@@ -7,26 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class Estudiantes extends Model
 {
-     protected $table = 'estudiantes';
+     protected $table = 'estudiantes'; 
     /** @use HasFactory<\Database\Factories\EstudiantesFactory> */
     use HasFactory;
 
 public $timestamps=true;
 
-protected $fillable=[
- 
-           'nombre',
-           'apellido',
-           'sexo',
-           'cedula',
-           'edad',
-           'celular',
-           'nombre_madre',
+    protected $fillable=[
+    
+            'nombre',
+            'apellido',
+            'sexo',
+            'cedula',
+            'edad',
+            'celular',
+            'nombre_madre',
             'nombre_padre',
             'comarca'
-          
+            
 
-];
+    ];
 
 
 

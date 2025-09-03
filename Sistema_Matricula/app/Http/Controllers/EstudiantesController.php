@@ -13,8 +13,9 @@ class EstudiantesController extends Controller
     public function index()
     {//lista todos los estudiantes
        $estudiantes= Estudiantes::all();
+       // dd($estudiantes->toArray());
            return view('estudiantes.index', compact('estudiantes'));
-        
+         
     }
 
     /**
@@ -30,6 +31,8 @@ class EstudiantesController extends Controller
      */
     public function store(Request $request)
     {
+
+
         $request ->validate([
         'nombre' => 'required|string|max:255',
         'apellido' => 'required|string|max:255',
@@ -42,7 +45,7 @@ class EstudiantesController extends Controller
         'comarca' => 'required|string|max:150'
         ]);
 
-        Estudiantes::create($request::all());
+        Estudiantes::create($request->all());
         
           return redirect()->route('estudiantes.index')->with('success', 'Estudiante creado correctamente');
     
@@ -51,23 +54,25 @@ class EstudiantesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Estudiantes $estudiantes)
+    public function show(Estudiantes $estudiante)
     {
-        return $request('estudiantes.show',compact('estudiantes'));
+        //para depurar
+        // dd($estudiante);
+        return view('estudiantes.show',compact('estudiante'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Estudiantes $estudiantes)
+    public function edit(Estudiantes $estudiante)
     {
-        return $request('estudiantes.edit',compact('estudiantes'));
+        return view('estudiantes.edit',compact('estudiante'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Estudiantes $estudiantes)
+    public function update(Request $request, Estudiantes $estudiante)
     {
         $request ->validate([
         'nombre' => 'required|string|max:255',
@@ -81,7 +86,7 @@ class EstudiantesController extends Controller
         'comarca' => 'required|string|max:150'
         ]);
 
-        $estudiantes->update($request->all());
+        $estudiante->update($request->all());
 
         return redirect()->route('estudiantes.index')->with('access','estudiante actualizado correctamente');
     }
@@ -89,9 +94,9 @@ class EstudiantesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Estudiantes $estudiantes)
+    public function destroy(Estudiantes $estudiante)
     {
-        $estudiantes->delete();
+        $estudiante->delete();
 
         return redirect()->route('estudiantes.index')->with('access','estudiante eliminado correctamente');
     }

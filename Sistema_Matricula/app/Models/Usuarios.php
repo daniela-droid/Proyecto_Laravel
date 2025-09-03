@@ -12,13 +12,13 @@ class Usuarios extends Model
     use HasFactory;
     public $timestamps=true;
 
-protected $fillable=[
-'nombre',
-'gmail',
-'password',
-'rol'
+    protected $fillable=[
+    'nombre',
+    'gmail',
+    'password',
+    'rol'
 
-];
+    ];
 
 
 protected $hidden = ['password'];

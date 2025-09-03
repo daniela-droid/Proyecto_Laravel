@@ -13,12 +13,12 @@ class Matriculas extends Model
     use HasFactory;
     public $timestamps= true;
 
-protected $fillable=[
+    protected $fillable=[
 
-'Id_estudiantes',
-'Id_asignatura'
+    'Id_estudiantes',
+    'Id_asignatura'
 
-];
+    ];
 
 //define una relacion de uno a muchos
 public function estudiante(){

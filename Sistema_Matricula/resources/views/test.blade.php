@@ -21,3 +21,20 @@
 <script> console.log('Hi!'); </script>
    
 @stop
+
+<!-- resources/views/test.blade.php -->
+@extends('adminlte::page')
+
+@section('title', 'Prueba AdminLTE')
+
+@section('content_header')
+    <h1>Panel de prueba</h1>
+@stop
+
+@section('content')
+    <p>Si ves esto con los estilos de AdminLTE, todo está listo.</p>
+
+    
+
+@stop
+

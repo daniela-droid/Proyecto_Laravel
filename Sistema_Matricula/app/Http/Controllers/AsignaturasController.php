@@ -29,49 +29,49 @@ class AsignaturasController extends Controller
      */
     public function store(Request $request)
     {
-        $request -> validate([
+        $request ->validate([
             'nombre'=>'required|string|max:255'
         ]);
         
-        Asignaturas::create($request::all());
+        Asignaturas::create($request->all());
         return redirect()->route('asignaturas.index')->with('success','Asignatura creada correctamente');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Asignaturas $asignaturas)
+    public function show(Asignaturas $asignatura)
     {
-        return $request('asignaturas.show',compact('asignaturas'));
+        return view('asignaturas.show',compact('asignatura'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Asignaturas $asignaturas)
+    public function edit(Asignaturas $asignatura)
     {
-        return $request('asignaturas.edit',compact('asignaturas'));
+        return view('asignaturas.edit',compact('asignatura'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Asignaturas $asignaturas)
+    public function update(Request $request, Asignaturas $asignatura)
     {
         $request->validate([
             'nombre'=>'required|string|max:255'
 
         ]);
-        $asignaturas->update($request::all());
-        return redirect()->route('asignaturas.index')->with('access','asignaturas actualozada');
+        $asignatura->update($request->all());
+        return redirect()->route('asignaturas.index')->with('access','asignaturas actualizada');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Asignaturas $asignaturas)
+    public function destroy(Asignaturas $asignatura)
     {
-        $asignaturas->delete();
+        $asignatura->delete();
         return redirect()->route('asignaturas.index')->with('access','asignatura eliminada');
     }
 }
