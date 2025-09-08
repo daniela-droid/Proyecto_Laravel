@@ -24,5 +24,8 @@ public function notas()
     return $this->hasMany(Nota::class);
 }
 
-
+public function matriculas()
+    {
+        return $this->hasMany(Matriculas::class, 'id_asignaturas');
+    }
 }

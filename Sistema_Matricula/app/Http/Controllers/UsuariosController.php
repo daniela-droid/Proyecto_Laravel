@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Usuarios;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Hash;
 class UsuariosController extends Controller
 {
     /**
@@ -12,7 +12,9 @@ class UsuariosController extends Controller
      */
     public function index()
     {
-        //
+        //obtener usuarios
+        $usuarios=usuarios::all();
+        return view('usuarios.index',compact('usuarios'));
     }
 
     /**
@@ -20,7 +22,8 @@ class UsuariosController extends Controller
      */
     public function create()
     {
-        //
+        //creamos el usuaurio
+        return view('usuarios.create');
     }
 
     /**
@@ -28,23 +31,40 @@ class UsuariosController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+      
+        $request->validate([
+                'nombre'=>'required|string|max:80',
+                'gmail'    => 'required|string|email|max:125|unique:usuarios,gmail',
+                'password' => 'required|string|min:8|confirmed', 
+                'rol'      => 'required|in:admin,user'
+
+        ]);
+      Usuarios::create([
+            'nombre'   => $request->nombre,
+            'gmail'    => $request->gmail,
+            'password' => Hash::make($request->password),
+            'rol'      => $request->rol,
+        ]);
+
+        return redirect()->route('usuarios.index')->with('success','Usuario creado correctamente');
+
+        }
 
     /**
      * Display the specified resource.
      */
-    public function show(Usuarios $usuarios)
+    public function show(Usuarios $usuario)
     {
         //
+        return view('usuarios.show',compact('usuario'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Usuarios $usuarios)
+    public function edit(Usuarios $usuario)
     {
-        //
+        return view('usuarios.edit',compact('usuario'));
     }
 
     /**
@@ -52,14 +72,23 @@ class UsuariosController extends Controller
      */
     public function update(Request $request, Usuarios $usuarios)
     {
-        //
+        $request->validate([
+                 'nombre'=>'required|string|max:80',
+                'gmail'    => 'required|string|email|max:125|unique:usuarios,gmail',
+                'password' => 'required|string|min:8|confirmed', 
+                'rol'      => 'required|in:admin,user'
+
+        ]);
+        $usuarios->update($request->all());
+        return redirect()->route('usuarios.index')->with('success','Editado correctamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Usuarios $usuarios)
+    public function destroy(Usuarios $usuario)
     {
-        //
+        $usuario->delete();
+        return redirect()->route('usuarios.index')->with('success','Usuario eliminado correctamente');
     }
 }

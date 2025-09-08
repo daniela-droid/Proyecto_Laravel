@@ -88,7 +88,7 @@ class EstudiantesController extends Controller
 
         $estudiante->update($request->all());
 
-        return redirect()->route('estudiantes.index')->with('access','estudiante actualizado correctamente');
+        return redirect()->route('estudiantes.index')->with('success','estudiante actualizado correctamente');
     }
 
     /**
@@ -98,6 +98,6 @@ class EstudiantesController extends Controller
     {
         $estudiante->delete();
 
-        return redirect()->route('estudiantes.index')->with('access','estudiante eliminado correctamente');
+        return redirect()->route('estudiantes.index')->with('success','estudiante eliminado correctamente');
     }
 }

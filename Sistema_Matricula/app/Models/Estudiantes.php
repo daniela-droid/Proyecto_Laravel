@@ -28,6 +28,9 @@ public $timestamps=true;
 
     ];
 
-
+public function matriculas()
+    {
+        return $this->hasMany(Matriculas::class, 'id_estudiantes');
+    }
 
 }

@@ -13,8 +13,8 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
     */
-
-    'title' => 'AdminLTE 3',
+ 'title' => 'Sistema Matricula',
+   // 'title' => 'AdminLTE 3',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -63,8 +63,8 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo' => '<b>Sistema Matricula</b>',
+   // 'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -327,16 +327,31 @@ return [
             'label' => 4,
             'label_color' => 'success',
         ],
-        ['header' => 'account_settings'],
+        ['header' => 'Ajustes'],
         [
-            'text' => 'profile',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
+            'text' => 'Estudiantes',
+            'url' => '/estudiantes',
+            'icon' => 'fas fa-user-graduate',
         ],
         [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
+            'text' => 'Asignaturas',
+            'url' => '/asignaturas',
+            'icon' => 'fas fa-book',
+        ],
+        [
+            'text' => 'Matriculas',
+            'url' => '/matriculas',
+            'icon' => 'fas fa-file-alt',
+        ],
+        [
+            'text' => 'Usuarios',
+            'url' => '/usuarios',
+            'icon' => 'fas fa-users',
+        ],
+        [
+            'text' => 'Notas',
+            'url' => '/notas',
+            'icon' => 'fas  fa-sticky-note',
         ],
         [
             'text' => 'multilevel',

@@ -15,18 +15,23 @@ class Matriculas extends Model
 
     protected $fillable=[
 
-    'Id_estudiantes',
-    'Id_asignatura'
+    'id_estudiantes',
+    'id_asignaturas'
 
     ];
 
-//define una relacion de uno a muchos
-public function estudiante(){
-    return $this->belongsTO(estudiante::class);
-}
 
-public function asignaturas(){
-    return $this->belongsTo(asignaturas::class);
-}
+// Una matrícula pertenece a un estudiante
+    public function estudiante()
+    {
+        return $this->belongsTo(Estudiantes::class, 'id_estudiantes');
+    }
+
+    // Una matrícula pertenece a una asignatura
+    public function asignatura()
+    {
+        return $this->belongsTo(Asignaturas::class, 'id_asignaturas');
+    }
+
 
 }

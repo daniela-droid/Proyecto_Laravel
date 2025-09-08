@@ -12,7 +12,8 @@ class NotasController extends Controller
      */
     public function index()
     {
-        //
+        //obtener las notas con sus relaciones
+        $notas= notas::with([ ])->get();
     }
 
     /**

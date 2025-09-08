@@ -12,6 +12,7 @@ class MatriculasController extends Controller
      */
     public function index()
     {
+
         //obtener las matriculas con estudiante y asignatura
         $matriculas  = matriculas::with(['estudiante','asignatura'])->get();
         return view('matriculas.index',compact('matriculas'));
@@ -26,7 +27,7 @@ class MatriculasController extends Controller
         //traer estudiantes y asignaturas para el select
         $estudiantes= Estudiantes::all();
         $asignaturas = Asignaturas::all();
-        return view('matriculas.create',compact('estudiantes',asignaturas));
+        return view('matriculas.create',compact('estudiantes','asignaturas'));
     }
 
     /**
@@ -37,14 +38,14 @@ class MatriculasController extends Controller
         //validacion
         $request->validate(
             [
-                'id_estudiante'=>'required|exists:estudiantes,id',
-                'id_asignatura'=>'required|exists:asignaturas,id',
+                'id_estudiantes'=>'required|exists:estudiantes,id',
+                'id_asignaturas'=>'required|exists:asignaturas,id',
             ]
         );
         //crear la matricula
         Matricula::create([
-'id_estudiante' =>$request->id_estudiante,
-'id_asignatura' =>$request->id_asignatura
+'id_estudiantes' =>$request->id_estudiantes,
+'id_asignaturas' =>$request->id_asignaturas
 
 ]);
 return redirect()->route('matriculas.index')->with('success','Matriculas creada correctamente');
@@ -54,9 +55,9 @@ return redirect()->route('matriculas.index')->with('success','Matriculas creada 
     /**
      * Display the specified resource.
      */
-    public function show(Matriculas $matriculas)
+    public function show(Matriculas $matricula)
     {
-       return view('matriculas.show',compact('matriculas'));
+       return view('matriculas.show',compact('matricula'));
     }
 
     /**
@@ -75,12 +76,12 @@ return redirect()->route('matriculas.index')->with('success','Matriculas creada 
     public function update(Request $request, Matriculas $matriculas)
     {
         $request->validate([
-            'id_estudiante' => 'required|exists:estudiantes,id',
-            'id_asignatura' => 'required|exists:asignaturas,id'
+            'id_estudiantes' => 'required|exists:estudiantes,id',
+            'id_asignaturas' => 'required|exists:asignaturas,id'
         ]);
         $matriculas->update([
-        'id_estudiante' =>$request->id_estudiante,
-        'id_asignatura' =>$request->id_asignatura
+        'id_estudiantes' =>$request->id_estudiantes,
+        'id_asignaturas' =>$request->id_asignaturas
 
         ]);
 
