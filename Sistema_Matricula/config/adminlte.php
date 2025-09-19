@@ -14,10 +14,11 @@ return [
     |
     */
  'title' => 'Sistema Matricula',
+
    // 'title' => 'AdminLTE 3',
     'title_prefix' => '',
     'title_postfix' => '',
-
+// <link rel="stylesheet" href="{{ asset('public/custom.css') }}">
     /*
     |--------------------------------------------------------------------------
     | Favicon
@@ -159,6 +160,7 @@ return [
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
 
+    
     /*
     |--------------------------------------------------------------------------
     | Authentication Views Classes
@@ -189,18 +191,32 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Layout-and-Styling-Configuration
     |
     */
-
+///modificar panel del costado
     'classes_body' => '',
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-dark-primary elevation-4',
+    'classes_sidebar' => 'sidebar-dark-blue elevation-4',
     'classes_sidebar_nav' => '',
     'classes_topnav' => 'navbar-white navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
+
+
+    'plugins' => [
+    'CustomCSS' => [
+        'active' => true,
+        'files' => [
+            [
+                'type' => 'css',
+                'asset' => true,
+                'location' => 'custom.css',
+            ],
+        ],
+    ],
+],
 
     /*
     |--------------------------------------------------------------------------
@@ -351,7 +367,7 @@ return [
         [
             'text' => 'Notas',
             'url' => '/notas',
-            'icon' => 'fas  fa-sticky-note',
+            'icon' => 'fas fa-sticky-note',
         ],
         [
             'text' => 'multilevel',

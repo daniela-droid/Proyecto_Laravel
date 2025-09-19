@@ -3,8 +3,10 @@
 @section('title', 'Estudiantes')
 
 @section('content_header')
+
     <h1>Listado de Estudiantes</h1>
 @stop
+
 
 @section('content')
     <div class="card">

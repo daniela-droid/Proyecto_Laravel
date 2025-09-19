@@ -13,7 +13,8 @@ class NotasController extends Controller
     public function index()
     {
         //obtener las notas con sus relaciones
-        $notas= notas::with([ ])->get();
+        $notas = notas::with(['estudiante','asignatura','usuarios'])->get();
+        return view('notas.index',compact('notas'));
     }
 
     /**
@@ -21,7 +22,12 @@ class NotasController extends Controller
      */
     public function create()
     {
-        //
+        $estudiantes=Estudiantes::all();
+        $asignaturas=Asignaturas::all();
+        $usuarios=Usuarios::all();
+        return view('notas.create',compact('estudiantes','asignaturas','usuarios'));
+
+
     }
 
     /**
@@ -29,15 +35,29 @@ class NotasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+                'id_estudiantes'=>'required|exists:estudiantes,id',
+                'id_asignaturas'=>'required|exists:asignaturas,id',
+                'id_usuarios'=>'required|exists:usuarios,id',
+                'notas'=>'required|string|Decimal'
+
+        ]);
+        Notas::create([
+            'id_estudiantes' =>$request->id_estudiantes,
+            'id_asignaturas' =>$request->id_asignaturas,
+            'Id_usuarios'=>$request->id_usuarios
+
+
+        ]);
+        return redirect()->route('notas.index')->with('success','Notas creadas correctamente');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Notas $notas)
+    public function show(Notas $nota)
     {
-        //
+        return view('notas.show',compact('nota'));
     }
 
     /**
@@ -45,7 +65,10 @@ class NotasController extends Controller
      */
     public function edit(Notas $notas)
     {
-        //
+        $estudiantes=Estudiantes::all();
+        $asignaturas=Asignaturas::all();
+        $usuarios=Usuarios::all();
+        return view('notas.edit',compact('notas','estudiantes','asignaturas','usuarios'));
     }
 
     /**
@@ -53,7 +76,20 @@ class NotasController extends Controller
      */
     public function update(Request $request, Notas $notas)
     {
-        //
+        $request ->validate([
+                'id_estudiantes'=>'required|exists:estudiantes,id',
+                'id_asignaturas'=>'required|exists:asignaturas,id',
+                'id_usuarios'=>'required|exists:usuarios,id',
+                'notas'=>'required|string|Decimal'
+        ]);
+        $notas->update([
+            'id_estudiantes' =>$request->id_estudiantes,
+            'id_asignaturas' =>$request->id_asignaturas,
+            'id_usuarios'=>$request->id_usuarios
+    
+
+        ]);
+        return redirect()->route('notas.index')->with('success','Notas actualizadas correctamente');
     }
 
     /**
@@ -61,6 +97,8 @@ class NotasController extends Controller
      */
     public function destroy(Notas $notas)
     {
-        //
+        $notas->delete();
+        return redirect()->route('notas.index')->with('success','Notas eliminadas correctamente');
+        
     }
 }

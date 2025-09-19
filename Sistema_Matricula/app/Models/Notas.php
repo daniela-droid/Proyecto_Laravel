@@ -9,25 +9,27 @@ class Notas extends Model
 {
    /** @use HasFactory<\Database\Factories\NotasFactory> */
     use HasFactory;
-
+protected $table='notas';
         protected $fillable=[
-        
-                'Id_Estudiantes',
-                'Id_Asignarura',
-                'Id_usuario',
+                'id_estudiantes',
+                'id_asignaturas',
+                'id_usuarios',
                 'notas'
         ];
 
     //relaciones
-    public function estudiantes(){
-    return $this->belongsTO(estudiantes::class);
+   public function estudiante()
+    {
+        return $this->belongsTo(Estudiantes::class, 'id_estudiantes');
     }
 
-    public function asignaturas(){
-        return $this->belongsTO(asignaturas::class);
+    // Una matrícula pertenece a una asignatura
+    public function asignatura()
+    {
+        return $this->belongsTo(Asignaturas::class, 'id_asignaturas');
     }
     public function usuarios(){
-        return $this->belongsTO(usuarios::class);
+        return $this->belongsTO(Usuarios::class, 'id_usuarios');
     }
 
 

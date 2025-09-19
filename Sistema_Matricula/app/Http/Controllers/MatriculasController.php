@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Matriculas;
 use Illuminate\Http\Request;
 
+
 class MatriculasController extends Controller
 {
     /**
@@ -14,7 +15,7 @@ class MatriculasController extends Controller
     {
 
         //obtener las matriculas con estudiante y asignatura
-        $matriculas  = matriculas::with(['estudiante','asignatura'])->get();
+        $matriculas  = matriculas::with(['estudiantes','asignaturas'])->get();
         return view('matriculas.index',compact('matriculas'));
 
     }
@@ -25,8 +26,8 @@ class MatriculasController extends Controller
     public function create()
     {
         //traer estudiantes y asignaturas para el select
-        $estudiantes= Estudiantes::all();
-        $asignaturas = Asignaturas::all();
+        $estudiantes=Estudiantes::all();
+        $asignaturas=Asignaturas::all();
         return view('matriculas.create',compact('estudiantes','asignaturas'));
     }
 
@@ -44,12 +45,12 @@ class MatriculasController extends Controller
         );
         //crear la matricula
         Matricula::create([
-'id_estudiantes' =>$request->id_estudiantes,
-'id_asignaturas' =>$request->id_asignaturas
+            'id_estudiantes' =>$request->id_estudiantes,
+            'id_asignaturas' =>$request->id_asignaturas
 
-]);
-return redirect()->route('matriculas.index')->with('success','Matriculas creada correctamente');
-    }
+            ]);
+        return redirect()->route('matriculas.index')->with('success','Matriculas creada correctamente');
+            }
 
 
     /**
