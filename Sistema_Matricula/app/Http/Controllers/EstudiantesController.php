@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Estudiantes;
+use App\Models\Estudiante;
 use Illuminate\Http\Request;
 
 class EstudiantesController extends Controller
@@ -12,7 +12,7 @@ class EstudiantesController extends Controller
      */
     public function index()
     {//lista todos los estudiantes
-       $estudiantes= Estudiantes::all();
+       $estudiantes= Estudiante::all();
        // dd($estudiantes->toArray());
            return view('estudiantes.index', compact('estudiantes'));
          
@@ -45,7 +45,7 @@ class EstudiantesController extends Controller
         'comarca' => 'required|string|max:150'
         ]);
 
-        Estudiantes::create($request->all());
+        Estudiante::create($request->all());
         
           return redirect()->route('estudiantes.index')->with('success', 'Estudiante creado correctamente');
     
@@ -54,7 +54,7 @@ class EstudiantesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Estudiantes $estudiante)
+    public function show(Estudiante $estudiante)
     {
         //para depurar
         // dd($estudiante);
@@ -64,7 +64,7 @@ class EstudiantesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Estudiantes $estudiante)
+    public function edit(Estudiante $estudiante)
     {
         return view('estudiantes.edit',compact('estudiante'));
     }
@@ -72,7 +72,7 @@ class EstudiantesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Estudiantes $estudiante)
+    public function update(Request $request, Estudiante $estudiante)
     {
         $request ->validate([
         'nombre' => 'required|string|max:255',
@@ -94,7 +94,7 @@ class EstudiantesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Estudiantes $estudiante)
+    public function destroy(Estudiante $estudiante)
     {
         $estudiante->delete();
 

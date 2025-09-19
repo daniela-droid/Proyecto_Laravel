@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Asignaturas;
+use App\Models\Asignatura;
 use Illuminate\Http\Request;
 
 class AsignaturasController extends Controller
@@ -12,7 +12,7 @@ class AsignaturasController extends Controller
      */
     public function index()
     {
-        $asignaturas =Asignaturas::all();
+        $asignaturas =Asignatura::all();
         return view('asignaturas.index',compact('asignaturas'));
     }
 
@@ -40,7 +40,7 @@ class AsignaturasController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Asignaturas $asignatura)
+    public function show(Asignatura $asignatura)
     {
         return view('asignaturas.show',compact('asignatura'));
     }
@@ -48,7 +48,7 @@ class AsignaturasController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Asignaturas $asignatura)
+    public function edit(Asignatura $asignatura)
     {
         return view('asignaturas.edit',compact('asignatura'));
     }
@@ -56,7 +56,7 @@ class AsignaturasController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Asignaturas $asignatura)
+    public function update(Request $request, Asignatura $asignatura)
     {
         $request->validate([
             'nombre'=>'required|string|max:255'
@@ -69,7 +69,7 @@ class AsignaturasController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Asignaturas $asignatura)
+    public function destroy(Asignatura $asignatura)
     {
         $asignatura->delete();
         return redirect()->route('asignaturas.index')->with('access','asignatura eliminada');

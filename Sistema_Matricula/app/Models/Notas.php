@@ -20,16 +20,16 @@ protected $table='notas';
     //relaciones
    public function estudiante()
     {
-        return $this->belongsTo(Estudiantes::class, 'id_estudiantes');
+        return $this->belongsTo(Estudiante::class, 'id_estudiantes');
     }
 
     // Una matrícula pertenece a una asignatura
     public function asignatura()
     {
-        return $this->belongsTo(Asignaturas::class, 'id_asignaturas');
+        return $this->belongsTo(Asignatura::class, 'id_asignaturas');
     }
     public function usuarios(){
-        return $this->belongsTO(Usuarios::class, 'id_usuarios');
+        return $this->belongsTO(Usuario::class, 'id_usuarios');
     }
 
 

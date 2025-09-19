@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Usuarios;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 class UsuariosController extends Controller
@@ -13,7 +13,7 @@ class UsuariosController extends Controller
     public function index()
     {
         //obtener usuarios
-        $usuarios=usuarios::all();
+        $usuarios=usuario::all();
         return view('usuarios.index',compact('usuarios'));
     }
 
@@ -39,7 +39,7 @@ class UsuariosController extends Controller
                 'rol'      => 'required|in:admin,user'
 
         ]);
-      Usuarios::create([
+      Usuario::create([
             'nombre'   => $request->nombre,
             'gmail'    => $request->gmail,
             'password' => Hash::make($request->password),
@@ -53,7 +53,7 @@ class UsuariosController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Usuarios $usuario)
+    public function show(Usuario $usuario)
     {
         //
         return view('usuarios.show',compact('usuario'));
@@ -62,7 +62,7 @@ class UsuariosController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Usuarios $usuario)
+    public function edit(Usuario $usuario)
     {
         return view('usuarios.edit',compact('usuario'));
     }
@@ -70,7 +70,7 @@ class UsuariosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Usuarios $usuarios)
+    public function update(Request $request, Usuario $usuarios)
     {
         $request->validate([
                  'nombre'=>'required|string|max:80',
@@ -86,7 +86,7 @@ class UsuariosController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Usuarios $usuario)
+    public function destroy(Usuario $usuario)
     {
         $usuario->delete();
         return redirect()->route('usuarios.index')->with('success','Usuario eliminado correctamente');

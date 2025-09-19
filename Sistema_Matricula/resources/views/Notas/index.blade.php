@@ -4,7 +4,9 @@
 
 @section('content_header')
 
- <h1>Listado de Notas</h1>
+<div style="background-color: #47b3d4ff; color: dark; padding: 10px 20px; border-radius: 5px;">
+    <h1 style="margin: 0; font-size: 1.5rem;">Listado de Notas</h1>
+</div>
 @stop
 
 @section('content')

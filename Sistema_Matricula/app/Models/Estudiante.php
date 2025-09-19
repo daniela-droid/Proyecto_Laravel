@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Estudiantes extends Model
+class Estudiante extends Model
 {
      protected $table = 'estudiantes'; 
     /** @use HasFactory<\Database\Factories\EstudiantesFactory> */
@@ -33,4 +33,8 @@ public function matriculas()
         return $this->hasMany(Matriculas::class, 'id_estudiantes');
     }
 
+    public function notas()
+    {
+        return $this->hasMany(Notas::class, 'id_estudiantes');
+    }
 }

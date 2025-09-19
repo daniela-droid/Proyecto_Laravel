@@ -3,10 +3,14 @@
 @section('title', 'Asignaturas')
 
 @section('content')
-<div class="container">
-    <div class="card">
-        <div class="card-header">
-            <h3>Lista de Asignaturas</h3>
+@section('content_header')
+
+    <!-- Panel superior -->
+<div style="background-color: #47b3d4ff; color: dark; padding: 10px 20px; border-radius: 5px;">
+    <h1 style="margin: 0; font-size: 1.5rem;">Listado de Asignaturas</h1>
+</div>
+
+@stop
 
  <!-- Botón Editar -->
             <a href="{{ route('asignaturas.create') }}" class="btn btn-success mb-3">

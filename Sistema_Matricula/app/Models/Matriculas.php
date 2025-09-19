@@ -22,15 +22,15 @@ class Matriculas extends Model
 
 
 // Una matrícula pertenece a un estudiante
-    public function estudiante()
+    public function estudiantes()
     {
-        return $this->belongsTo(Estudiantes::class, 'id_estudiantes');
+        return $this->belongsTo(Estudiante::class, 'id_estudiantes');
     }
 
     // Una matrícula pertenece a una asignatura
-    public function asignatura()
+    public function asignaturas()
     {
-        return $this->belongsTo(Asignaturas::class, 'id_asignaturas');
+        return $this->belongsTo(Asignatura::class, 'id_asignaturas');
     }
 
 

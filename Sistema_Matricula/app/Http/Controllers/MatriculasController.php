@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Matriculas;
 use Illuminate\Http\Request;
-
+use App\Models\Estudiante;
+use App\Models\Asignatura;
 
 class MatriculasController extends Controller
 {
@@ -15,7 +16,7 @@ class MatriculasController extends Controller
     {
 
         //obtener las matriculas con estudiante y asignatura
-        $matriculas  = matriculas::with(['estudiantes','asignaturas'])->get();
+        $matriculas  = Matriculas::with(['estudiantes','asignaturas'])->get();
         return view('matriculas.index',compact('matriculas'));
 
     }
@@ -26,9 +27,9 @@ class MatriculasController extends Controller
     public function create()
     {
         //traer estudiantes y asignaturas para el select
-        $estudiantes=Estudiantes::all();
-        $asignaturas=Asignaturas::all();
-        return view('matriculas.create',compact('estudiantes','asignaturas'));
+        $estudiante=Estudiante::all();
+        $asignatura=Asignatura::all();
+        return view('matriculas.create',compact('estudiante','asignatura'));
     }
 
     /**
@@ -66,8 +67,8 @@ class MatriculasController extends Controller
      */
     public function edit(Matriculas $matriculas)
     {
-        $estudiantes = Estudiantes::all();
-        $asignaturas = Asignaturas::all();
+        $estudiantes = Estudiante::all();
+        $asignaturas = Asignatura::all();
         return view('matriculas.edit',compact('matriculas','estudiantes','asignaturas'));
     }
 

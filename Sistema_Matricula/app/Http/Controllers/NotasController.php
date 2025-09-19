@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Notas;
 use Illuminate\Http\Request;
+use App\Models\Estudiante;
+use App\Models\Asignatura;
+use App\Models\Usuario;
 
 class NotasController extends Controller
 {
@@ -20,11 +23,12 @@ class NotasController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+     
     public function create()
     {
-        $estudiantes=Estudiantes::all();
-        $asignaturas=Asignaturas::all();
-        $usuarios=Usuarios::all();
+        $estudiantes=Estudiante::all();
+        $asignaturas=Asignatura::all();
+        $usuarios=Usuario::all();
         return view('notas.create',compact('estudiantes','asignaturas','usuarios'));
 
 
@@ -39,14 +43,15 @@ class NotasController extends Controller
                 'id_estudiantes'=>'required|exists:estudiantes,id',
                 'id_asignaturas'=>'required|exists:asignaturas,id',
                 'id_usuarios'=>'required|exists:usuarios,id',
-                'notas'=>'required|string|Decimal'
+              'notas' => 'required|numeric|decimal:2|min:0|max:100',
 
         ]);
+       
         Notas::create([
             'id_estudiantes' =>$request->id_estudiantes,
             'id_asignaturas' =>$request->id_asignaturas,
-            'Id_usuarios'=>$request->id_usuarios
-
+            'Id_usuarios'=>$request->id_usuarios,
+            'notas'=> $request->nota
 
         ]);
         return redirect()->route('notas.index')->with('success','Notas creadas correctamente');
@@ -65,9 +70,9 @@ class NotasController extends Controller
      */
     public function edit(Notas $notas)
     {
-        $estudiantes=Estudiantes::all();
-        $asignaturas=Asignaturas::all();
-        $usuarios=Usuarios::all();
+        $estudiantes=Estudiante::all();
+        $asignaturas=Asignatura::all();
+        $usuarios=Usuario::all();
         return view('notas.edit',compact('notas','estudiantes','asignaturas','usuarios'));
     }
 
@@ -80,7 +85,7 @@ class NotasController extends Controller
                 'id_estudiantes'=>'required|exists:estudiantes,id',
                 'id_asignaturas'=>'required|exists:asignaturas,id',
                 'id_usuarios'=>'required|exists:usuarios,id',
-                'notas'=>'required|string|Decimal'
+                'nota' => 'required|numeric|decimal:2|min:0|max:100',
         ]);
         $notas->update([
             'id_estudiantes' =>$request->id_estudiantes,
