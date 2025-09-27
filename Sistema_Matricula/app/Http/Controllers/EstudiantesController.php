@@ -31,8 +31,6 @@ class EstudiantesController extends Controller
      */
     public function store(Request $request)
     {
-
-
         $request ->validate([
         'nombre' => 'required|string|max:255',
         'apellido' => 'required|string|max:255',

@@ -5,15 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-    class Asignatura
-     extends Model
+    class Asignatura  extends Model
     {
         protected $table = 'asignaturas';
         /** @use HasFactory<\Database\Factories\AsignaturasFactory> */
         use HasFactory;
         /*hacemos uso de los timestames*/
     public $timestamps = true;
-
+        
     protected $fillable=[
     'nombre'
 

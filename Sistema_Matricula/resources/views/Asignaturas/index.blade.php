@@ -36,8 +36,72 @@
                 <i class="fas fa-plus"></i> Nueva Asignatura
             </a>
         </div>
+    <div class="container">
+    @php  
+        if(count($asignaturas)>0){
+            $heads = [
+                'Id',
+                'Nombre',                
+                ['label' => 'Actions', 'no-export' => true, 'width' => 5],
+            ];
+        }else{
+            $heads = [
+                'asignaturas',
+            ];
+        }
+            
+            if(count($asignaturas)>0){
+                $data=[];
+                foreach($asignaturas as $asignatura){
+                    $btnEdit = '<a href="' . route('asignaturas.edit', $asignatura->id) . '" class="btn btn-xs btn-default text-primary mx-1 shadow" title="Edit">
+                                    <i class="fa fa-lg fa-fw fa-pen"></i>
+                                </a>';
+                    $btnDelete = '<button class="btn btn-xs btn-default text-danger mx-1 shadow" data-toggle="modal" title="Delete" data-target="#modalDelete-' . $asignatura->id . '">
+                                    <i class="fa fa-lg fa-fw fa-trash"></i>
+                                </button>';
+                                
+                    $btnDetails = '<a href="' . route('asignaturas.show', $asignatura->id) . '" class="btn btn-xs btn-default text-teal mx-1 shadow" title="Details">
+                                    <i class="fa fa-lg fa-fw fa-eye"></i>
+                                </a>';
 
-    
+                    $data[] = [ 
+                        $asignatura->id,       
+                        $asignatura->nombre,                       
+                        '<nobr>'.$btnEdit.$btnDetails.'</nobr>'
+                            
+                    ];
+                }
+            }else{              
+                $data[] = ['No hay registros en la tabla.'];
+            }
+            $config = [
+                'data' => $data,
+                'order' => [[1, 'asc']],
+                'columns' => (count($asignaturas) > 0) ? [null, null, null, ['orderable' => false]] : [['orderable' => false]],
+            ];
+
+    @endphp
+
+        {{-- Minimal example / fill data using the component slot --}}
+        <div class="row">
+            <div class="col">
+                <x-adminlte-card icon="fas fa-cogs"  theme="dark" title="Listado de Servicio">
+                    <x-adminlte-datatable id="table1" :heads="$heads" head-theme="light" theme="light" striped hoverable >
+                    @foreach($config['data'] as $row)
+                        <tr>
+                            @foreach($row as $cell)
+                                <td>{!! $cell !!}</td>
+                            @endforeach                            
+                        </tr>
+                    @endforeach
+                    </x-adminlte-datatable>
+                </x-adminlte-card>  
+            </div>
+        </div>
+
+
+    </div>
+
             <div class="container">
              <div class="row">
                 <div class="col">
@@ -46,7 +110,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
-                        <th>Acciones</th>
+                        <th with=5px;>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>

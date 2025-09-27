@@ -29,11 +29,12 @@ class AsignaturasController extends Controller
      */
     public function store(Request $request)
     {
+
         $request ->validate([
             'nombre'=>'required|string|max:255'
         ]);
         
-        Asignaturas::create($request->all());
+        Asignatura::create($request->all());
         return redirect()->route('asignaturas.index')->with('success','Asignatura creada correctamente');
     }
 
