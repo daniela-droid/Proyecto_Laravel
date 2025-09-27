@@ -2,8 +2,14 @@
 
 @section('title', 'Notas')
 
-@section('content_header')
+@section('css')
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <!-- Estilos de DataTables Buttons -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+@stop
 
+@section('content_header')
 <div style="background-color: #47b3d4ff; color: dark; padding: 10px 20px; border-radius: 5px;">
     <h1 style="margin: 0; font-size: 1.5rem;">Listado de Notas</h1>
 </div>

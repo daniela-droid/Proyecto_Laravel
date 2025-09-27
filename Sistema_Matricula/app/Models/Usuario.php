@@ -3,16 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Usuario extends Model
+
+class Usuario extends Authenticatable//esto es para que laravel sepa que este es para login
 {
      protected $table = 'usuarios';
+
+         use HasFactory, Notifiable;
     /** @use HasFactory<\Database\Factories\UsuariosFactory> */
     use HasFactory;
     public $timestamps=true;
 
-    protected $fillable=[
+protected $fillable=[
     'nombre',
     'gmail',
     'password',

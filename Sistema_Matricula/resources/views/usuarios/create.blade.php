@@ -31,30 +31,30 @@
 
                 <div class="form-group">
                     <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" class="form-control" required>
+                    <input type="text" name="nombre" class="form-control form-control-sm w-50" required>
                 </div>
 
                 <div class="form-group">
                     <label for="gmail">Gmail</label>
-                    <input type="email" name="gmail" class="form-control" required>
+                    <input type="email" name="gmail" class="form-control form-control-sm w-50" required>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="input-group">
-                        <input type="password" name="password" id="password" class="form-control" required>
+                        <input type="password" name="password" id="password" class=" form-control-sm w-50" required>
                         <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">👁️</button>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="password_confirmation">Confirmar Password</label>
-                    <input type="password" name="password_confirmation" class="form-control" required>
+                    <input type="password" name="password_confirmation" class="form-control form-control-sm w-50" required>
                 </div>
 
                 <div class="form-group">
                     <label for="rol">Rol</label>
-                   <select name="rol" class="form-control" required>
+                   <select name="rol" class="form-control form-control-sm w-50" required>
     <option value="admin">admin</option>
     <option value="user">user</option>
 </select>

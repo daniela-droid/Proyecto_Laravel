@@ -17,7 +17,7 @@
 
                 <div class="form-group">
                     <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" class="form-control" required>
+                    <input type="text" name="nombre" class="form-control form-control-sm w-50" required>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Guardar</button>
