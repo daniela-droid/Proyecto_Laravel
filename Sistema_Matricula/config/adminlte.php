@@ -13,7 +13,7 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
     */
- 'title' => 'Sistema Matricula',
+ 'title' => 'Sistema de Matricula',
 
    // 'title' => 'AdminLTE 3',
     'title_prefix' => '',
@@ -65,8 +65,8 @@ return [
     */
 
     'logo' => '<b>Sistema Matricula</b>',
-   // 'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
+   'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+ 'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
     'logo_img_alt' => 'Admin Logo',
@@ -113,14 +113,14 @@ return [
     'preloader' => [
         'enabled' => true,
         'mode' => 'fullscreen',
-        'img' => [
+       'img' => [
             'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
             'alt' => 'AdminLTE Preloader Image',
             'effect' => 'animation__shake',
             'width' => 60,
             'height' => 60,
         ],
-    ],
+   ],
 
     /*
     |--------------------------------------------------------------------------
@@ -325,9 +325,14 @@ return [
             'type' => 'fullscreen-widget',
             'topnav_right' => true,
         ],
-
-        // Sidebar items:
+       ['header' => 'Home'],
         [
+            'text' => 'Inicio',
+            'url' => '/',
+            'icon' => 'fas fa-home',
+        ],
+        // Sidebar items:
+       /* [
             'type' => 'sidebar-menu-search',
             'text' => 'search',
         ],
@@ -342,8 +347,8 @@ return [
             'icon' => 'far fa-fw fa-file',
             'label' => 4,
             'label_color' => 'success',
-        ],
-        ['header' => 'Ajustes'],
+        ],*/
+        ['header' => 'Menu'],
         [
             'text' => 'Estudiantes',
             'url' => '/estudiantes',

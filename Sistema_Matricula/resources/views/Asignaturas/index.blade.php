@@ -23,8 +23,8 @@
 @section('content_header')
 
     <!-- Panel superior -->
-<div style="background-color: #47b3d4ff; color: dark; padding: 10px 20px; border-radius: 5px;">
-    <h1 style="margin: 0; font-size: 1.5rem;">Listado de Asignaturas</h1>
+<div style="background-color: #3f6570ff; color: white; padding: 10px 20px; border-radius: 5px;">
+    <h1 style="margin: 0; font-size: 1.5rem;">Asignaturas</h1>
 </div>
 
 @stop
@@ -32,11 +32,11 @@
 @section('content')
 
  <!-- Botón Editar -->
-            <a href="{{ route('asignaturas.create') }}" class="btn btn-success mb-3">
-                <i class="fas fa-plus"></i> Nueva Asignatura
-            </a>
-        </div>
-    <div class="container">
+           <a href="{{ route('asignaturas.create') }}" class="btn btn-success mb-3">
+    <i class="fas fa-plus"></i> Nueva Asignatura
+</a>
+
+<div class="container">
     @php  
         if(count($asignaturas)>0){
             $heads = [
@@ -45,115 +45,67 @@
                 ['label' => 'Actions', 'no-export' => true, 'width' => 5],
             ];
         }else{
-            $heads = [
-                'asignaturas',
-            ];
+            $heads = ['asignaturas'];
         }
             
-            if(count($asignaturas)>0){
-                $data=[];
-                foreach($asignaturas as $asignatura){
-                    $btnEdit = '<a href="' . route('asignaturas.edit', $asignatura->id) . '" class="btn btn-xs btn-default text-primary mx-1 shadow" title="Edit">
-                                    <i class="fa fa-lg fa-fw fa-pen"></i>
-                                </a>';
-                    $btnDelete = '<button class="btn btn-xs btn-default text-danger mx-1 shadow" data-toggle="modal" title="Delete" data-target="#modalDelete-' . $asignatura->id . '">
-                                    <i class="fa fa-lg fa-fw fa-trash"></i>
-                                </button>';
-                                
-                    $btnDetails = '<a href="' . route('asignaturas.show', $asignatura->id) . '" class="btn btn-xs btn-default text-teal mx-1 shadow" title="Details">
-                                    <i class="fa fa-lg fa-fw fa-eye"></i>
-                                </a>';
+        if(count($asignaturas)>0){
+            $data=[];
+            foreach($asignaturas as $asignatura){
+                $btnEdit = '<a href="' . route('asignaturas.edit', $asignatura->id) . '" class="btn btn-xs btn-default text-primary mx-1 shadow" title="Edit">
+                                <i class="fa fa-lg fa-fw fa-pen"></i>
+                            </a>';
+                $btnDelete = '<button class="btn btn-xs btn-default text-danger mx-1 shadow" data-toggle="modal" title="Delete" data-target="#modalDelete-'.$asignatura->id.'">
+                                <i class="fa fa-lg fa-fw fa-trash"></i>
+                            </button>';
+                $btnDetails = '<a href="' . route('asignaturas.show', $asignatura->id) . '" class="btn btn-xs btn-default text-teal mx-1 shadow" title="Details">
+                                <i class="fa fa-lg fa-fw fa-eye"></i>
+                            </a>';
 
-                    $data[] = [ 
-                        $asignatura->id,       
-                        $asignatura->nombre,                       
-                        '<nobr>'.$btnEdit.$btnDetails.'</nobr>'
-                            
-                    ];
-                }
-            }else{              
-                $data[] = ['No hay registros en la tabla.'];
+                $data[] = [ 
+                    $asignatura->id,       
+                    $asignatura->nombre,                       
+                    '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'                    
+                ];
             }
-            $config = [
-                'data' => $data,
-                'order' => [[1, 'asc']],
-                'columns' => (count($asignaturas) > 0) ? [null, null, null, ['orderable' => false]] : [['orderable' => false]],
-            ];
+        }else{              
+            $data[] = ['No hay registros en la tabla.'];
+        }
 
+        $config = [
+            'data' => $data,
+            'order' => [[1, 'asc']],
+            'columns' => (count($asignaturas) > 0) ? [null, null, null, ['orderable' => false]] : [['orderable' => false]],
+        ];
     @endphp
 
-        {{-- Minimal example / fill data using the component slot --}}
-        <div class="row">
-            <div class="col">
-                <x-adminlte-card icon="fas fa-cogs"  theme="dark" title="Listado de Servicio">
-                    <x-adminlte-datatable id="table1" :heads="$heads" head-theme="light" theme="light" striped hoverable >
+    {{-- Tabla --}}
+    <div class="row">
+        <div class="col">
+            <x-adminlte-card icon="fas fa-book"  theme="dark" title="Listado de Asignaturas">
+                <x-adminlte-datatable id="table1" :heads="$heads" head-theme="light" theme="light" striped hoverable>
                     @foreach($config['data'] as $row)
                         <tr>
                             @foreach($row as $cell)
                                 <td>{!! $cell !!}</td>
-                            @endforeach                            
+                            @endforeach
                         </tr>
                     @endforeach
-                    </x-adminlte-datatable>
-                </x-adminlte-card>  
-            </div>
-        </div>
-
-
-    </div>
-
-            <div class="container">
-             <div class="row">
-                <div class="col">
-            <table id="tabla-asignaturas"  class="table table-bordered table-striped table-hover table-sm compact-table">
-                <thead class="bg-dark text-white">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th with=5px;>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($asignaturas as $asignatura)
-                        <tr>
-                            <td>{{ $asignatura->id }}</td>
-                            <td>{{ $asignatura->nombre }}</td>
-                            <td>
-                                <!-- Boton  de ver -->
-                                <a href="{{ route('asignaturas.show', $asignatura->id) }}" 
-                                   class="btn btn-info btn-sm">
-                                   <i class="fas fa-eye"></i>
-                                </a>
-
-                                <!-- Boton  de editar -->
-                                <a href="{{ route('asignaturas.edit', $asignatura->id) }}" 
-                                   class="btn btn-warning btn-sm">
-                                   <i class="fas fa-edit"></i>
-                                </a>
-
-                                <!-- Boton de eliminar -->
-                                <form action="{{ route('asignaturas.destroy', $asignatura->id) }}" 
-                                      method="POST" style="display:inline-block">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="btn btn-danger btn-sm"
-                                            onclick="return confirm('¿Seguro que deseas eliminar esta asignatura?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="3">No hay Asignaturas registradas</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                </x-adminlte-datatable>
+            </x-adminlte-card>  
         </div>
     </div>
+
+    {{-- Modales de confirmación --}}
+    @foreach ($asignaturas as $asignatura)
+        <x-delete-modal 
+            id="modalDelete-{{ $asignatura->id }}"
+            :route="route('asignaturas.destroy', $asignatura->id)"
+            :message="'¿Seguro que deseas eliminar <b>' . $asignatura->nombre . '</b>?'"/>
+    @endforeach
+
 </div>
+
+           
 @endsection
 
 

@@ -9,7 +9,7 @@
 @stop
 
 @section('content_header')
-  <div style="background-color: #47b3d4ff; color: dark; padding: 10px 20px; border-radius: 5px;">
+  <div style="background-color: #3f6570ff; color: white; padding: 10px 20px; border-radius: 5px;">
     <h1 style="margin: 0; font-size: 1.5rem;">Sistema de Matricula</h1>
 </div>
 @stop
@@ -53,10 +53,6 @@
 </body>
 </html>
 @stop
-
-
-
-
 
 
 

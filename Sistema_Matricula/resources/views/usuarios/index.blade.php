@@ -11,67 +11,94 @@
 
 
 @section('content_header')
-  <div style="background-color: #47b3d4ff; color: dark; padding: 10px 20px; border-radius: 5px;">
-    <h1 style="margin: 0; font-size: 1.5rem;">Listado de Usuarios</h1>
+<div style="background-color: #3f6570ff; color: white; padding: 10px 20px; border-radius: 5px;">
+    <h1 style="margin: 0; font-size: 1.5rem;">Usuarios</h1>
 </div>
 @stop
 
 @section('content')
 
-<div class="card">
-    <div class="card-body">
-        <a href="{{ route ('usuarios.create') }}"class="btn btn-success mb-3">
-<i class="fas fa-plus"></i>Nuevo Usuario
+<!-- Botón Editar -->
+           <a href="{{ route('asignaturas.create') }}" class="btn btn-success mb-3">
+    <i class="fas fa-plus"></i> Nuevo Usuario
 </a>
 
-<table id="tabla-estudiantes" class="table table-bordered table-striped table-hover">
-                <thead class="bg-dark text-white">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Gmail</th>
-                        <th>Password</th>
-                        <th>Rol</th>
-                     
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($usuarios as $usuario)
+<div class="container">
+    @php  
+        if(count($usuarios)>0){
+            $heads = [
+                'Id',
+                'Nombre',
+                'Gmail',
+                'Password',
+                'Rol',                
+                ['label' => 'Actions', 'no-export' => true, 'width' => 5],
+            ];
+        }else{
+            $heads = ['usuarios'];
+        }
+            
+        if(count($usuarios)>0){
+            $data=[];
+            foreach($usuarios as $usuario){
+                $btnEdit = '<a href="' . route('usuarios.edit', $usuario->id) . '" class="btn btn-xs btn-default text-primary mx-1 shadow" title="Edit">
+                                <i class="fa fa-lg fa-fw fa-pen"></i>
+                            </a>';
+                $btnDelete = '<button class="btn btn-xs btn-default text-danger mx-1 shadow" data-toggle="modal" title="Delete" data-target="#modalDelete-'.$usuario->id.'">
+                                <i class="fa fa-lg fa-fw fa-trash"></i>
+                            </button>';
+                $btnDetails = '<a href="' . route('usuarios.show', $usuario->id) . '" class="btn btn-xs btn-default text-teal mx-1 shadow" title="Details">
+                                <i class="fa fa-lg fa-fw fa-eye"></i>
+                            </a>';
+
+                $data[] = [ 
+                    $usuario->id,       
+                    $usuario->nombre,
+                    $usuario->gmail,
+                    $usuario->password,
+                    $usuario->rol,                       
+                    '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'                    
+                ];
+            }
+        }else{              
+            $data[] = ['No hay registros en la tabla.'];
+        }
+
+        $config = [
+            'data' => $data,
+            'order' => [[1, 'asc']],
+            'columns' => (count($usuarios) > 0) ? [null, null, null, null, null, null,  ['orderable' => false]] : [['orderable' => false]],
+        ];
+    @endphp
+
+    {{-- Tabla --}}
+    <div class="row">
+        <div class="col">
+            <x-adminlte-card icon="fas fa-users"  theme="dark" title="Listado de Usuarios">
+                <x-adminlte-datatable id="table1" :heads="$heads" head-theme="light" theme="light" striped hoverable>
+                    @foreach($config['data'] as $row)
                         <tr>
-                            <td>{{ $usuario->id }}</td>
-                            <td>{{ $usuario->nombre }}</td>
-                            <td>{{ $usuario->gmail}}</td>
-                            <td>{{ $usuario->password}}</td>
-                            <td>{{ $usuario->rol }}</td>
-                           
-                            <td>
-    <a href="{{route('usuarios.show',$usuario->id)}}"
-    class="btn btn-info btn-sm">
-    <i class="fas fa-eye"></i>
-    </a>
+                            @foreach($row as $cell)
+                                <td>{!! $cell !!}</td>
+                            @endforeach
+                        </tr>
+                    @endforeach
+                </x-adminlte-datatable>
+            </x-adminlte-card>  
+        </div>
+    </div>
 
-    <a href="{{ route('usuarios.edit',$usuario->id) }}"
-    class="btn btn-warning btn-sm">
-    <i class="fas fa-edit"></i>
-    </a>
+    {{-- Modales de confirmación --}}
+    @foreach ($usuarios as $usuario)
+        <x-delete-modal 
+            id="modalDelete-{{ $usuario->id }}"
+            :route="route('usuarios.destroy', $usuario->id)"
+            :message="'¿Seguro que deseas eliminar <b>' . $usuario->nombre . '</b>?'"/>
+    @endforeach
 
-    <form action="{{route('usuarios.destroy',$usuario->id)  }}"
-    method="POST" style="display:inline-block">
-    @csrf
-    @method('DELETE')
-    <button type="submit"
-    class="btn btn-danger btn-sm"
-    onclik="return confirm('Seguro que quiere eliminar?')">
-    <i class="fas fas-trash"></i>
-    </button>
-</form>
-</td>
-</tr>
-@endforeach
-</tbody>
-</table>
 </div>
-</div>
+
+
+
 
 @endsection

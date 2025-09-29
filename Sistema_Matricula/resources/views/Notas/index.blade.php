@@ -10,68 +10,95 @@
 @stop
 
 @section('content_header')
-<div style="background-color: #47b3d4ff; color: dark; padding: 10px 20px; border-radius: 5px;">
-    <h1 style="margin: 0; font-size: 1.5rem;">Listado de Notas</h1>
+<div style="background-color: #3f6570ff; color: white; padding: 10px 20px; border-radius: 5px;">
+    <h1 style="margin: 0; font-size: 1.5rem;">Notas</h1>
 </div>
 @stop
 
 @section('content')
 
-<div class="card">
-        <div class="card-body">
-            <a href="{{ route('notas.create') }}" class="btn btn-success mb-3">
-                <i class="fas fa-plus"></i> Nueva Nota
-            </a>
+<!-- Botón Editar -->
+           <a href="{{ route('asignaturas.create') }}" class="btn btn-success mb-3">
+    <i class="fas fa-plus"></i> Nueva Nota
+</a>
 
-            <table id="tabla-notas" class="table table-bordered table-striped table-hover">
-                <thead class="bg-dark text-white">
-                    <tr>
-                        <th>ID</th>
-                        <th>Id_Estudiantes</th>
-                        <th>Id_Asignaturas</th>
-                        <th>Id_usuarios</th>
-                        <th>Notas</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($notas as $nota)
+<div class="container">
+    @php  
+        if(count($notas)>0){
+            $heads = [
+                'Id',
+                'Id_Estudiantes', 
+                'Id_Asignaturas',
+                'Id_usuarios',
+                'Notas',       
+                ['label' => 'Actions', 'no-export' => true, 'width' => 5],
+            ];
+        }else{
+            $heads = ['notas'];
+        }
+            
+        if(count($notas)>0){
+            $data=[];
+            foreach($notas as $nota){
+                $btnEdit = '<a href="' . route('notas.edit', $nota->id) . '" class="btn btn-xs btn-default text-primary mx-1 shadow" title="Edit">
+                                <i class="fa fa-lg fa-fw fa-pen"></i>
+                            </a>';
+                $btnDelete = '<button class="btn btn-xs btn-default text-danger mx-1 shadow" data-toggle="modal" title="Delete" data-target="#modalDelete-'.$nota->id.'">
+                                <i class="fa fa-lg fa-fw fa-trash"></i>
+                            </button>';
+                $btnDetails = '<a href="' . route('notas.show', $nota->id) . '" class="btn btn-xs btn-default text-teal mx-1 shadow" title="Details">
+                                <i class="fa fa-lg fa-fw fa-eye"></i>
+                            </a>';
+
+                $data[] = [ 
+                    $nota->id,       
+                    $nota->id_estudiantes,
+                    $nota->id_asignaturas,
+                    $nota->id_usuarios,
+                    $nota->notas,                      
+                    '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'                    
+                ];
+            }
+        }else{              
+            $data[] = ['No hay registros en la tabla.'];
+        }
+
+     $config = [
+            'data' => $data,
+            'order' => [[1, 'asc']],
+            'columns' => (count($notas) > 0) ? [null, null, null, null, null, null,  ['orderable' => false]] : [['orderable' => false]],
+        ];
+    @endphp
+
+    {{-- Tabla --}}
+    <div class="row">
+        <div class="col">
+            <x-adminlte-card icon="fas fa-sticky-note"  theme="dark" title="Listado de Notas">
+                <x-adminlte-datatable id="table1" :heads="$heads" head-theme="light" theme="light" striped hoverable>
+                    @foreach($config['data'] as $row)
                         <tr>
-                            <td>{{ $nota->id }}</td>
-                            <td>{{ $nota->id_estudiantes }}</td>
-                            <td>{{ $nota->id_asignaturas}}</td>
-                            <td>{{ $nota->id_usuarios}}</td>
-                             <td>{{ $nota->notas}}</td>
-                            <td>
-                                <!-- Botón Ver -->
-                                <a href="{{ route('notas.show', $nota->id) }}" 
-                                   class="btn btn-info btn-sm">
-                                   <i class="fas fa-eye"></i>
-                                </a>
-
-                                <!-- Botón Editar -->
-                                <a href="{{ route('notas.edit', $nota->id) }}" 
-                                   class="btn btn-warning btn-sm">
-                                   <i class="fas fa-edit"></i>
-                                </a>
-
-                                <!-- Botón Eliminar -->
-                                <form action="{{ route('notas.destroy', $nota->id) }}" 
-                                      method="POST" style="display:inline-block">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="btn btn-danger btn-sm"
-                                            onclick="return confirm('¿Seguro que deseas eliminar estas notas?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
+                            @foreach($row as $cell)
+                                <td>{!! $cell !!}</td>
+                            @endforeach
                         </tr>
                     @endforeach
-                </tbody>
-            </table>
+                </x-adminlte-datatable>
+            </x-adminlte-card>  
         </div>
     </div>
+
+    {{-- Modales de confirmación --}}
+    @foreach ($notas as $nota)
+        <x-delete-modal 
+            id="modalDelete-{{ $nota->id }}"
+            :route="route('notas.destroy', $nota->id)"
+            :message="'¿Seguro que deseas eliminar <b>' . $nota->nombre . '</b>?'"/>
+    @endforeach
+
+</div>
+
+
+
+
 @stop
 

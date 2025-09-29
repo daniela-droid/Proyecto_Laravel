@@ -19,105 +19,106 @@
 }
 </style>
 @stop
-  
+
+@section('content_header')
+
+    <!-- Panel superior -->
+<div style="background-color: #3f6570ff; color: white; padding: 10px 20px; border-radius: 5px;">
+    <h1 style="margin: 0; font-size: 1.5rem;">Estudiantes</h1>
+</div>
+@stop
 
 @section('content')
-   <div class="card">
+<div class="card">
         <div class="card-body">
             <a href="{{ route('estudiantes.create') }}" class="btn btn-success mb-3">
                 <i class="fas fa-plus" theme="dark"></i> Nuevo Estudiante
             </a>
+ <!-- Botón Editar -->
+<div class="container">
+    @php  
+        if(count($estudiantes)>0){
+            $heads = [
+                'id',
+                'nombre', 
+                'apellido',
+                'sexo',
+                'cedula',
+                'edad',
+                'celular',
+                'nombre_madre',
+                'nombre_padre',
 
-                    <div class="container">
-                <div class="row">
-                    <div class="col">
-                        <x-adminlte-card icon="fas fa-user-graduate" theme="dark" title="Listado de Estudiantes">
-                        <div class="table-responsive w-90 mx-auto">
-            <table id="tabla-estudiantes" class="table table-bordered table-striped table-hover table-sm compact-table">
+                ['label' => 'Actions', 'no-export' => true, 'width' => 5],
+            ];
+        }else{
+            $heads = ['$estudiantes'];
+        }
+            
+        if(count($estudiantes)>0){
+            $data=[];
+            foreach($estudiantes as $estudiante){
+                $btnEdit = '<a href="' . route('estudiantes.edit', $estudiante->id) . '" class="btn btn-xs btn-default text-primary mx-1 shadow" title="Edit">
+                                <i class="fa fa-lg fa-fw fa-pen"></i>
+                            </a>';
+                $btnDelete = '<button class="btn btn-xs btn-default text-danger mx-1 shadow" data-toggle="modal" title="Delete" data-target="#modalDelete-'.$estudiante->id.'">
+                                <i class="fa fa-lg fa-fw fa-trash"></i>
+                            </button>';
+                $btnDetails = '<a href="' . route('estudiantes.show', $estudiante->id) . '" class="btn btn-xs btn-default text-teal mx-1 shadow" title="Details">
+                                <i class="fa fa-lg fa-fw fa-eye"></i>
+                            </a>';
 
+                $data[] = [ 
+                    $estudiante->id,       
+                    $estudiante->nombre, 
+                    $estudiante->apellido,
+                    $estudiante->sexo,
+                    $estudiante->cedula,
+                    $estudiante->edad,
+                    $estudiante->celular,
+                    $estudiante->nombre_madre,
+                    $estudiante->nombre_padre,
 
-                    <thead class="bg-dark text-white">
+                    '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'                    
+                ];
+            }
+        }else{              
+            $data[] = ['No hay registros en la tabla.'];
+        }
+
+        $config = [
+            'data' => $data,
+            'order' => [[1, 'asc']],
+            'columns' => (count($estudiantes) > 0) ? [null, null, null, null, null, null, null, null, null, null, null, null,['orderable' => false]] : [['orderable' => false]],
+        ];
+    @endphp
+
+    {{-- Tabla --}}
+    <div class="row">
+        <div class="col">
+            <x-adminlte-card icon="fas fa-user-graduate"  theme="dark" title="Listado de Estudiantes">
+                <x-adminlte-datatable id="table1" :heads="$heads" head-theme="light" theme="light" striped hoverable>
+                    @foreach($config['data'] as $row)
                         <tr>
-                            <th >ID</th>
-                            <th >Nombre</th>
-                            <th>Apellido</th>
-                            <th>Sexo</th>
-                            <th>Cédula</th>
-                            <th>Edad</th>
-                            <th>Celular</th>
-                            <th>Nombre Madre</th>
-                            <th>Nombre Padre</th>
-                            <th>Comarca</th>
-                            <th >Acciones</th>
+                            @foreach($row as $cell)
+                                <td>{!! $cell !!}</td>
+                            @endforeach
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($estudiantes as $estudiante)
-                            <tr>
-                                <td >{{ $estudiante->id }}</td>
-                                <td>{{ $estudiante->nombre }}</td>
-                                <td>{{ $estudiante->apellido }}</td>
-                                <td>{{ $estudiante->sexo }}</td>
-                                <td>{{ $estudiante->cedula }}</td>
-                                <td>{{ $estudiante->edad }}</td>
-                                <td>{{ $estudiante->celular }}</td>
-                                <td>{{ $estudiante->nombre_madre }}</td>
-                                <td>{{ $estudiante->nombre_padre }}</td>
-                                <td>{{ $estudiante->comarca }}</td>
-                                <td>
-                                    <!-- Botón Ver -->
-                                    <a href="{{ route('estudiantes.show', $estudiante->id) }}" 
-                                       class="btn btn-xs btn-default text-teal mx-1 shadow" title="Ver">
-                                        <i class="fa fa-sm fa-fw fa-eye"></i>
-                                    </a>
-
-                                    <!-- Botón Editar -->
-                                    <a href="{{ route('estudiantes.edit', $estudiante->id) }}" 
-                                       class="btn btn-xs btn-default text-primary mx-1 shadow" title="Editar">
-                                        <i class="fa fa-sm fa-fw fa-pen"></i>
-                                    </a>
-
-                                    <!-- Botón Eliminar -->
-                                    <form action="{{ route('estudiantes.destroy', $estudiante->id) }}" 
-                                          method="POST" style="display:inline-block">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" 
-                                                class="btn btn-xs btn-default text-danger mx-1 shadow" 
-                                                title="Eliminar"
-                                                onclick="return confirm('¿Seguro que deseas eliminar este estudiante?')">
-                                            <i class="fa fa-sm fa-fw fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </x-adminlte-card>
+                    @endforeach
+                </x-adminlte-datatable>
+            </x-adminlte-card>  
         </div>
     </div>
+
+    {{-- Modales de confirmación --}}
+    @foreach ($estudiantes as $estudiante)
+        <x-delete-modal 
+            id="modalDelete-{{ $estudiante->id }}"
+            :route="route('estudiantes.destroy', $estudiante->id)"
+            :message="'¿Seguro que deseas eliminar <b>' . $estudiante->nombre . '</b>?'"/>
+    @endforeach
+
 </div>
-@stop
-<!--LIBRERIAS IMPORTANTES-->
-@section('js')
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- DataTables -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('#tabla-estudiantes').DataTable({
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-                },
-                "pageLength": 5,
-                "lengthMenu": [5, 10, 20, 50],
-                "order": [[0, "asc"]] // Ordenar por ID
-            });
-        });
-    </script>
-@stop
+  
+@endsection

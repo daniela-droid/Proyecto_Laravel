@@ -10,7 +10,7 @@ use App\Http\Controllers\NotasController;
 use App\Http\Controllers\Auth\LoginController;
 
 Route::get('/', function () {    
-    return view('test');
+    return view('inicio');
 });
 
 
