@@ -50,8 +50,8 @@ class NotasController extends Controller
         Notas::create([
             'id_estudiantes' =>$request->id_estudiantes,
             'id_asignaturas' =>$request->id_asignaturas,
-            'Id_usuarios'=>$request->id_usuarios,
-            'notas'=> $request->nota
+            'id_usuarios'=>$request->id_usuarios,
+            'notas'=> $request->notas
 
         ]);
         return redirect()->route('notas.index')->with('success','Notas creadas correctamente');
@@ -68,12 +68,12 @@ class NotasController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Notas $notas)
+    public function edit(Notas $nota)
     {
         $estudiantes=Estudiante::all();
         $asignaturas=Asignatura::all();
         $usuarios=Usuario::all();
-        return view('notas.edit',compact('notas','estudiantes','asignaturas','usuarios'));
+        return view('notas.edit',compact('nota','estudiantes','asignaturas','usuarios'));
     }
 
     /**
@@ -85,7 +85,7 @@ class NotasController extends Controller
                 'id_estudiantes'=>'required|exists:estudiantes,id',
                 'id_asignaturas'=>'required|exists:asignaturas,id',
                 'id_usuarios'=>'required|exists:usuarios,id',
-                'nota' => 'required|numeric|decimal:2|min:0|max:100',
+                'notas' => 'required|numeric|decimal:2|min:0|max:100',
         ]);
         $notas->update([
             'id_estudiantes' =>$request->id_estudiantes,

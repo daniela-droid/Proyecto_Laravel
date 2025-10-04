@@ -17,7 +17,7 @@
 
                 <div class="form-group">
                     <label for="Nombre">Nombre</label>
-                    <input type="text" name="nombre" class="form-control" value="{{ $asignatura->nombre }}" required>
+                    <input type="text" name="nombre" class="form-control form-control-sm w-50" value="{{ $asignatura->nombre }}" required>
                 </div>
 
               <button type="submit" class="btn btn-success">Actualizar</button>

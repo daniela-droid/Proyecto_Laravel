@@ -45,7 +45,7 @@ class MatriculasController extends Controller
             ]
         );
         //crear la matricula
-        Matricula::create([
+        Matriculas::create([
             'id_estudiantes' =>$request->id_estudiantes,
             'id_asignaturas' =>$request->id_asignaturas
 
@@ -65,30 +65,31 @@ class MatriculasController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Matriculas $matriculas)
+    public function edit(Matriculas $matricula)
     {
         $estudiantes = Estudiante::all();
         $asignaturas = Asignatura::all();
-        return view('matriculas.edit',compact('matriculas','estudiantes','asignaturas'));
+        return view('matriculas.edit',compact('matricula','estudiantes','asignaturas'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Matriculas $matriculas)
-    {
-        $request->validate([
-            'id_estudiantes' => 'required|exists:estudiantes,id',
-            'id_asignaturas' => 'required|exists:asignaturas,id'
-        ]);
-        $matriculas->update([
-        'id_estudiantes' =>$request->id_estudiantes,
-        'id_asignaturas' =>$request->id_asignaturas
+  public function update(Request $request, Matriculas $matricula)
+{
+    $request->validate([
+        'id_estudiantes' => 'required|exists:estudiantes,id',
+        'id_asignaturas' => 'required|exists:asignaturas,id',
+    ]);
 
-        ]);
+    $matricula->update([
+        'id_estudiantes' => $request->id_estudiantes,
+        'id_asignaturas' => $request->id_asignaturas,
+    ]);
 
-        return redirect()->route('matriculas.index')->with('success','Matricula actualizada correctamente');
-    }
+    return redirect()->route('matriculas.index')->with('success', 'Matrícula actualizada correctamente');
+}
+
 
     /**
      * Remove the specified resource from storage.

@@ -30,7 +30,7 @@
                 </div>
 <div class="form-group">
                 <label for="nota">Nota:</label>
-    <input type="number" name="nota" id="nota" step="0.01" min="0" max="100" required>
+    <input type="number" name="notas" id="notas" step="0.01" min="0" max="100" required>
   </div>
                 <button type="submit" class="btn btn-primary">Guardar</button>
                 {{-- Aquí estaba mal, debe ser route() con comillas --}}

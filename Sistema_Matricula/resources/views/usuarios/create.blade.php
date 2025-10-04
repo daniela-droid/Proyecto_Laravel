@@ -55,9 +55,9 @@
                 <div class="form-group">
                     <label for="rol">Rol</label>
                    <select name="rol" class="form-control form-control-sm w-50" required>
-    <option value="admin">admin</option>
-    <option value="user">user</option>
-</select>
+            <option value="admin">admin</option>
+            <option value="user">user</option>
+        </select>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Guardar</button>
