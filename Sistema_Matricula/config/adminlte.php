@@ -13,7 +13,7 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
     */
- 'title' => 'Sistema de Matricula',
+ 'title' => ' Sistema de Gestión Académica',
 
    // 'title' => 'AdminLTE 3',
     'title_prefix' => '',
@@ -64,12 +64,12 @@ return [
     |
     */
 
-    'logo' => '<b>Sistema Matricula</b>',
-   'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo' => '<i class="fas fa-graduation-cap"></i> <b>Sistema de Gestión<br> Académica</b>',
+   'logo_img' => null,
  'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Admin Logo',
+    'logo_img_alt' => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -365,6 +365,21 @@ return [
             'icon' => 'fas fa-file-alt',
         ],
         [
+            'text' => 'Docentes',
+            'url' => '/docentes',
+            'icon' => 'fas fa-user',
+        ],
+        [
+            'text' => 'Grupos o Cursos',
+            'url' => '/grupos',
+            'icon' => 'fa fa-book-open',
+        ],
+         [
+            'text' => 'Turnos',
+            'url' => '/turnos',
+            'icon' => 'fa fa-clock',
+        ],
+        [
             'text' => 'Usuarios',
             'url' => '/usuarios',
             'icon' => 'fas fa-users',
@@ -372,62 +387,31 @@ return [
         [
             'text' => 'Notas',
             'url' => '/notas',
-            'icon' => 'fas fa-sticky-note',
+            'icon' => 'fas fa-file-alt',
+        ],
+         [
+            'text' => 'Reportes',
+            'url' => '/reportes',
+            'icon' => 'fas fa-chart-line',
         ],
         [
-            'text' => 'multilevel',
-            'icon' => 'fas fa-fw fa-share',
+            'text' => 'Ajustes',
+            'icon' => 'fas fa-cog',
             'submenu' => [
                 [
-                    'text' => 'level_one',
-                    'url' => '#',
+                    'text' => 'Descripcion',
+                    'icon' => 'fas fa-fw fa-book',
+                    'url' => '/description',
                 ],
+                
                 [
-                    'text' => 'level_one',
-                    'url' => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
+                    'text' => 'Politicas de Privacidad',
+                    'icon' => 'fa-solid fa-circle-info',
+                    'url' => '/Politicas',
                 ],
             ],
         ],
-        ['header' => 'labels'],
-        [
-            'text' => 'important',
-            'icon_color' => 'red',
-            'url' => '#',
-        ],
-        [
-            'text' => 'warning',
-            'icon_color' => 'yellow',
-            'url' => '#',
-        ],
-        [
-            'text' => 'information',
-            'icon_color' => 'cyan',
-            'url' => '#',
-        ],
+        
     ],
 
     /*

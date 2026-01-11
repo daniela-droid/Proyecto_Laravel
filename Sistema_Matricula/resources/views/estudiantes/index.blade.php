@@ -40,6 +40,7 @@
         if(count($estudiantes)>0){
             $heads = [
                 'id',
+                'codigo',
                 'nombre', 
                 'apellido',
                 'sexo',
@@ -69,7 +70,8 @@
                             </a>';
 
                 $data[] = [ 
-                    $estudiante->id,       
+                    $estudiante->id,  
+                    $estudiante->codigo,     
                     $estudiante->nombre, 
                     $estudiante->apellido,
                     $estudiante->sexo,
@@ -89,7 +91,7 @@
         $config = [
             'data' => $data,
             'order' => [[1, 'asc']],
-            'columns' => (count($estudiantes) > 0) ? [null, null, null, null, null, null, null, null, null, null, null, null,['orderable' => false]] : [['orderable' => false]],
+            'columns' => (count($estudiantes) > 0) ? [null,null,null, null, null, null, null, null, null, null, null, null, null,['orderable' => false]] : [['orderable' => false]],
         ];
     @endphp
 

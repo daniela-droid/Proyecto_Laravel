@@ -12,6 +12,11 @@
                 @method('PUT') {{-- Actualizacion--}}
 
                 <div class="form-group">
+                    <label for="codigo">Codigo</label>
+                    <input type="text" name="codigo" class="form-control form-control-sm w-50" value="{{ $estudiante->codigo }}" required>
+                </div>
+
+                <div class="form-group">
                     <label for="Nombre">Nombre</label>
                     <input type="text" name="nombre" class="form-control form-control-sm w-50" value="{{ $estudiante->nombre }}" required>
                 </div>
@@ -30,7 +35,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="Cedula">Cédula</label>
+                    <label for="Cedula">Cédula o Fecha_N</label>
                     <input type="text" name="cedula" class="form-control form-control-sm w-50" value="{{ $estudiante->cedula }}" required>
                 </div>
 

@@ -8,24 +8,27 @@ use App\Http\Controllers\MatriculasController;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\NotasController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Middleware;
 
-Route::get('/', function () {    
+
+Route::get('/', function () {
     return view('inicio');
+})->middleware('auth')->name('inicio');
+
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login'); // muestra la vista login
+Route::post('/login', [LoginController::class, 'login']); // procesa el login
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout'); // logout
+
+
+
+Route::middleware('auth')->group(function () {
+
+// Recursos generales (todos logueados pueden acceder)
+    Route::resource('estudiantes', EstudiantesController::class);
+    Route::resource('asignaturas', AsignaturasController::class);
+    Route::resource('matriculas', MatriculasController::class);
+    Route::resource('notas', NotasController::class);
+
+    // Usuarios solo para admin
+    Route::resource('usuarios', UsuariosController::class)->middleware('role:admin');
 });
-
-
-Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('login', [LoginController::class, 'login']);
-Route::post('logout', [LoginController::class, 'logout'])->name('logout');
-
-
-Route::resource('login', LoginController::class);
-Route::resource('estudiantes', EstudiantesController::class);
-Route::resource('asignaturas', AsignaturasController::class);
-Route::resource('matriculas',MatriculasController::class);
-Route::resource('usuarios',UsuariosController::class);
-Route::resource('notas',NotasController::class);
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

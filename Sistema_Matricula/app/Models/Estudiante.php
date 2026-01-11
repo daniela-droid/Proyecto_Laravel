@@ -14,7 +14,7 @@ class Estudiante extends Model
 public $timestamps=true;
 
     protected $fillable=[
-    
+            'codigo',
             'nombre',
             'apellido',
             'sexo',

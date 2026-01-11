@@ -15,6 +15,7 @@
                 @csrf
                 @method('PUT') {{-- Actualizacion--}}
 
+                
                  <div class="form-group">
                     <label for="Id_estudiantes">Id Estudiantes</label>
                     <input type="text" name="id_estudiantes" class="form-control form-control-sm w-50" value="{{ $nota->id_estudiantes }}" required>

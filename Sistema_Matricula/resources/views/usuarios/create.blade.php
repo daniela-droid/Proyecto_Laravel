@@ -56,7 +56,7 @@
                     <label for="rol">Rol</label>
                    <select name="rol" class="form-control form-control-sm w-50" required>
             <option value="admin">admin</option>
-            <option value="user">user</option>
+            <option value="docente">user</option>
         </select>
                 </div>
 

@@ -1,57 +1,71 @@
 @extends('adminlte::page')
 
-@section('title', 'Test')
-@section('css')
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
-    <!-- Estilos de DataTables Buttons -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
-@stop
+@section('title', 'Sistema de Matrícula')
 
 @section('content_header')
-  <div style="background-color: #3f6570ff; color: white; padding: 10px 20px; border-radius: 5px;">
-    <h1 style="margin: 0; font-size: 1.5rem;">Sistema de Matricula</h1>
+<div style="
+    background-color: #FFFFFF;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+">
+    <h1 style="margin: 0; font-size: 1.5rem;">
+        Sistema de Gestión Académica
+    </h1>
+
+    <div style="text-align: right;">
+        <p style="margin: 0;">
+            <i class="fas fa-user"></i>
+            Bienvenido, {{ Auth::user()->nombre }}!
+        </p>
+
+        <form action="{{ route('logout') }}" method="POST" style="margin-top: 5px;">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-sm">
+                <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+            </button>
+
+            
+        </form>
+    </div>
 </div>
 @stop
+
+
+
 @section('content')
-
-<!--<img src="https://i.pinimg.com/474x/02/12/11/021211d463f03aa754131ff28f3641a6.jpg">-->
-
- <div class="content-wrapper">
-    <div class="content">
-      <div class="hero">
-        <div class="hero-card">
-          <!-- Aquí puedes usar tu logo -->
-          
-          <h1 class="text-primary mb-3">Bienvenido</h1>
-          <p class="lead text-muted">
-
-          </p>
-          <div class="mt-4">
-            <a href="login" class="btn btn-primary btn-lg">
-              <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+    @guest
+        <!-- Usuario no logueado: mostrar solo login y descripción -->
+        <div class="container text-center mt-5">
+            <h1>Bienvenido al Sistema de Matrícula</h1>
+            <p class="lead">Por favor inicia sesión.</p>
+            <a href="{{ route('login') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
             </a>
-            
-            <a href="#" class="btn btn-outline-secondary btn-lg ml-2">
-              <i class="fas fa-info-circle"></i> Más Información
-            </a>
-          </div>
+
         </div>
-      </div>
-    </div>
-  </div>
 
-  <footer class="main-footer text-center">
-    <strong>&copy; 2025 Sistema de Matrículas</strong>
-  </footer>
+ @endguest
 
-</div>
+    @auth
+        <!-- Usuario logueado: mostrar panel completo -->
+        <div class="content-wrapper">
+            <div class="content-header d-flex justify-content-between align-items-center">
+                <h5>Panel de Administrador</h5>
+                <!-- Botón de cerrar sesión -->
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                   
+                </form>
+            </div>
 
-<script src="plugins/jquery/jquery.min.js"></script>
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="dist/js/adminlte.min.js"></script>
-</body>
-</html>
+              
+        </div>
+             
+    @endauth
 @stop
 
 

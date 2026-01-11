@@ -36,7 +36,7 @@ class UsuariosController extends Controller
                 'nombre'=>'required|string|max:80',
                 'gmail'    => 'required|string|email|max:125|unique:usuarios,gmail',
                 'password' => 'required|string|min:8|confirmed', 
-                'rol'      => 'required|in:admin,user'
+                'rol'      => 'required|in:admin,docente'
 
         ]);
       Usuario::create([
@@ -70,18 +70,31 @@ class UsuariosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Usuario $usuarios)
-    {
-        $request->validate([
-                 'nombre'=>'required|string|max:80',
-                'gmail'    => 'required|string|email|max:125|unique:usuarios,gmail',
-                'password' => 'required|string|min:8|confirmed', 
-                'rol'      => 'required|in:admin,user'
+   public function update(Request $request, Usuario $usuarios)
+{
+    $request->validate([
+        'nombre' => 'required|string|max:80',
+        'gmail'  => 'required|string|email|max:125|unique:usuarios,gmail,' . $usuarios->id,
+        'password' => 'nullable|string|min:8|confirmed', // puede ser opcional
+        'rol' => 'required|in:admin,docente'
+    ]);
 
-        ]);
-        $usuarios->update($request->all());
-        return redirect()->route('usuarios.index')->with('success','Editado correctamente');
+    $data = [
+        'nombre' => $request->nombre,
+        'gmail'  => $request->gmail,
+        'rol'    => $request->rol
+    ];
+
+    // Solo actualizar contraseña si se ingresó
+    if ($request->filled('password')) {
+        $data['password'] = Hash::make($request->password);
     }
+
+    $usuarios->update($data);
+
+    return redirect()->route('usuarios.index')->with('success','Editado correctamente');
+}
+
 
     /**
      * Remove the specified resource from storage.

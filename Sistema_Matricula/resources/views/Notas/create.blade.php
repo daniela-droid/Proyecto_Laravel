@@ -29,8 +29,8 @@
                     <input type="text" name="id_usuarios" class="form-control form-control-sm w-50" required>
                 </div>
 <div class="form-group">
-                <label for="nota">Nota:</label>
-    <input type="number" name="notas" id="notas" step="0.01" min="0" max="100" required>
+                <label for="notas">Nota:</label>
+    <input type="number" name="notas" id="notas" class="form-control form-control-sm w-50"  required>
   </div>
                 <button type="submit" class="btn btn-primary">Guardar</button>
                 {{-- Aquí estaba mal, debe ser route() con comillas --}}

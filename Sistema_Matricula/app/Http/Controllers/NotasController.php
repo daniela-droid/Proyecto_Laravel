@@ -16,7 +16,7 @@ class NotasController extends Controller
     public function index()
     {
         //obtener las notas con sus relaciones
-        $notas = notas::with(['estudiante','asignatura','usuarios'])->get();
+        $notas = notas::with(['estudiantes','asignaturas','usuarios'])->get();
         return view('notas.index',compact('notas'));
     }
 
@@ -43,7 +43,8 @@ class NotasController extends Controller
                 'id_estudiantes'=>'required|exists:estudiantes,id',
                 'id_asignaturas'=>'required|exists:asignaturas,id',
                 'id_usuarios'=>'required|exists:usuarios,id',
-              'notas' => 'required|numeric|decimal:2|min:0|max:100',
+             // 'notas' => 'required|numeric|decimal:2|min:0|max:100', No llamar el valor
+             //  que ya tiene notas en sus atributos
 
         ]);
        

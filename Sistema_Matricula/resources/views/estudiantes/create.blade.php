@@ -12,6 +12,12 @@
             <form action="{{ route('estudiantes.store') }}" method="POST">
                 @csrf {{-- Seguridad de Laravel --}}
 
+
+                <div class="form-group mb-2">
+                    <label for="codigo">Codigo</label>
+                    <input type="text" name="codigo" class="form-control form-control-sm w-50" required>
+                </div>
+
                 <div class="form-group mb-2">
                     <label for="nombre">Nombre</label>
                     <input type="text" name="nombre" class="form-control form-control-sm w-50" required>
@@ -31,7 +37,7 @@
                  </div>
 
                 <div class="form-group mb-2">
-                    <label for="cedula">Cédula</label>
+                    <label for="cedula">Cédula o fecha_N</label>
                     <input type="text" name="cedula" class="form-control form-control-sm w-50" required>
                 </div>
 

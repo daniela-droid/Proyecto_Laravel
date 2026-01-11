@@ -14,6 +14,7 @@
     
         </div>
         <div class="card-body">
+            <p><strong>Codigo:</strong>{{$estudiante->codigo}}</p>
            <p><strong>Nombre:</strong> {{ $estudiante->nombre }}</p>
             <p><strong>Apellido:</strong> {{ $estudiante->apellido }}</p>
             <p><strong>Sexo:</strong> {{ $estudiante->sexo}}</p>

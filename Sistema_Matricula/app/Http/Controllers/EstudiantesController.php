@@ -32,6 +32,7 @@ class EstudiantesController extends Controller
     public function store(Request $request)
     {
         $request ->validate([
+        'codigo' => 'required|integer',
         'nombre' => 'required|string|max:255',
         'apellido' => 'required|string|max:255',
         'sexo' => 'required|string|max:12',
@@ -73,6 +74,7 @@ class EstudiantesController extends Controller
     public function update(Request $request, Estudiante $estudiante)
     {
         $request ->validate([
+         'codigo' => 'required|integer',
         'nombre' => 'required|string|max:255',
         'apellido' => 'required|string|max:255',
         'sexo' => 'required|string|max:12',
