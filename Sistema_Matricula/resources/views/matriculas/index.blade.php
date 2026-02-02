@@ -21,7 +21,7 @@
 @section('content_header')
 
     <!-- Panel superior -->
-<div style="background-color: #3f6570ff; color: white; padding: 10px 20px; border-radius: 5px;">
+<div style="background-color: #233858; color: white; padding: 10px 20px; border-radius: 5px;">
     <h1 style="margin: 0; font-size: 1.5rem;">Matriculas</h1>
 </div>
 
@@ -85,7 +85,7 @@
         {{-- Minimal example / fill data using the component slot --}}
         <div class="row">
             <div class="col">
-                <x-adminlte-card icon="fas fa-file-alt"  theme="dark" title="Listado de Matriculas">
+                <x-adminlte-card icon="fas fa-file-alt"  theme="lightblue" title="Listado de Matriculas">
                     <x-adminlte-datatable id="table1" :heads="$heads" head-theme="light" theme="light" striped hoverable >
                     @foreach($config['data'] as $row)
                         <tr>

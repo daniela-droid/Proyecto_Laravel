@@ -47,7 +47,7 @@ class MatriculasController extends Controller
         //crear la matricula
         Matriculas::create([
             'id_estudiantes' =>$request->id_estudiantes,
-            'id_asignaturas' =>$request->id_asignaturas
+            'id_asignaturas' =>$request->id_asignaturas,
 
             ]);
         return redirect()->route('matriculas.index')->with('success','Matriculas creada correctamente');

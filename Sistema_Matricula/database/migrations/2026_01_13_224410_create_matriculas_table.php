@@ -12,16 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('matriculas', function (Blueprint $table) {
-            $table->id();
-
-             $table->unsignedBigInteger('id_estudiantes');
-        $table->unsignedBigInteger('id_asignaturas');
-
-            /*creamos relacion con las difenrentes tablas*/
-            $table->foreign('id_estudiantes')->references('id')->on('estudiantes')->onDelete('cascade'); 
-
-            $table->foreign('id_asignaturas')->references('id')->on('asignaturas')->onDelete('cascade'); 
-
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('id_estudiantes')->index('matriculas_id_estudiantes_foreign');
+            $table->unsignedBigInteger('id_asignaturas')->index('matriculas_id_asignaturas_foreign');
+            $table->timestamps();
         });
     }
 

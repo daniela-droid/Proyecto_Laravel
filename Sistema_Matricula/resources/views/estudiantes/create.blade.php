@@ -5,7 +5,8 @@
 @section('content')
 <div class="container">
     <div class="card shadow-sm">
-        <div class="card-header bg-dark text-white">
+     <!--   <div class="card-header bg-dark text-white">-->
+            <div style="background-color: #17a2b8; color: white; padding: 10px 20px; border-radius: 5px;">
             <h4 class="mb-0"><i class="fas fa-user-plus"></i> Agregar Estudiante</h4>
         </div>
         <div class="card-body">

@@ -13,6 +13,7 @@ class AsignaturasController extends Controller
     public function index()
     {
         $asignaturas =Asignatura::all();
+      //  dd(view()->exists('asignaturas.index'));
         return view('asignaturas.index',compact('asignaturas'));
     }
 

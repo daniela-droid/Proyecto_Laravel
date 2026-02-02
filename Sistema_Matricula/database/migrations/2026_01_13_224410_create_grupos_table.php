@@ -12,19 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('grupos', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('Codigo');
             $table->string('Nombre');
             $table->string('Descripcion');
             $table->string('Seccion');
             $table->string('Grado');
-            $table->unsignedBigInteger('id_turnos');
-            $table->unsignedBigInteger('id_docentes');
+            $table->unsignedBigInteger('id_turnos')->index('grupos_id_turnos_foreign');
+            $table->unsignedBigInteger('id_docentes')->index('grupos_id_docentes_foreign');
             $table->string('Periodo');
-
-            $table->foreign('id_turnos')->references('id')->on('turnos')->onDelete('cascade'); 
-            $table->foreign('id_docentes')->references('id')->on('docentes')->onDelete('cascade'); 
-            
             $table->timestamps();
         });
     }

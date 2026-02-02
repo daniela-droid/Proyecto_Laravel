@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Estudiantes')
+@section('title', 'Grupos')
 
 @section('css')
  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -11,9 +11,9 @@
     /*Importante para modificar la tabla*/
     .compact-table th,
    .compact-table td {
-    white-space: nowrap;      /* No rompe líneas */
-    overflow: hidden;         /* Oculta exceso de texto */
-    text-overflow: ellipsis;  /* Muestra "..." si es muy largo */
+    white-space: nowrap;     
+    overflow: hidden;         
+    text-overflow: ellipsis;  
     vertical-align: middle;
     max-width: 170px;         /* Ajusta  */
 }
@@ -24,62 +24,60 @@
 
     <!-- Panel superior -->
 <div style="background-color: #233858; color: white; padding: 10px 20px; border-radius: 5px;">
-    <h1 style="margin: 0; font-size: 1.5rem;">Estudiantes</h1>
+    <h1 style="margin: 0; font-size: 1.5rem;">Grupos</h1>
 </div>
 @stop
 
 @section('content')
 <div class="card">
         <div class="card-body">
-            <a href="{{ route('estudiantes.create') }}" class="btn btn-success mb-3">
-                <i class="fas fa-plus" theme="blue"></i> Nuevo Estudiante
+            <a href="{{ route('docentes.create') }}" class="btn btn-success mb-3">
+                <i class="fas fa-plus" theme="blue"></i> Nuevo Grupo
             </a>
  <!-- Botón Editar -->
 <div class="container">
     @php  
-        if(count($estudiantes)>0){
+        if(count($grupos)>0){
             $heads = [
                 'id',
-                'codigo',
-                'nombre', 
-                'apellido',
-                'sexo',
-                'cedula',
-                'edad',
-                'celular',
-                'nombre_madre',
-                'nombre_padre',
+                'Codigo',
+                'Nombre', 
+                'Descripcion',
+                'Seccion',
+                'Grado',
+                'id_turnos',
+                'id_docentes',
+                'Periodo',
 
                 ['label' => 'Actions', 'no-export' => true, 'width' => 5],
             ];
         }else{
-            $heads = ['$estudiantes'];
+            $heads = ['$grupos'];
         }
             
-        if(count($estudiantes)>0){
+        if(count($grupos)>0){
             $data=[];
-            foreach($estudiantes as $estudiante){
-                $btnEdit = '<a href="' . route('estudiantes.edit', $estudiante->id) . '" class="btn btn-xs btn-default text-primary mx-1 shadow" title="Edit">
+            foreach($grupos as $grupo){
+                $btnEdit = '<a href="' . route('grupos.edit', $grupo->id) . '" class="btn btn-xs btn-default text-primary mx-1 shadow" title="Edit">
                                 <i class="fa fa-lg fa-fw fa-pen"></i>
                             </a>';
-                $btnDelete = '<button class="btn btn-xs btn-default text-danger mx-1 shadow" data-toggle="modal" title="Delete" data-target="#modalDelete-'.$estudiante->id.'">
+                $btnDelete = '<button class="btn btn-xs btn-default text-danger mx-1 shadow" data-toggle="modal" title="Delete" data-target="#modalDelete-'.$grupo->id.'">
                                 <i class="fa fa-lg fa-fw fa-trash"></i>
                             </button>';
-                $btnDetails = '<a href="' . route('estudiantes.show', $estudiante->id) . '" class="btn btn-xs btn-default text-teal mx-1 shadow" title="Details">
+                $btnDetails = '<a href="' . route('grupos.show', $grupo->id) . '" class="btn btn-xs btn-default text-teal mx-1 shadow" title="Details">
                                 <i class="fa fa-lg fa-fw fa-eye"></i>
                             </a>';
 
                 $data[] = [ 
-                    $estudiante->id,  
-                    $estudiante->codigo,     
-                    $estudiante->nombre, 
-                    $estudiante->apellido,
-                    $estudiante->sexo,
-                    $estudiante->cedula,
-                    $estudiante->edad,
-                    $estudiante->celular,
-                    $estudiante->nombre_madre,
-                    $estudiante->nombre_padre,
+                    $grupo->id,  
+                    $grupo->Codigo,     
+                    $grupo->Nombre, 
+                    $grupo->Descripcion,
+                    $grupo->Seccion,
+                    $grupo->Grado,
+                    $grupo->turnos->Nombre ?? '',
+                    $grupo->docentes->Nombre ?? '',
+                    $grupo->Periodo,
 
                     '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'                    
                 ];
@@ -91,14 +89,14 @@
         $config = [
             'data' => $data,
             'order' => [[1, 'asc']],
-            'columns' => (count($estudiantes) > 0) ? [null,null,null, null, null, null, null, null, null, null, null, null, null,['orderable' => false]] : [['orderable' => false]],
+            'columns' => (count($grupos) > 0) ? [null,null,null, null, null, null, null, null, null,['orderable' => false]] : [['orderable' => false]],
         ];
     @endphp
 
     {{-- Tabla --}}
     <div class="row">
         <div class="col">
-            <x-adminlte-card icon="fas fa-user-graduate"  theme="lightblue" title="Listado de Estudiantes">
+            <x-adminlte-card icon="fas fa-user-graduate"  theme="lightblue" title="Listado de Grupo">
                 <x-adminlte-datatable id="table1" :heads="$heads" head-theme="light" theme="light" striped hoverable>
                     @foreach($config['data'] as $row)
                         <tr>
@@ -113,11 +111,11 @@
     </div>
 
     {{-- Modales de confirmación --}}
-    @foreach ($estudiantes as $estudiante)
+    @foreach ($grupos as $grupo)
         <x-delete-modal 
-            id="modalDelete-{{ $estudiante->id }}"
-            :route="route('estudiantes.destroy', $estudiante->id)"
-            :message="'¿Seguro que deseas eliminar <b>' . $estudiante->nombre . '</b>?'"/>
+            id="modalDelete-{{ $grupo->id }}"
+            :route="route('grupos.destroy', $grupo->id)"
+            :message="'¿Seguro que deseas eliminar <b>' . $grupo->nombre . '</b>?'"/>
     @endforeach
 
 </div>

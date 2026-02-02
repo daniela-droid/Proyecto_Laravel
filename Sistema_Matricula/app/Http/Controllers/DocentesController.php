@@ -12,54 +12,80 @@ class DocentesController extends Controller
      */
     public function index()
     {
-        //
-    }
+        //listamos los maestros
+        $docentes=Docentes::all();
+        //para pruebas de request
+       // dd($docentes->toArray());
+        return view('docentes.index',compact('docentes'));
+     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
-        //
+        return view('docentes.create');
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'Nombre'=>'required|string|max:255',
+            'Apellido'=>'required|string|max:255',
+            'FechadeNacimiento'=>'required|date',
+            'Gmail'=>'required|string|max:255',
+            'Telefono'=>'required|integer',
+            'Especialidad'=>'required|string:max:255',
+            'GrupoAsignado'=>'required|string|max:255'
+
+        ]);
+    Docentes::create($request->all());
+    return redirect()->route('docentes.index')->with('secces','Docente creado correctamente');
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Docentes $docentes)
+    public function show(Docentes $docente)
     {
-        //
+        return view('docentes.show',compact('docente'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Docentes $docentes)
+    public function edit(Docentes $docente)
     {
-        //
+        return view('docentes.edit',compact('docente'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Docentes $docentes)
+    public function update(Request $request, Docentes $docente)
     {
-        //
+        $request->validate([
+            'Nombre'=>'required|string|max:255',
+            'Apellido'=>'required|string|max:255',
+            'FechadeNacimientod'=>'require|date',
+            'Gmail'=>'required|string|max:255',
+            'Telefono'=>'required|integer',
+            'Especialidad'=>'required|string:max:255',
+            'GrupoAsignado'=>'required|string|max:255'
+
+        ]);
+        $docente->update($request->all());
+        return redirect()->route('docentes.index')->with('succes','Docentes Actualizado correctamete');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Docentes $docentes)
+    public function destroy(Docentes $docente)
     {
-        //
+        $docente->delete();
+
+        return redirect()->route('docentes.index')->with('succes','El docente ha sido eliminado');
     }
 }
