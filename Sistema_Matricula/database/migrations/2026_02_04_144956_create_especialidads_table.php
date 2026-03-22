@@ -11,15 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('docentes', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('Nombre');
-            $table->string('Apellido');
-            $table->date('FechadeNacimiento');
-            $table->string('Gmail');
-            $table->integer('Telefono');
+        Schema::create('especialidads', function (Blueprint $table) {
+             $table->bigIncrements('id');
             $table->string('Especialidad');
-            $table->string('GrupoAsignado');
+            $table->string('Descripcion')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('docentes');
+        Schema::dropIfExists('especialidads');
     }
 };

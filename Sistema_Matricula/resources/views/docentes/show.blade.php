@@ -14,13 +14,15 @@
     
         </div>
         <div class="card-body">
+
+              <p><strong>id_Usuario:</strong>{{$docente->id_usuario}}</p>
             <p><strong>Nombre:</strong>{{$docente->Nombre}}</p>
             <p><strong>Apellido:</strong> {{ $docente->Apellido }}</p>
             <p><strong>Fecha de Nacimiento:</strong> {{ $docente->FechadeNacimiento}}</p>
-            <p><strong>Gmail:</strong> {{ $docente->Gmail}}</p>
+            <p><strong>Email:</strong> {{ $docente->Email}}</p>
             <p><strong>Telefono:</strong> {{ $docente->Telefono }}</p>
-            <p><strong>Especialidad:</strong> {{ $docente->Especialidad}}</p>
-            <p><strong>Grupo Asignado:</strong> {{$docente->GrupoAsignado }}</p>
+            <p><strong>id_Especialidad:</strong> {{ $docente->id_especialidads}}</p>
+          
            
         </div>
         <div class="card-footer">

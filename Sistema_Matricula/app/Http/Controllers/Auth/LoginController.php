@@ -40,12 +40,12 @@ class LoginController extends Controller
     }
     public function username()
     {
-        return 'gmail';
+        return 'Email';
     }
 
     public function login(Request $request)
 {
-    $credentials = $request->only('gmail', 'password');
+    $credentials = $request->only('Email', 'password');
     logger($credentials);
 
     if (Auth::attempt($credentials)) {
@@ -54,6 +54,6 @@ class LoginController extends Controller
     }
 
     logger('Login FAILED');
-    return back()->withErrors(['gmail' => 'Credenciales incorrectas']);
+    return back()->withErrors(['Email' => 'Credenciales incorrectas']);
 }
 }

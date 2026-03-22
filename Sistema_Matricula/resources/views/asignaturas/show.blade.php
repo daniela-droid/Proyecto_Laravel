@@ -1,3 +1,4 @@
+
 @extends('adminlte::page')
 
 @section('title', 'Asignaturas')
@@ -14,7 +15,9 @@
         </div>
         <div class="card-body">
             <p><strong>ID:</strong> {{ $asignatura->id }}</p>
-            <p><strong>Nombre:</strong> {{ $asignatura->nombre }}</p>
+            <p><strong>Nombre:</strong> {{ $asignatura->Nombre }}</p>
+             <p><strong>Descripcion:</strong> {{ $asignatura->Descripcion }}</p>
+              <p><strong>Código:</strong> {{ $asignatura->Código }}</p>
         </div>
         <div class="card-footer">
             <a href="{{ route('asignaturas.index') }}" class="btn btn-secondary">

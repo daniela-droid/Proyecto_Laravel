@@ -19,7 +19,7 @@
 @section('content')
 
 <!-- Botón Editar -->
-           <a href="{{ route('usuarios.create') }}" class="btn btn-success mb-3">
+           <a href="{{ route('usuarios.create') }}" style="background-color:#233858"class="btn btn-success mb-3 ">
     <i class="fas fa-plus"></i> Nuevo Usuario
 </a>
 
@@ -27,9 +27,8 @@
     @php  
         if(count($usuarios)>0){
             $heads = [
-                'Id',
-                'Nombre',
-                'Gmail',
+                
+                'Email',
                 'Password',
                 'Rol',                
                 ['label' => 'Actions', 'no-export' => true, 'width' => 5],
@@ -52,9 +51,8 @@
                             </a>';
 
                 $data[] = [ 
-                    $usuario->id,       
-                    $usuario->nombre,
-                    $usuario->gmail,
+                         
+                    $usuario->Email,
                     $usuario->password,
                     $usuario->rol,                       
                     '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'                    
@@ -67,7 +65,7 @@
         $config = [
             'data' => $data,
             'order' => [[1, 'asc']],
-            'columns' => (count($usuarios) > 0) ? [null, null, null, null, null, null,  ['orderable' => false]] : [['orderable' => false]],
+            'columns' => (count($usuarios) > 0) ? [null, null, null, null,    ['orderable' => false]] : [['orderable' => false]],
         ];
     @endphp
 
@@ -93,7 +91,7 @@
         <x-delete-modal 
             id="modalDelete-{{ $usuario->id }}"
             :route="route('usuarios.destroy', $usuario->id)"
-            :message="'¿Seguro que deseas eliminar <b>' . $usuario->nombre . '</b>?'"/>
+            :message="'¿Seguro que deseas eliminar la modalidad con el id ' . $usuario->id . '?'"/>
     @endforeach
 
 </div>

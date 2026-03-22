@@ -92,7 +92,7 @@
         <x-delete-modal 
             id="modalDelete-{{ $nota->id }}"
             :route="route('notas.destroy', $nota->id)"
-            :message="'¿Seguro que deseas eliminar <b>' . $nota->nombre . '</b>?'"/>
+            :message="'¿Seguro que deseas eliminar la modalidad con el id ' . $nota->id . '?'"/>
     @endforeach
 
 </div>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Estudiante;
+use App\Models\Comarca;
+use App\Models\Padres;
 use Illuminate\Http\Request;
 
 class EstudiantesController extends Controller
@@ -12,7 +14,7 @@ class EstudiantesController extends Controller
      */
     public function index()
     {//lista todos los estudiantes
-       $estudiantes= Estudiante::all();
+       $estudiantes= Estudiante::with(['padre','comarca'])->get();
        // dd($estudiantes->toArray());
            return view('estudiantes.index', compact('estudiantes'));
          
@@ -23,7 +25,9 @@ class EstudiantesController extends Controller
      */
     public function create()
     {
-        return view('estudiantes.create');
+        $padre=Padres::all();
+        $comarca=Comarca::all();
+        return view('estudiantes.create',compact('padre','comarca'));
     }
 
     /**
@@ -32,22 +36,22 @@ class EstudiantesController extends Controller
     public function store(Request $request)
     {
         $request ->validate([
-        'codigo' => 'required|integer',
-        'nombre' => 'required|string|max:255',
-        'apellido' => 'required|string|max:255',
-        'sexo' => 'required|string|max:12',
-        'cedula' => 'required|string|max:255',
-        'edad' => 'required|integer',
-        'celular' => 'required|integer',
-        'nombre_madre' => 'required|string|max:150',
-        'nombre_padre' => 'required|string|max:150',
-        'comarca' => 'required|string|max:150'
+        'Código_Persona' => 'required|integer',
+        'Nombre' => 'required|string|max:255',
+        'Apellido' => 'required|string|max:255',
+        'Sexo' => 'required|string|max:12',
+        'Fecha_N' => 'required|date',
+        'Celular' => 'required|integer',
+        'id_padre'=>'required|exists:padres,id',
+        'id_comarca'=>'required|exists:comarcas,id'
         ]);
+                
 
         Estudiante::create($request->all());
-        
-          return redirect()->route('estudiantes.index')->with('success', 'Estudiante creado correctamente');
-    
+        return redirect()->route('estudiantes.index')->with('success', 'Estudiante creado correctamente');
+                    
+          
+            
     }
 
     /**
@@ -56,7 +60,7 @@ class EstudiantesController extends Controller
     public function show(Estudiante $estudiante)
     {
         //para depurar
-        // dd($estudiante);
+         //dd($datosvalidados);
         return view('estudiantes.show',compact('estudiante'));
     }
 
@@ -65,7 +69,9 @@ class EstudiantesController extends Controller
      */
     public function edit(Estudiante $estudiante)
     {
-        return view('estudiantes.edit',compact('estudiante'));
+        $padre=Padres::all();
+        $comarca=Comarca::all();
+        return view('estudiantes.edit',compact('estudiante','padre','comarca'));
     }
 
     /**
@@ -74,19 +80,17 @@ class EstudiantesController extends Controller
     public function update(Request $request, Estudiante $estudiante)
     {
         $request ->validate([
-         'codigo' => 'required|integer',
-        'nombre' => 'required|string|max:255',
-        'apellido' => 'required|string|max:255',
-        'sexo' => 'required|string|max:12',
-        'cedula' => 'required|string|max:255',
-        'edad' => 'required|integer',
-        'celular' => 'required|integer',
-        'nombre_madre' => 'required|string|max:150',
-        'nombre_padre' => 'required|string|max:150',
-        'comarca' => 'required|string|max:150'
+        'Código_Persona' => 'required|integer',
+        'Nombre' => 'required|string|max:255',
+        'Apellido' => 'required|string|max:255',
+        'Sexo' => 'required|string|max:12',
+        'Fecha_N' => 'required|date',
+        'Celular' => 'required|integer',
+        'id_padre'=>'required|exists:padres,id',
+        'id_comarca'=>'required|exists:comarcas,id'
         ]);
 
-        $estudiante->update($request->all());
+      $estudiante->update($request->all());
 
         return redirect()->route('estudiantes.index')->with('success','estudiante actualizado correctamente');
     }

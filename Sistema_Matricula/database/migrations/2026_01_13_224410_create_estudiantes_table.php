@@ -13,16 +13,15 @@ return new class extends Migration
     {
         Schema::create('estudiantes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('codigo');
-            $table->string('nombre');
-            $table->string('apellido');
-            $table->string('sexo');
-            $table->string('cedula');
-            $table->integer('edad');
-            $table->integer('celular');
-            $table->string('nombre_madre');
-            $table->string('nombre_padre');
-            $table->string('comarca');
+            $table->integer('Código_Persona');
+            $table->string('Nombre');
+            $table->string('Apellido');
+            $table->string('Sexo');
+            $table->date('Fecha_N');
+           
+            $table->integer('Celular');
+            $table->unsignedBigInteger('id_padre')->index('estudiantes_id_padre_foreign')->nullable();;
+            $table->unsignedBigInteger('id_comarca')->index('estudiantes_id_comarca_foreign');
             $table->timestamps();
         });
     }
@@ -35,3 +34,4 @@ return new class extends Migration
         Schema::dropIfExists('estudiantes');
     }
 };
+

@@ -14,16 +14,17 @@
     
         </div>
         <div class="card-body">
-            <p><strong>Codigo:</strong>{{$estudiante->codigo}}</p>
-           <p><strong>Nombre:</strong> {{ $estudiante->nombre }}</p>
-            <p><strong>Apellido:</strong> {{ $estudiante->apellido }}</p>
-            <p><strong>Sexo:</strong> {{ $estudiante->sexo}}</p>
-            <p><strong>Cédula:</strong> {{ $estudiante->cedula }}</p>
+            <p><strong>Código de Persona:</strong>{{$estudiante->Código_Persona}}</p>
+           <p><strong>Nombre:</strong> {{ $estudiante->Nombre }}</p>
+            <p><strong>Apellido:</strong> {{ $estudiante->Apellido }}</p>
+            <p><strong>Sexo:</strong> {{ $estudiante->Sexo}}</p>
+             <p><strong>Fecha De Nacimiento:</strong> {{ $estudiante->Fecha_N}}</p>
+            <p><strong>Cédula:</strong> {{ $estudiante->Cedula }}</p>
             <p><strong>Edad:</strong> {{ $estudiante->edad }}</p>
-            <p><strong>Celular:</strong> {{ $estudiante->celular }}</p>
-            <p><strong>Nombre de la madre:</strong> {{ $estudiante->nombre_madre }}</p>
-            <p><strong>Nombre del padre:</strong> {{ $estudiante->nombre_padre }}</p>
-            <p><strong>Comarca:</strong> {{ $estudiante->Comarca }}</p>
+            <p><strong>Celular:</strong> {{ $estudiante->Celular }}</p>
+            <p><strong>Nombre Padres o Tutor:</strong> {{ $estudiante->id_padre }}</p>
+            <p><strong>Comarca:</strong> {{ $estudiante->id_comarca}}</p>
+           
         </div>
         <div class="card-footer">
             <a href="{{ route('estudiantes.index') }}" class="btn btn-secondary">

@@ -14,7 +14,10 @@ use Illuminate\Database\Eloquent\Model;
     public $timestamps = true;
         
     protected $fillable=[
-    'nombre'
+     
+            'Nombre',
+            'Descripcion',
+            'Código'
 
 
     ];
@@ -28,4 +31,10 @@ public function matriculas()
     {
         return $this->hasMany(Matriculas::class, 'id_asignaturas');
     }
+
+public function horarios()
+    {
+        return $this->hasMany(Horarios::class, 'id_asignatura');
+    }
+
 }

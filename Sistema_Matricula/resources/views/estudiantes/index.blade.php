@@ -30,25 +30,25 @@
 
 @section('content')
 <div class="card">
+            <div style="background-color: #e0e5ee; border-radius: 5px; ">
         <div class="card-body">
-            <a href="{{ route('estudiantes.create') }}" class="btn btn-success mb-3">
+            <a href="{{ route('estudiantes.create') }}" style="background-color:#233858" class="btn btn-success mb-3">
                 <i class="fas fa-plus" theme="blue"></i> Nuevo Estudiante
             </a>
  <!-- Botón Editar -->
-<div class="container">
+<div class="container ">
     @php  
         if(count($estudiantes)>0){
             $heads = [
-                'id',
-                'codigo',
-                'nombre', 
-                'apellido',
-                'sexo',
-                'cedula',
-                'edad',
-                'celular',
-                'nombre_madre',
-                'nombre_padre',
+                 'Código de Persona',
+                'Nombre', 
+                'Apellido',
+                'Sexo',
+                'Fecha de Nacimiento',
+                'Edad',
+                'Celular',
+                'Padre',
+                'Comarca',
 
                 ['label' => 'Actions', 'no-export' => true, 'width' => 5],
             ];
@@ -70,16 +70,16 @@
                             </a>';
 
                 $data[] = [ 
-                    $estudiante->id,  
-                    $estudiante->codigo,     
-                    $estudiante->nombre, 
-                    $estudiante->apellido,
-                    $estudiante->sexo,
-                    $estudiante->cedula,
-                    $estudiante->edad,
-                    $estudiante->celular,
-                    $estudiante->nombre_madre,
-                    $estudiante->nombre_padre,
+                    $estudiante->Código_Persona,     
+                    $estudiante->Nombre, 
+                    $estudiante->Apellido,
+                    $estudiante->Sexo,
+                    $estudiante->Fecha_N,
+                    $estudiante->Edad,
+                    $estudiante->Celular,
+                    $estudiante->padre->Nombre_o_Tutor ?? '', 
+                    $estudiante->comarca->Comarca ?? '',
+                   
 
                     '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'                    
                 ];
@@ -91,7 +91,7 @@
         $config = [
             'data' => $data,
             'order' => [[1, 'asc']],
-            'columns' => (count($estudiantes) > 0) ? [null,null,null, null, null, null, null, null, null, null, null, null, null,['orderable' => false]] : [['orderable' => false]],
+            'columns' => (count($estudiantes) > 0) ? [null, null, null, null, null, null, null, null, null, null,['orderable' => false]] : [['orderable' => false]],
         ];
     @endphp
 
@@ -117,7 +117,7 @@
         <x-delete-modal 
             id="modalDelete-{{ $estudiante->id }}"
             :route="route('estudiantes.destroy', $estudiante->id)"
-            :message="'¿Seguro que deseas eliminar <b>' . $estudiante->nombre . '</b>?'"/>
+            :message="'¿Seguro que deseas eliminar la modalidad con el id' . $estudiante->id. '?'"/>
     @endforeach
 
 </div>
@@ -130,13 +130,13 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            $('#asignaturasTable').DataTable({
-                language: {
-                    url: "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
-                }
-            });
+  <script>
+    $(document).ready(function() {
+        $('.select-buscable').select2({
+            placeholder: "Escribe para buscar...",
+            allowClear: true,
+            width: '50%' // Para que mantenga el tamaño que definiste en Bootstrap
         });
-    </script>
+    });
+</script>
 @stop

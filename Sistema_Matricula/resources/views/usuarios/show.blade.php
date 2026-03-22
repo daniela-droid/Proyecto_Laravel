@@ -15,8 +15,8 @@
     
         </div>
         <div class="card-body">
-           <p><strong>Nombre:</strong> {{ $usuario->nombre }}</p>
-            <p><strong>Gmail:</strong> {{ $usuario->gmail }}</p>
+
+            <p><strong>Email:</strong> {{ $usuario->Email }}</p>
             <p><strong>Password:</strong> {{ $usuario->password}}</p>
             <p><strong>Rol:</strong> {{ $usuario->rol }}</p>
            

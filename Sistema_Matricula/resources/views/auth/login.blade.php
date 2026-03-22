@@ -18,7 +18,7 @@
 
         <!-- Gmail -->
         <div class="input-group mb-3">
-            <input type="email" name="gmail" class="form-control" placeholder="Correo electrónico" value="{{ old('gmail') }}" required autofocus>
+            <input type="email" name="Email" class="form-control" placeholder="Correo electrónico" value="{{ old('Email') }}" required autofocus>
             <div class="input-group-append">
                 <div class="input-group-text">
                     <span class="fas fa-envelope"></span>
@@ -47,6 +47,6 @@
 
 @section('auth_footer')
     <p class="mb-0 text-center">
-        &copy; 2025 Sistema de Matrícula
+        &copy; 2026 Sistema de Matrícula
     </p>
 @stop

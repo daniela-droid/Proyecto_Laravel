@@ -4,24 +4,25 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Auth;// IMPORTANTE
+use Illuminate\Support\Facades\Auth;
 
 class CheckRole
 {
-    public function handle(Request $request, Closure $next, ...$roles) // <-- 2. Usar el operador ... para recibir múltiples roles
-    {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
+   public function handle(Request $request, Closure $next, ...$roles)
+{
+    // 1. Si no hay nadie logueado, NO revises roles. 
+    // Deja que Laravel lo mande al Login mediante el middleware 'auth'.
+    if (!Auth::check()) {
+        return $next($request); 
+    }
 
-        $user = Auth::user();
+    $user = Auth::user();
 
-        // Verificamos si el rol del usuario está dentro de la lista de roles permitidos
-        if (!in_array($user->rol, $roles)) {
-            abort(403, 'No tienes permisos para acceder a esta sección.');
-        }
-
+    // 2. Si el usuario está logueado, entonces SÍ revisamos si tiene el rol
+    if (in_array($user->rol, $roles)) {
         return $next($request);
     }
+
+    return redirect()->route('No_permisos');
+}
 }

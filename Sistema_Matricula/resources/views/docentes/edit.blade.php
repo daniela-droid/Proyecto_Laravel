@@ -5,12 +5,20 @@
 @section('content')
 <div class="container">
     <div class="card">
-        <div style="background-color: #17a2b8; color: white; padding: 10px 20px; border-radius: 5px;">
+               <div style="background-color: #e0e5ee; color: dark; padding: 10px 20px; border-radius: 5px; ">
         <div class="card-header">Editar Docente</div>
         <div class="card-body">
             <form action="{{ route('docentes.update', $docente->id) }}" method="POST">
                 @csrf
                 @method('PUT') {{-- Actualizacion--}}
+
+                        <select name="id_usuario" class="form-control form-control-sm w-50" required>
+                                @foreach($usuarios as $usuario)
+                                    <option value="{{ $usuario->id }}" {{ $docente->id_usuario == $usuario->id ? 'selected' : '' }}>
+                                        {{ $usuario->Email }}
+                                    </option>
+                                @endforeach
+</select>
 
                   <div class="form-group mb-2">
                     <label for="Nombre">Nombre</label>
@@ -29,8 +37,8 @@
                 </div>
 
                    <div class="form-group mb-2"> 
-                    <label for="Gmail">Gmail</label>
-                     <input type="text" name="Gmail" class="form-control form-control-sm w-50" value="{{$docente->Gmail}}"required>
+                    <label for="Email">Email</label>
+                     <input type="text" name="Email" class="form-control form-control-sm w-50" value="{{$docente->Email}}"required>
               
                    </div>
 
@@ -44,11 +52,18 @@
                     <input type="text" name="Especialidad" class="form-control form-control-sm w-50" value="{{$docente->Especialidad}}"required>
                 </div>
 
-                <div class="form-group mb-2">
-                      <label for="GrupoAsignado">Grupo Asignado</label>
-                    <input type="text" name="GrupoAsignado" class="form-control form-control-sm w-50" value="{{$docente->GrupoAsignado}}"required>
-                </div>
-
+            <div class="form-group mb-2">
+                <label for="id_especialidads">Especialidades</label>
+                <select name="id_especialidads" class="form-control form-control-sm w-50" required>
+                 
+                    <option value="" disabled selected>-- Especialiades --</option>
+                    @foreach($especialidads as $especialidad)
+                        {{-- Importante: value lleva el ID, pero el usuario ve el Nombre --}}
+                        <option value="{{ $especialidad->id }}">{{ $especialidad->Especialidad}} </option>
+                    @endforeach
+                </select>
+              
+            </div>
                 
 
                 <button type="submit" class="btn btn-success">Actualizar</button>

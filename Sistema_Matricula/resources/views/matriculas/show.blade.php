@@ -14,9 +14,14 @@
     
         </div>
         <div class="card-body">
-           <p><strong>Id_Estudiantes:</strong> {{ $matricula->id_estudiantes }}</p>
-            <p><strong>id_Asignaturas:</strong> {{ $matricula->id_asignaturas }}</p>
-           
+             <p><strong>Id:</strong> {{ $matricula->id}}</p>
+           <p><strong>Estudiante:</strong> {{ $matricula->estudiantes->Nombre}}</p>
+            <p><strong>Sección:</strong> {{ $matricula->grupos->Descripcion }}</p>
+            <p><strong>Periodo:</strong> {{ $matricula->periodos->Nombre }}</p>
+           <p><strong>Usuario:</strong> {{ $matricula->usuarios->Email }}</p>
+            <p><strong>Fecha de la Matricula:</strong> {{ $matricula->fecha_matricula }}</p>
+            <p><strong>Estado de Estudiante:</strong> {{ $matricula->estado }}</p>
+            <p><strong>Observación:</strong> {{ $matricula->observaciones }}</p>
         </div>
         <div class="card-footer">
             <a href="{{ route('matriculas.index') }}" class="btn btn-secondary">

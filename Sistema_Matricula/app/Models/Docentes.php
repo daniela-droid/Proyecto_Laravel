@@ -14,20 +14,46 @@ class Docentes extends Model
 public $timestamps=true;
 
     protected $fillable=[
-                'id',
+                'id_usuario',
                 'Nombre',
                 'Apellido',
                 'FechadeNacimiento',
-                'Gmail',
+                'Email',
                 'Telefono',
-                'Especialidad',
-                'GrupoAsignado'
+               'id_especialidads'
 
 ];
+
+public function docente()
+{
+    // Un usuario pertenece a un registro de docente
+    return $this->hasOne(Docentes::class, 'id_usuario');
+}
+
+public function usuarios()
+    {
+        // Relación con el modelo padres usando la llave 'id_padre'
+        return $this->belongsTo(Usuario::class, 'id_usuario');
+    }
+public function especialidades()
+    {
+        // Relación con el modelo padres usando la llave 'id_padre'
+        return $this->belongsTo(Especialidad::class, 'id_especialidads');
+    }
+
+
+
 //esto creo que es para decirle a grupos que tiene permiso de relacionarce conmigo
 public function grupos()
     {
         return $this->hasMany(Grupos::class, 'id_docentes');
     }
     
+public function horarios()
+    {
+        return $this->hasMany(Horarios::class, 'id_docente');
+    }
+
+
+
 }

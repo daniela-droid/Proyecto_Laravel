@@ -13,14 +13,12 @@ return new class extends Migration
     {
         Schema::create('grupos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('Codigo');
-            $table->string('Nombre');
+            $table->string('Código');
+            $table->string('Nombre');//puede ser A O B
             $table->string('Descripcion');
-            $table->string('Seccion');
-            $table->string('Grado');
-            $table->unsignedBigInteger('id_turnos')->index('grupos_id_turnos_foreign');
-            $table->unsignedBigInteger('id_docentes')->index('grupos_id_docentes_foreign');
-            $table->string('Periodo');
+            $table->unsignedBigInteger('id_turno')->index('grupos_id_turno_foreign');
+            $table->unsignedBigInteger('id_grado')->index('grupos_id_grado_foreign');
+           $table->unsignedBigInteger('id_periodo_academicos')->index('grupos_id_periodo_academicos_foreign');
             $table->timestamps();
         });
     }

@@ -314,7 +314,7 @@ return [
     |
     */
 
-    'menu' => [
+ 'menu' => [
         // Navbar items:
         [
             'type' => 'navbar-search',
@@ -325,74 +325,136 @@ return [
             'type' => 'fullscreen-widget',
             'topnav_right' => true,
         ],
-       ['header' => 'Home'],
+      
         [
             'text' => 'Inicio',
             'url' => '/',
             'icon' => 'fas fa-home',
         ],
-        // Sidebar items:
-       /* [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
-        [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
-        ],
-        [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'far fa-fw fa-file',
-            'label' => 4,
-            'label_color' => 'success',
-        ],*/
+        
+  
         ['header' => 'Menu'],
         [
             'text' => 'Estudiantes',
             'url' => '/estudiantes',
             'icon' => 'fas fa-user-graduate',
+            'can' => 'admin-only', 
         ],
         [
             'text' => 'Asignaturas',
             'url' => '/asignaturas',
             'icon' => 'fas fa-book',
+            'can' => 'admin-only', 
         ],
         [
             'text' => 'Matriculas',
             'url' => '/matriculas',
             'icon' => 'fas fa-file-alt',
+            'can' => 'admin-only',
         ],
         [
             'text' => 'Docentes',
             'url' => '/docentes',
             'icon' => 'fas fa-user',
+            'can' => 'admin-only',
         ],
         [
-            'text' => 'Grupos o Cursos',
+            'text' => 'Secciones',
             'url' => '/grupos',
             'icon' => 'fa fa-book-open',
+            'can' => 'admin-only',
+        ],
+         [
+            'text' => 'Modalidades',
+            'url' => '/modalidades',
+            'icon' => 'fa fa-sun',
+            'can' => 'admin-only',
         ],
          [
             'text' => 'Turnos',
             'url' => '/turnos',
             'icon' => 'fa fa-clock',
+            'can' => 'admin-only',
+        ],
+        [
+            'text' => 'Grados',
+            'url' => '/grados',
+            'icon' => 'fa fa-bars',
+            'can' => 'admin-only',
         ],
         [
             'text' => 'Usuarios',
             'url' => '/usuarios',
             'icon' => 'fas fa-users',
+            'can' => 'admin-only',
         ],
         [
             'text' => 'Notas',
             'url' => '/notas',
             'icon' => 'fas fa-file-alt',
+            'can' => 'admin-only',
+        ],
+        [
+            'text' => 'Especialidades',
+            'url' => '/especialidades',
+            'icon' => 'fas fa-laptop',
+            'can' => 'admin-only',
+        ],
+        [
+            'text' => 'Padres',
+            'url' => '/padres',
+            'icon' => 'fas fa-user-tie',
+            'can' => 'admin-only',
+        ],
+        [
+            'text' => 'Aulas',
+            'url' => '/aulas',
+            'icon' => 'fas fa-school',
+            'can' => 'admin-only',
+        ],
+        [
+            'text' => 'Horarios Generales',
+            'url' => '/horarios',
+            'icon' => 'fas fa-calendar',
+            'can' => 'admin-only',
+        ],
+         // --- SOLO PARA EL DOCENTE ---
+        [
+            'text' => 'Mi Horario',
+            'url' => '/mi-horario',
+            'icon' => 'fas fa-calendar-day',
+            'can' => 'docente-only', 
+        ],
+
+        [
+            'text' => 'Mis Estudiantes',
+            'url' => '/mis-estudiantes',
+            'icon' => 'fas fa-user-graduate',
+            'can' => 'docente-only', 
+        ],
+         [
+            'text' => 'Periodos Academicos',
+            'url' => '/periodo',
+            'icon' => 'fa fa-hourglass-half',
+            'can' => 'admin-only',
+        ],
+        [
+            'text' => 'Cortes Evaluativos',
+            'url' => '/cortes',
+            'icon' => 'fa fa-cut',
+            'can' => 'admin-only',
+        ],
+        [
+            'text' => 'Comarcas',
+            'url' => '/comarcas',
+            'icon' => 'fas fa-map',
+            'can' => 'admin-only',
         ],
          [
             'text' => 'Reportes',
             'url' => '/reportes',
             'icon' => 'fas fa-chart-line',
+
         ],
         [
             'text' => 'Ajustes',
@@ -403,7 +465,12 @@ return [
                     'icon' => 'fas fa-fw fa-book',
                     'url' => '/description',
                 ],
-                
+                 [
+                    'text' => 'Formulario del admin',
+                    'icon' => 'fas fa-user',
+                    'url' => '/admins',
+                    'can' => 'admin-only',
+                ],
                 [
                     'text' => 'Politicas de Privacidad',
                     'icon' => 'fa-solid fa-circle-info',

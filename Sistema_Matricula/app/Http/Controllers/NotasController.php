@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Notas;
 use Illuminate\Http\Request;
-use App\Models\Estudiante;
-use App\Models\Asignatura;
+use App\Models\Matriculas;
+use App\Models\Horarios;
+use App\Models\cortes_evaluativos;
 use App\Models\Usuario;
 
 class NotasController extends Controller
@@ -16,7 +17,7 @@ class NotasController extends Controller
     public function index()
     {
         //obtener las notas con sus relaciones
-        $notas = notas::with(['estudiantes','asignaturas','usuarios'])->get();
+        $notas = notas::with(['matriculas','horarios','cortes','usuarios'])->get();
         return view('notas.index',compact('notas'));
     }
 
@@ -26,10 +27,11 @@ class NotasController extends Controller
      
     public function create()
     {
-        $estudiantes=Estudiante::all();
-        $asignaturas=Asignatura::all();
+        $matriculas=Matriculas::all();
+        $horarios=Horarios::all();
+        $cortes=cortes_evaluativos::all();
         $usuarios=Usuario::all();
-        return view('notas.create',compact('estudiantes','asignaturas','usuarios'));
+        return view('notas.create',compact('matriculas','horarios','cortes','usuarios'));
 
 
     }
@@ -40,21 +42,18 @@ class NotasController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-                'id_estudiantes'=>'required|exists:estudiantes,id',
-                'id_asignaturas'=>'required|exists:asignaturas,id',
-                'id_usuarios'=>'required|exists:usuarios,id',
-             // 'notas' => 'required|numeric|decimal:2|min:0|max:100', No llamar el valor
-             //  que ya tiene notas en sus atributos
+                
+                'id_matricula'=>'required|exists:matriculas,id',
+                'id_horario'=>'required|exists:horarios,id',
+                'id_corte_evaluativo'=>'required|exists:cortes_evaluativos,id',
+                'id_usuario'=>'required|exists:usuarios,id',
+                'nota_normal'=>'required|double',
+                'nota_especial'=>'required|double',
+                'observacion'=>'required|string|max:255'
 
         ]);
        
-        Notas::create([
-            'id_estudiantes' =>$request->id_estudiantes,
-            'id_asignaturas' =>$request->id_asignaturas,
-            'id_usuarios'=>$request->id_usuarios,
-            'notas'=> $request->notas
-
-        ]);
+        Notas::create($request->all());
         return redirect()->route('notas.index')->with('success','Notas creadas correctamente');
     }
 
@@ -71,10 +70,7 @@ class NotasController extends Controller
      */
     public function edit(Notas $nota)
     {
-        $estudiantes=Estudiante::all();
-        $asignaturas=Asignatura::all();
-        $usuarios=Usuario::all();
-        return view('notas.edit',compact('nota','estudiantes','asignaturas','usuarios'));
+        return view('notas.edit',compact('nota','matriculas','horarios','cortes','usuarios'));
     }
 
     /**
@@ -83,27 +79,24 @@ class NotasController extends Controller
     public function update(Request $request, Notas $notas)
     {
         $request ->validate([
-                'id_estudiantes'=>'required|exists:estudiantes,id',
-                'id_asignaturas'=>'required|exists:asignaturas,id',
-                'id_usuarios'=>'required|exists:usuarios,id',
-                'notas' => 'required|numeric|decimal:2|min:0|max:100',
+               'id_matricula'=>'required|exists:matriculas,id',
+                'id_horario'=>'required|exists:horarios,id',
+                'id_corte_evaluativo'=>'required|exists:cortes_evaluativos,id',
+                'id_usuario'=>'required|exists:usuarios,id',
+                'nota_normal'=>'required|double',
+                'nota_especial'=>'required|double',
+                'observacion'=>'required|string|max:255'
         ]);
-        $notas->update([
-            'id_estudiantes' =>$request->id_estudiantes,
-            'id_asignaturas' =>$request->id_asignaturas,
-            'id_usuarios'=>$request->id_usuarios
-    
-
-        ]);
+        $notas->update($request->all());
         return redirect()->route('notas.index')->with('success','Notas actualizadas correctamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Notas $notas)
+    public function destroy(Notas $nota)
     {
-        $notas->delete();
+        $nota->delete();
         return redirect()->route('notas.index')->with('success','Notas eliminadas correctamente');
         
     }

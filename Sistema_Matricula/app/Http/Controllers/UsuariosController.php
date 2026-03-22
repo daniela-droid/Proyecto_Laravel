@@ -13,7 +13,7 @@ class UsuariosController extends Controller
     public function index()
     {
         //obtener usuarios
-        $usuarios=usuario::all();
+        $usuarios=Usuario::all();
         return view('usuarios.index',compact('usuarios'));
     }
 
@@ -33,15 +33,13 @@ class UsuariosController extends Controller
     {
       
         $request->validate([
-                'nombre'=>'required|string|max:80',
-                'gmail'    => 'required|string|email|max:125|unique:usuarios,gmail',
+               'Email'    => 'required|string|email|max:125|unique:usuarios,Email',
                 'password' => 'required|string|min:8|confirmed', 
-                'rol'      => 'required|in:admin,docente'
+                'rol'      => 'required|in:admin,docentes'
 
         ]);
       Usuario::create([
-            'nombre'   => $request->nombre,
-            'gmail'    => $request->gmail,
+            'Email'    => $request->Email,
             'password' => Hash::make($request->password),
             'rol'      => $request->rol,
         ]);
@@ -70,18 +68,18 @@ class UsuariosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-   public function update(Request $request, Usuario $usuarios)
+   public function update(Request $request, Usuario $usuario)
 {
     $request->validate([
-        'nombre' => 'required|string|max:80',
-        'gmail'  => 'required|string|email|max:125|unique:usuarios,gmail,' . $usuarios->id,
-        'password' => 'nullable|string|min:8|confirmed', // puede ser opcional
-        'rol' => 'required|in:admin,docente'
+       
+        'Email'  => 'required|string|email|max:125|unique:usuarios,Email,' . $usuario->id,
+        'password' => 'nullable|string|min:8|confirmed', 
+        'rol' => 'required|in:admin,docentes'
     ]);
 
     $data = [
-        'nombre' => $request->nombre,
-        'gmail'  => $request->gmail,
+        
+        'Email'  => $request->Email,
         'rol'    => $request->rol
     ];
 
@@ -90,7 +88,7 @@ class UsuariosController extends Controller
         $data['password'] = Hash::make($request->password);
     }
 
-    $usuarios->update($data);
+    $usuario->update($data);
 
     return redirect()->route('usuarios.index')->with('success','Editado correctamente');
 }

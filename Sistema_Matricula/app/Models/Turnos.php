@@ -24,6 +24,6 @@ class Turnos extends Model
 
     public function grupos()
     {
-        return $this->hasMany(Grupos::class, 'id_turnos');
+        return $this->hasMany(Grupos::class, 'id_turno');
     }
 }

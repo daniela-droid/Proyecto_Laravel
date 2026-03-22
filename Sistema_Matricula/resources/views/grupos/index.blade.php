@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Grupos')
+@section('title', 'Sección')
 
 @section('css')
  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -24,30 +24,28 @@
 
     <!-- Panel superior -->
 <div style="background-color: #233858; color: white; padding: 10px 20px; border-radius: 5px;">
-    <h1 style="margin: 0; font-size: 1.5rem;">Grupos</h1>
+    <h1 style="margin: 0; font-size: 1.5rem;">Sección</h1>
 </div>
 @stop
 
 @section('content')
 <div class="card">
         <div class="card-body">
-            <a href="{{ route('docentes.create') }}" class="btn btn-success mb-3">
-                <i class="fas fa-plus" theme="blue"></i> Nuevo Grupo
+            <a href="{{ route('grupos.create') }}" style="background-color:#233858" class="btn btn-success mb-3">
+                <i class="fas fa-plus" theme="blue"></i> Nueva Sección
             </a>
  <!-- Botón Editar -->
 <div class="container">
     @php  
         if(count($grupos)>0){
             $heads = [
-                'id',
-                'Codigo',
+                
+                'Código',
                 'Nombre', 
                 'Descripcion',
-                'Seccion',
+                'Turno',
                 'Grado',
-                'id_turnos',
-                'id_docentes',
-                'Periodo',
+                'Periodo Académica',
 
                 ['label' => 'Actions', 'no-export' => true, 'width' => 5],
             ];
@@ -69,15 +67,13 @@
                             </a>';
 
                 $data[] = [ 
-                    $grupo->id,  
-                    $grupo->Codigo,     
+                    
+                    $grupo->Código,     
                     $grupo->Nombre, 
                     $grupo->Descripcion,
-                    $grupo->Seccion,
-                    $grupo->Grado,
                     $grupo->turnos->Nombre ?? '',
-                    $grupo->docentes->Nombre ?? '',
-                    $grupo->Periodo,
+                    $grupo->grados->Nombre ?? '',
+                    $grupo->periodos->Nombre ?? '',
 
                     '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'                    
                 ];
@@ -89,7 +85,7 @@
         $config = [
             'data' => $data,
             'order' => [[1, 'asc']],
-            'columns' => (count($grupos) > 0) ? [null,null,null, null, null, null, null, null, null,['orderable' => false]] : [['orderable' => false]],
+            'columns' => (count($grupos) > 0) ? [null,null,null, null, null, null, null, null,['orderable' => false]] : [['orderable' => false]],
         ];
     @endphp
 
@@ -115,7 +111,7 @@
         <x-delete-modal 
             id="modalDelete-{{ $grupo->id }}"
             :route="route('grupos.destroy', $grupo->id)"
-            :message="'¿Seguro que deseas eliminar <b>' . $grupo->nombre . '</b>?'"/>
+            :message="'¿Seguro que deseas eliminar la modalidad con el id ' . $grupo->id . '?'"/>
     @endforeach
 
 </div>

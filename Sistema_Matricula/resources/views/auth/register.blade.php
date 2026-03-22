@@ -26,10 +26,10 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="gmail" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+                            <label for="Email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
 
                             <div class="col-md-6">
-                                <input id="gmail" type="gmail" class="form-control @error('gmail') is-invalid @enderror" name="gmail" value="{{ old('gmail') }}" required autocomplete="gmail">
+                                <input id="gmail" type="Email" class="form-control @error('Email') is-invalid @enderror" name="Email" value="{{ old('Email') }}" required autocomplete="Email">
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">

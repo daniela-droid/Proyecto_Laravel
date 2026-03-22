@@ -31,7 +31,7 @@
 @section('content')
 <div class="card">
         <div class="card-body">
-            <a href="{{ route('docentes.create') }}" class="btn btn-success mb-3">
+            <a href="{{ route('docentes.create') }}" style="background-color:#233858"class="btn btn-success mb-3">
                 <i class="fas fa-plus" theme="blue"></i> Nuevo Docente
             </a>
  <!-- Botón Editar -->
@@ -39,14 +39,13 @@
     @php  
         if(count($docentes)>0){
             $heads = [
-                'id',
+                'Usuario',
                 'Nombre',
                 'Apellido', 
                 'FechadeNacimiento',
-                'Gmail',
                 'Telefono',
-                'Especialidad',
-                'GrupoAsignado',
+                'Especialidades',
+               
 
                 ['label' => 'Actions', 'no-export' => true, 'width' => 5],
             ];
@@ -68,14 +67,13 @@
                             </a>';
 
                 $data[] = [ 
-                    $docente->id,  
+                    $docente->usuarios->Email ?? '',
                     $docente->Nombre,     
                     $docente->Apellido, 
                     $docente->FechadeNacimiento,
-                    $docente->Gmail,
                     $docente->Telefono,
-                    $docente->Especialidad,
-                    $docente->GrupoAsignado,
+                    $docente->especialidades->Especialidad ?? '',
+                   
 
                     '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'                    
                 ];
@@ -87,7 +85,7 @@
         $config = [
             'data' => $data,
             'order' => [[1, 'asc']],
-            'columns' => (count($docentes) > 0) ? [null,null,null, null, null, null, null, null, null,['orderable' => false]] : [['orderable' => false]],
+            'columns' => (count($docentes) > 0) ? [null,null,null, null, null, null, null, null, ['orderable' => false]] : [['orderable' => false]],
         ];
     @endphp
 
@@ -113,7 +111,7 @@
         <x-delete-modal 
             id="modalDelete-{{ $docente->id }}"
             :route="route('docentes.destroy', $docente->id)"
-            :message="'¿Seguro que deseas eliminar <b>' . $docente->nombre . '</b>?'"/>
+            :message="'¿Seguro que deseas eliminar la modalidad con el id ' . $docente->id . '?'"/>
     @endforeach
 
 </div>

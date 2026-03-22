@@ -16,27 +16,45 @@ class Usuario extends Authenticatable//esto es para que laravel sepa que este es
     use HasFactory;
     public $timestamps=true;
 
-protected $fillable=[
-    'nombre',
-    'gmail',
-    'password',
-    'rol'
+            protected $fillable=[
+                'Email',
+                'password',
+                'rol'
 
-    ];
+            ];
+
+        //proteccion de contrasaenias
+        protected $hidden = ['password'];
+
+        protected function casts(): array
+        {
+            return [
+                'email_verified_at' => 'datetime',
+                'password' => 'hashed', // <--- Este es el "comando" que hashea todo automáticamente
+            ];
+        } 
 
 
-protected $hidden = ['password'];
+//METODOS PARA RECORDARLE A ESTE MODELO LA RELACION QUE TIENE CON SU RESPECTIVO NOMBRE EN el metodo
 
-protected function casts(): array
-{
-    return [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed', // <--- Este es el "comando" que hashea todo automáticamente
-    ];
-} 
-
-public function notas()
+     public function notas()
     {
-        return $this->hasMany(Notas::class, 'id_usuarios');
+        return $this->hasMany(Notas::class, 'id_usuario');
     }
+
+        public function docentes()
+    {
+        return $this->hasMany(Docentes::class, 'id_usuario');
+    }
+
+    public function admin()
+    {
+        return $this->hasMany(Admin::class, 'id_usuarios');
+    }
+
+     public function matriculas()
+    {
+        return $this->hasMany(Matriculas::class, 'id_usuario');
+    }
+
 }

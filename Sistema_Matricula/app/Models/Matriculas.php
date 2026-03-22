@@ -13,25 +13,48 @@ class Matriculas extends Model
     use HasFactory;
     public $timestamps= true;
 
-    protected $fillable=[
+        protected $fillable=[
+            'id_estudiante',
+            'id_grupo',
+            'id_periodo_academicos',
+            'id_usuario',
+            'fecha_matricula',//date
+            'estado',  //enum
+            'observaciones'//string
 
-    'id_estudiantes',
-    'id_asignaturas'
-
-    ];
+        ];
 
 
 // Una matrícula pertenece a un estudiante
     public function estudiantes()
     {
-        return $this->belongsTo(Estudiante::class, 'id_estudiantes');
+        return $this->belongsTo(Estudiante::class, 'id_estudiante');
     }
 
-    // Una matrícula pertenece a una asignatura
-    public function asignaturas()
+
+    public function grupos()
     {
-        return $this->belongsTo(Asignatura::class, 'id_asignaturas');
+        return $this->belongsTo(Grupos::class, 'id_grupo');
     }
+
+     public function periodos()
+    {
+        return $this->belongsTo(Periodo_academicos::class, 'id_periodo_academicos');
+    }
+
+     public function usuarios()
+    {
+        return $this->belongsTo(Usuario::class, 'id_usuario');
+    }
+    ///////////////////////////////////////////
+
+    public function notas()
+    {
+        return $this->hasMany(Notas::class, 'id_matricula');
+    }
+
+
+
 
 
 }

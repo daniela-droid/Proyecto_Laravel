@@ -7,17 +7,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
     <!-- Estilos de DataTables Buttons -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
-<style>
-    /*Importante para modificar la tabla*/
-    .compact-table th,
-   .compact-table td {
-    white-space: nowrap;      /* No rompe líneas */
-    overflow: hidden;         /* Oculta exceso de texto */
-    text-overflow: ellipsis;  /* Muestra "..." si es muy largo */
-    vertical-align: middle;
-    max-width: 170px;         /* Ajusta según convenga */
-}
-</style>
+
     @stop
 
 @section('content_header')
@@ -32,7 +22,7 @@
 @section('content')
 
  <!-- Botón Editar -->
-           <a href="{{ route('asignaturas.create') }}" class="btn btn-success mb-3">
+           <a href="{{ route('asignaturas.create') }}" style="background-color:#233858"class="btn btn-success mb-3">
     <i class="fas fa-plus"></i> Nueva Asignatura
 </a>
 
@@ -40,8 +30,9 @@
     @php  
         if(count($asignaturas)>0){
             $heads = [
-                'Id',
-                'Nombre',                
+               'Nombre',
+                'Descripción',
+                'Código' ,              
                 ['label' => 'Actions', 'no-export' => true, 'width' => 5],
             ];
         }else{
@@ -62,8 +53,10 @@
                             </a>';
 
                 $data[] = [ 
-                    $asignatura->id,       
-                    $asignatura->nombre,                       
+                         
+                    $asignatura->Nombre,
+                    $asignatura->Descripcion,
+                    $asignatura->Código ,                     
                     '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'                    
                 ];
             }
@@ -74,7 +67,7 @@
         $config = [
             'data' => $data,
             'order' => [[1, 'asc']],
-            'columns' => (count($asignaturas) > 0) ? [null, null, null, ['orderable' => false]] : [['orderable' => false]],
+            'columns' => (count($asignaturas) > 0) ? [null, null, null,null,null,null, ['orderable' => false]] : [['orderable' => false]],
         ];
     @endphp
 
@@ -100,7 +93,7 @@
         <x-delete-modal 
             id="modalDelete-{{ $asignatura->id }}"
             :route="route('asignaturas.destroy', $asignatura->id)"
-            :message="'¿Seguro que deseas eliminar <b>' . $asignatura->nombre . '</b>?'"/>
+            :message="'¿Seguro que deseas eliminar la modalidad con el id ' . $asignatura->id . '?'"/>
     @endforeach
 
 </div>
@@ -125,3 +118,4 @@
         });
     </script>
 @stop
+

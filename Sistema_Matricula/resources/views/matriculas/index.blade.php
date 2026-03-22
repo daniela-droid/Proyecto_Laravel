@@ -29,7 +29,7 @@
 @section('content')
 
  <!-- Botón Editar -->
-            <a href="{{ route('matriculas.create') }}" class="btn btn-success mb-3">
+            <a href="{{ route('matriculas.create') }}" style="background-color: #233858;" class="btn btn-success mb-3">
                 <i class="fas fa-plus"></i> Nueva Matricula
             </a>
 
@@ -38,9 +38,14 @@
     @php  
         if(count($matriculas)>0){
             $heads = [
-                'Id',
-                'Id_Estudiantes',  
-                'Id_Asignaturas',            
+          
+                'Estudiantes',  
+                'Secciones', 
+                'Grado',  
+                'Periodos Académico', 
+                'Fecha de Matricula',
+                'Estados',  
+                     
                 ['label' => 'Actions', 'no-export' => true, 'width' => 5],
             ];
         }else{
@@ -64,9 +69,14 @@
                                 </a>';
 
                     $data[] = [ 
-                        $matricula->id,       
-                        $matricula->id_estudiantes,       
-                        $matricula->id_asignaturas ,            
+                            
+                        $matricula->estudiantes->Nombre ?? '',       
+                        $matricula->grupos->Descripcion ?? '' , 
+                        $matricula->grupos->grados->Nombre ?? '' ,  
+                        $matricula->periodos->Nombre ?? '', 
+                        $matricula->fecha_matricula, 
+                        $matricula->estado , 
+                               
                         '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'
                             
                     ];
@@ -77,12 +87,11 @@
             $config = [
                 'data' => $data,
                 'order' => [[1, 'asc']],
-                'columns' => (count($matriculas) > 0) ? [null, null, null, null, ['orderable' => false]] : [['orderable' => false]],
+                'columns' => (count($matriculas) > 0) ? [null, null, null, null, null, null, null, null,['orderable' => false]] : [['orderable' => false]],
             ];
 
     @endphp
 
-        {{-- Minimal example / fill data using the component slot --}}
         <div class="row">
             <div class="col">
                 <x-adminlte-card icon="fas fa-file-alt"  theme="lightblue" title="Listado de Matriculas">
@@ -107,9 +116,8 @@
        <x-delete-modal 
         id="modalDelete-{{ $matricula->id }}"
         :route="route('matriculas.destroy', $matricula->id)"
-        :message="'¿Seguro que deseas eliminar la matrícula de <b>' 
-                   . $matricula->estudiantes->nombre . '</b> en <b>' 
-                   . $matricula->asignaturas->nombre . '</b>?'" />
+        :message="'¿Seguro que deseas eliminar la matrícula de ' 
+                  "/>
     @endforeach
 
 </div>
@@ -118,7 +126,7 @@
 @stop
 
 @section('js')
-<script> console.log('Hi!'); </script>
+<script> console.log('Holi manoli'); </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- DataTables -->

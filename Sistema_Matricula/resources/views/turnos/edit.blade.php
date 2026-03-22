@@ -9,6 +9,7 @@
 @section('content')
 <div class="container">
     <div class="card">
+             <div style="background-color: #e0e5ee; color: dark; padding: 10px 20px; border-radius: 5px;">
         <div class="card-header">Agregar Turno</div>
         <div class="card-body">
          

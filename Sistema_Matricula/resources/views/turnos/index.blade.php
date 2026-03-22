@@ -24,7 +24,7 @@
 
     <!-- Panel superior -->
 <div style="background-color: #233858; color: white; padding: 10px 20px; border-radius: 5px;">
-    <h1 style="margin: 0; font-size: 1.5rem;">Asignaturas</h1>
+    <h1 style="margin: 0; font-size: 1.5rem;">Turnos</h1>
 </div>
 
 @stop
@@ -32,7 +32,7 @@
 @section('content')
 
  <!-- Botón Editar -->
-           <a href="{{ route('turnos.create') }}" class="btn btn-success mb-3">
+           <a href="{{ route('turnos.create') }}" style="background-color:#233858"class="btn btn-success mb-3">
     <i class="fas fa-plus"></i> Nuevos Turnos
 </a>
 
@@ -40,7 +40,7 @@
     @php  
         if(count($turnos)>0){
             $heads = [
-                'Id',
+              
                 'Nombre',    
                 'Descripcion',            
                 ['label' => 'Actions', 'no-export' => true, 'width' => 5],
@@ -63,7 +63,7 @@
                             </a>';
 
                 $data[] = [ 
-                    $turno->id,       
+                           
                     $turno->Nombre, 
                     $turno->Descripcion,                    
                     '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'                    
@@ -102,7 +102,7 @@
         <x-delete-modal 
             id="modalDelete-{{ $turno->id }}"
             :route="route('turnos.destroy', $turno->id)"
-            :message="'¿Seguro que deseas eliminar <b>' . $turno->nombre . '</b>?'"/>
+            :message="'¿Seguro que deseas eliminar la modalidad con el id ' . $turno->id . '?'"/>
     @endforeach
 
 </div>

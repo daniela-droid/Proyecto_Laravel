@@ -31,8 +31,11 @@ class AsignaturasController extends Controller
     public function store(Request $request)
     {
 
-        $request ->validate([
-            'nombre'=>'required|string|max:255'
+        $request->validate([
+            'Nombre'=>'required|string|max:255',
+            'Descripcion'=>'required|string|max:255',
+            'Código'=>'required|string|max:255'
+          
         ]);
         
         Asignatura::create($request->all());
@@ -61,11 +64,13 @@ class AsignaturasController extends Controller
     public function update(Request $request, Asignatura $asignatura)
     {
         $request->validate([
-            'nombre'=>'required|string|max:255'
+            'Nombre'=>'required|string|max:255',
+            'Descripcion'=>'required|string|max:255',
+            'Código'=>'required|string|max:255'
 
         ]);
         $asignatura->update($request->all());
-        return redirect()->route('asignaturas.index')->with('access','asignaturas actualizada');
+        return redirect()->route('asignaturas.index')->with('access','asignaturas actualizada correctamente');
     }
 
     /**
