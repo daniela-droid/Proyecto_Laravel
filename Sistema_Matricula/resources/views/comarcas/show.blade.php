@@ -13,7 +13,7 @@
             <h3 class="card-title">Comarca</h3>
         </div>
         <div class="card-body">
-            <p><strong>ID:</strong> {{ $comarca->id }}</p>
+            <!-- <p><strong>ID:</strong> {{ $comarca->id }}</p> -->
             <p><strong>Comarca:</strong> {{  $comarca->Comarca }}</p>
              <p><strong>Direccion:</strong> {{ $comarca->Direccion }}</p>
             

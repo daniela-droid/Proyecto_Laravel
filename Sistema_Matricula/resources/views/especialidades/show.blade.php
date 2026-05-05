@@ -10,10 +10,10 @@
 <div class="container">
     <div class="card card-info">
         <div class="card-header">
-            <h3 class="card-title">{{ $especialidad->Especialidad }}</h3>
+            <h3 class="card-title">Especialidad</h3>
         </div>
         <div class="card-body">
-            <p><strong>ID:</strong> {{ $especialidad->id }}</p>
+            <!-- <p><strong>ID:</strong> {{ $especialidad->id }}</p> -->
             <p><strong>Especialidad:</strong> {{ $especialidad->Especialidad }}</p>
              <p><strong>Descripcion:</strong> {{ $especialidad->Descripcion }}</p>
              

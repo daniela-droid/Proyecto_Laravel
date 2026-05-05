@@ -9,12 +9,15 @@
 
 @section('content')
 <div class="container">
+    
     <div class="card card-info">
+        
         <div class="card-header">
             <h3 class="card-title">{{ $asignatura->nombre }}</h3>
         </div>
         <div class="card-body">
-            <p><strong>ID:</strong> {{ $asignatura->id }}</p>
+            
+            <!-- <p><strong>ID:</strong> {{ $asignatura->id }}</p> -->
             <p><strong>Nombre:</strong> {{ $asignatura->Nombre }}</p>
              <p><strong>Descripcion:</strong> {{ $asignatura->Descripcion }}</p>
               <p><strong>Código:</strong> {{ $asignatura->Código }}</p>

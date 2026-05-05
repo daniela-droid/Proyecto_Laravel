@@ -4,22 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use \App\Traits\HashRouteKey;
 class Notas extends Model
 {
    /** @use HasFactory<\Database\Factories\NotasFactory> */
     use HasFactory;
+    // use HashRouteKey;
     protected $table='notas';
             protected $fillable=[
                     'id_matricula',
                     'id_horario',
                     'id_corte_evaluativo',
-                    'id_usuario',
-                    'nota_normal',//es decimal5,2
+                   'nota_normal',//es decimal5,2
                     'nota_especial',
-                    'observacion' //por si algun estudainte esta pendiente
+                    'observacion', //por si algun estudainte esta pendiente
+                     'id_usuario',
+
          ];
 
+
+         protected $casts = [
+        'nota_normal' => 'double',
+        'nota_especial' => 'double',
+    ];
     //relaciones
    public function matriculas()
     {
@@ -38,6 +45,11 @@ class Notas extends Model
 
     public function usuarios(){
         return $this->belongsTO(Usuario::class, 'id_usuario');
+    }
+
+    public function solicitudesCorreccion()
+    {
+        return $this->hasMany(SolicitudCorreccionNota::class, 'id_nota');
     }
 
 

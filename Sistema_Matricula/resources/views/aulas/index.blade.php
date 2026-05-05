@@ -4,9 +4,12 @@
 
 @section('css')
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
     <!-- Estilos de DataTables Buttons -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/css/OverlayScrollbars.min.css">
+
 <style>
     /*Importante para modificar la tabla*/
     .compact-table th,
@@ -15,17 +18,43 @@
     overflow: hidden;         /* Oculta exceso de texto */
     text-overflow: ellipsis;  /* Muestra "..." si es muy largo */
     vertical-align: middle;
-    max-width: 170px;         /* Ajusta según convenga */
+    max-width: 170px;         /* Ajusta  */
+ 
 }
+
+    /* 1. Quita las flechas de ordenamiento de DataTables */
+    table.dataTable thead .sorting::after,
+    table.dataTable thead .sorting::before,
+    table.dataTable thead .sorting_asc::after,
+    table.dataTable thead .sorting_asc::before,
+    table.dataTable thead .sorting_desc::after,
+    table.dataTable thead .sorting_desc::before {
+        display: none !important;
+    }
+
+    /* 2. Color cielo claro para el encabezado y texto alineado */
+    #table1 thead th {
+        background-color: #b8dffc !important; /* Azul cielo claro */
+        color: #333 !important;              /* Texto oscuro para contraste */
+        border-bottom: 2px solid #dee2e6;
+        cursor: default !important;          /* Quita la mano de "clic" */
+    }
+
+    /* Opcional: ajustar padding para que se vea más limpio sin las flechas */
+    table.dataTable thead th {
+        padding-right: 10px !important;
+    }
+
 </style>
-    @stop
+@stop
 
 @section('content_header')
 
     <!-- Panel superior -->
-<div style="background-color: #233858; color: white; padding: 10px 20px; border-radius: 5px;">
+<!-- <div style="background-color: #233858; color: white; padding: 10px 20px; border-radius: 5px;">
     <h1 style="margin: 0; font-size: 1.5rem;">Aulas</h1>
-</div>
+</div> -->
+<h4><strong>Aulas </strong><i class="fas fa-school text-navy"></i></h4>
 
 @stop
 
@@ -33,7 +62,7 @@
 
  <!-- Botón Editar -->
            <a href="{{ route('aulas.create') }}" style="background-color:#233858"class="btn btn-success mb-3">
-    <i class="fas fa-plus"></i> Nueva Aula o Seccion
+    <i class="fas fa-plus"></i> Agregar
 </a>
 
 <div class="container">
@@ -44,7 +73,7 @@
                 'Nombre',
                 'Capacidad',
                             
-                ['label' => 'Actions', 'no-export' => true, 'width' => 5],
+                ['label' => 'Acciones', 'no-export' => true, 'width' => 5],
             ];
         }else{
             $heads = ['aulas'];
@@ -85,7 +114,8 @@
     {{-- Tabla --}}
     <div class="row">
         <div class="col">
-            <x-adminlte-card icon="fas fa-book"  theme="lightblue" title="Listado de Aulas">
+            <hr>
+            <!-- <x-adminlte-card icon="fas fa-book"  theme="lightblue" title="Listado de Aulas"> -->
                 <x-adminlte-datatable id="table1" :heads="$heads" head-theme="light" theme="light" striped hoverable>
                     @foreach($config['data'] as $row)
                         <tr>

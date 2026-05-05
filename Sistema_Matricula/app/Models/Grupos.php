@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 // use App\Models\Matriculas;
+use \App\Traits\HashRouteKey;
 class Grupos extends Model
 {
     protected $table='grupos';
     /** @use HasFactory<\Database\Factories\GruposFactory> */
     use HasFactory;
     public $timestamps=true;
-
+    // use HashRouteKey;
     protected $fillable=[
                 'Código',
                 'Nombre',

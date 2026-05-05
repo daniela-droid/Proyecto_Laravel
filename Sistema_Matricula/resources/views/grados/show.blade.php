@@ -14,7 +14,7 @@
         </div>
 
         <div class="card-body">
-           <p><strong>Id Grado:</strong>{{$grado->id}} </p>
+           <!-- <p><strong>Id Grado:</strong>{{$grado->id}} </p> -->
            <p><strong>Nombre:</strong> {{$grado->Nombre}}</p>
            <p><strong>Nivel:</strong> {{$grado->Nivel}}</p>
 

@@ -16,9 +16,12 @@
             <form action="{{ route('matriculas.store') }}" method="POST">
                 @csrf {{-- método de seguridad --}}
 
-              <div class="form-group mb-2">
+
+                <div class="row">
+                    <div class="col-md-4">
+                 <div class="form-group mb-2">
                         <label for="id_estudiante">Estudiantes</label>
-                        <div class="input-group w-50">
+                        <div class="input-group ">
                             <input type="hidden" name="id_estudiante" id="id_estudiante" required>
                             
                             <input type="text" id="nombre_stu_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
@@ -27,18 +30,16 @@
                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalstu">
                                     <i class="fas fa-search "></i> Buscar
                                 </button>
-                              <a href="{{route('estudiantes.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                               
                             </div>
                          
                            </div>
-                </div>
-
-
-
-
-            <div class="form-group mb-2">
+                    </div>
+                    </div>
+                    <div class="col-md-4">
+                 <div class="form-group mb-2">
                         <label for="id_grupo">Secciones</label>
-                        <div class="input-group w-50">
+                        <div class="input-group ">
                             <input type="hidden" name="id_grupo" id="id_grupo" required>
                             
                             <input type="text" id="nombre_sec_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
@@ -47,59 +48,69 @@
                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalsec">
                                     <i class="fas fa-search "></i> Buscar
                                 </button>
-                              <a href="{{route('grupos.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                             
                             </div>
                          
                     </div>
-            </div>
+                 </div>
+
+                    </div>
+                    <div class="col-md-4">
+
+                <div class="form-group mb-3">
+                    <label for="id_periodo_academicos"> Periodos Academicos</label>
+                    <select name="id_periodo_academicos" class="form-control " required>
+                        <option value="" disabled selected>-- Seleccione  --</option>
+                        @foreach($periodos as $periodo)
+                        <option value="{{$periodo->id }}">{{$periodo->Nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                </div>
+                </div>
 
 
-
-
-             <div class="form-group mb-3">
-                <label for="id_periodo_academicos"> Periodos Academicos</label>
-                <select name="id_periodo_academicos" class="form-control form-control-sm w-50" required>
-                    <option value="" disabled selected>-- Seleccione  --</option>
-                    @foreach($periodos as $periodo)
-                       <option value="{{$periodo->id }}">{{$periodo->Nombre }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-
-            <!-- <div class="form-group mb-3">
-                <label for="id_usuario">Usuarios</label>
-                <select name="id_usuario" class="form-control form-control-sm w-50" readonly required>
-                    <option value="" disabled selected>-- Seleccione  --</option>
-                    @foreach($usuarios as $usuario)
-                       <option value="{{$usuario->id }}">{{ $usuario->Email }}</option>
-                    @endforeach
-                </select>
-            </div> -->
-
-             <div class="form-group mb-2">
+                <div class="row">
+                    <div class="col-md-4">
+                  <div class="form-group mb-2">
                     <label for="fecha_matricula">Fecha</label>
-                    <input type="date" name="fecha_matricula" class="form-control form-control-sm w-50" required>
-            </div>
+                    <input type="date" name="fecha_matricula" class="form-control " required>
+                 </div>
+                    </div>
+                    <div class="col-md-4">
 
-             <div class="form-group mb-2"> 
-                <label for="">Estado</label>
-                 <select name="estado" class="form-control form-control-sm w-50" required> 
+                     <div class="form-group mb-2"> 
+                   <label for="">Estado</label>
+                 <select name="estado" class="form-control " required> 
                     <option value="Activo">Activo</option> 
                     <option value="Retirado">Retirado</option> 
                     <option value="Suspendido">Suspendido</option> 
                     <option value="Expulsado">Expulsado</option> 
                 </select>
                  </div>
-
+                    </div>
+                    <div class="col-md-4">
+                        
                  <div class="form-group mb-2">
                     <label for="observaciones">Observaciones</label>
-                    <input type="text" name="observaciones" class="form-control form-control-sm w-50" required>
+                    <input type="text" name="observaciones" class="form-control " required>
+                </div>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <div class="row">
+                    <div class="col-md-12">
+                <hr>
+                    </div>
+                    <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">   <i class="fas fa-save"></i> Guardar</button>
                 {{-- Aquí estaba mal, debe ser route() con comillas --}}
                 <a href="{{ route('matriculas.index') }}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </div>
+             
+
+
             </form>
         </div>
     </div>
@@ -154,6 +165,42 @@
                         });
                     });
 
+
+        </script>
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+    // Usamos la URL actual para que cada formulario tenga su propio "baúl" de datos
+    const storagePrefix = "form_data_" + window.location.pathname;
+    const form = document.querySelector('form');
+    
+    if (!form) return; // Si no hay formulario en esta página, no hace nada
+
+    const inputs = form.querySelectorAll('input, select, textarea');
+
+    // 1. CARGAR: Al entrar, rellena lo que encuentre para ESTA página
+    inputs.forEach(input => {
+        if (input.name && input.type !== 'password') { 
+            const savedValue = localStorage.getItem(storagePrefix + "_" + input.name);
+            if (savedValue !== null) {
+                input.value = savedValue;
+            }
+        }
+    });
+
+    // 2. GUARDAR: Escucha cambios en cualquier input
+    form.addEventListener('input', function(e) {
+        if (e.target.name && e.target.type !== 'password') {
+            localStorage.setItem(storagePrefix + "_" + e.target.name, e.target.value);
+        }
+    });
+
+    // 3. LIMPIAR: Borra solo cuando el usuario guarda (submit)
+    form.addEventListener('submit', function() {
+        inputs.forEach(input => {
+            localStorage.removeItem(storagePrefix + "_" + input.name);
+        });
+    });
+});
 
         </script>
 @stop

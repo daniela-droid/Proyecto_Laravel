@@ -14,7 +14,7 @@
     
     </div>
         <div class="card-body">
-        <p><strong>ID:</strong>{{$horario->id}}</p>
+        <!-- <p><strong>ID:</strong>{{$horario->id}}</p> -->
         <p><strong>Grupo:</strong>{{$horario->id_grupo}}</p>
         <p><strong>Asignatura:</strong>{{$horario->id_asignatura}}</p>
         <p><strong>Docente:</strong>{{$horario->id_docente}}</p>

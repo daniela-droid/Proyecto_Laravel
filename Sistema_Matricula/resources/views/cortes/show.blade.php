@@ -13,7 +13,7 @@
             <h3 class="card-title">Corte Evaluativo</h3>
         </div>
         <div class="card-body">
-            <p><strong>ID:</strong> {{ $corte->id }}</p>
+            <!-- <p><strong>ID:</strong> {{ $corte->id }}</p> -->
             <p><strong>Modalidad:</strong> {{  $corte->modalidades->nombre}}</p>
              <p><strong>Nombre:</strong> {{ $corte->nombre }}</p>
               <p><strong>Ponderación:</strong> {{ $corte->ponderacion }}</p>

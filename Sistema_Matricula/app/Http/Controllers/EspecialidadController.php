@@ -42,7 +42,7 @@ class EspecialidadController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(especialidad $especialidad)
+    public function show(Especialidad $especialidad)
     {
         return view('especialidades.show',compact('especialidad'));
     }
@@ -50,7 +50,7 @@ class EspecialidadController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(especialidad $especialidad)
+    public function edit(Especialidad $especialidad)
     {
         return view('especialidades.edit',compact('especialidad'));
     }
@@ -58,7 +58,7 @@ class EspecialidadController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, especialidad $especialidad)
+    public function update(Request $request, Especialidad $especialidad)
     {
          $request->validate([
             'Especialidad'=>'required|string|max:70',
@@ -73,7 +73,7 @@ class EspecialidadController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(especialidad $especialidad)
+    public function destroy(Especialidad $especialidad)
     {
         $especialidad->delete();
      return redirect()->route('especialidades.index')->with('success','Especialidad Eliminado');

@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-class periodo_academicos extends Model
+use \App\Traits\HashRouteKey;
+class Periodo_academicos extends Model
 {
     protected $table='periodo_academicos';
     /** @use HasFactory<\Database\Factories\PeriodoAcademicoFactory> */
     use HasFactory;
-
+    // use HashRouteKey;
      public $timestamps=true;
 
     protected $fillable=[

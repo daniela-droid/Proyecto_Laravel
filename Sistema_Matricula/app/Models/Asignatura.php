@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use \App\Traits\HashRouteKey;
     class Asignatura  extends Model
     {
         protected $table = 'asignaturas';
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
         use HasFactory;
         /*hacemos uso de los timestames*/
     public $timestamps = true;
-        
+    //    use HashRouteKey; 
     protected $fillable=[
      
             'Nombre',

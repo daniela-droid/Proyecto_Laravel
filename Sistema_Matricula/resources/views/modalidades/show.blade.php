@@ -14,7 +14,7 @@
     
         </div>
         <div class="card-body">
-        <p><strong>Id:</strong>{{$modalidade->id}}</p>
+        <!-- <p><strong>Id:</strong>{{$modalidade->id}}</p> -->
         <p><strong>Nombre:</strong> {{ $modalidade->nombre }}</p>
         <p><strong>Código :</strong> {{ $modalidade->codigo }}</p>
         <p><strong>Descripción:</strong> {{ $modalidade->descripcion}}</p>

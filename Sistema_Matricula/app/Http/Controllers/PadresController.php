@@ -27,30 +27,43 @@ class PadresController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
+   public function store(Request $request)
+{
+    $request->validate([
+        'Nombre_o_Tutor'=>'required|string|max:255',
+        'Apellido'=>'required|string|max:255',
+        'Email'=>'required|string|max:255|email',
+        'Cedula'=>'required|string|max:255',
+        'Telefono'=>'required|string|max:25'
+    ]);
+    
+    $padre = Padres::create($request->all());
+    
+    return redirect()->route('padres.index')->with('success','Padre creado');
 
-        $request->validate([
-            'Nombre_o_Tutor'=>'required|string|max:255',
-            'Apellido'=>'required|string|max:255',
-            'Email'=>'required|string|max:255',
-            'Cedula'=>'required|string|max:255',
-            'Telefono'=>'required|string|max:25'
+    
+}
 
-        ]);
-        Padres::create($request->all());
+public function storeRapido(Request $request)
+{
+    $request->validate([
+        'Nombre_o_Tutor' => 'required|string|max:255',
+        'Apellido' => 'required|string|max:255',
+        'Email' => 'nullable|email|max:255',        // ← Opcional
+        'Cedula' => 'nullable|string|max:255',     // ← Opcional
+        'Telefono' => 'nullable|string|max:25'     // ← Opcional
+    ]);
 
-        //  decidimos si volver o no a estudaintes
-   if ($request->input('origen') == 'estudiante') {
-        return redirect()->route('estudiantes.create')
-       ->with('success', 'Padre creado');
-    }
-        return redirect()->route('padres.index')->with('success','padres creado correctamente');
-    }
+    $padre = Padres::create($request->all());
 
-    /**
-     * Display the specified resource.
-     */
+    return response()->json([
+        'success' => true,
+        'id' => $padre->id,
+        'nombre' => $padre->Nombre_o_Tutor . ' ' . $padre->Apellido
+    ]);
+}
+
+
     public function show(padres $padre)
     {
         return view('padres.show',compact('padre'));

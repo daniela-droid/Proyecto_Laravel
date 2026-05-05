@@ -14,9 +14,21 @@ class EstudiantesController extends Controller
      */
     public function index()
     {//lista todos los estudiantes
-       $estudiantes= Estudiante::with(['padre','comarca'])->get();
+    // Esto carga el estudiante y todas sus matrículas de un solo golpe
+     $total_estudiantes=Estudiante::count();
+     
+      // Necesitas estas variables AQUÍ para que las tarjetas del INDEX no den error
+    $estudiantesPrimaria = Estudiante::whereHas('matriculas.grupos.grados', function ($query) {
+        $query->where('tipo_nivel', 'Primaria');
+    })->get();
+
+    $estudiantesSecundaria = Estudiante::whereHas('matriculas.grupos.grados', function ($query) {
+        $query->where('tipo_nivel', 'Secundaria');
+    })->get();
+       $estudiantes= Estudiante::with(['padre','comarca','matriculas'])->get();
        // dd($estudiantes->toArray());
-           return view('estudiantes.index', compact('estudiantes'));
+           return view('estudiantes.index', compact(
+        'estudiantes','total_estudiantes','estudiantesPrimaria','estudiantesSecundaria'));
          
     }
 
@@ -30,13 +42,31 @@ class EstudiantesController extends Controller
         return view('estudiantes.create',compact('padre','comarca'));
     }
 
+    //metodo de tablas de estudiante de primaria
+    public function primaria(){
+     $estudiantesPrimaria = Estudiante::whereHas('matriculas.grupos.grados', function ($query) {
+        $query->where('tipo_nivel', 'Primaria');
+    })->get();
+
+    return view('estudiantes.primaria',compact('estudiantesPrimaria'));
+    }
+    //metodo de tablas de estudiante de secundaria 
+    public function secundaria(){
+    $estudiantesSecundaria = Estudiante::whereHas('matriculas.grupos.grados', function ($query) {
+        $query->where('tipo_nivel', 'Secundaria');
+    })->get();
+
+
+     return view('estudiantes.secundaria',compact('estudiantesSecundaria'));
+    }
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+      
         $request ->validate([
-        'Código_Persona' => 'required|integer',
+        'Código_Persona' => 'required|integer|unique:estudiantes,Código_Persona',
         'Nombre' => 'required|string|max:255',
         'Apellido' => 'required|string|max:255',
         'Sexo' => 'required|string|max:12',
@@ -48,10 +78,13 @@ class EstudiantesController extends Controller
                 
 
         Estudiante::create($request->all());
+        
+        if ($request->from === 'matriculas') {
+            return redirect()->route('matriculas.create')->with('success', 'Estudiante creado correctamente. Ahora puedes continuar con la matrícula.');
+        }
+        
         return redirect()->route('estudiantes.index')->with('success', 'Estudiante creado correctamente');
-                    
-          
-            
+              
     }
 
     /**
@@ -61,6 +94,8 @@ class EstudiantesController extends Controller
     {
         //para depurar
          //dd($datosvalidados);
+         // Buscamos al estudiante por id y cargamos sus 3 relaciones
+       $estudiante->load(['padre', 'comarca', 'matriculas']);
         return view('estudiantes.show',compact('estudiante'));
     }
 

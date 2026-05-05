@@ -8,7 +8,7 @@ use App\Models\Estudiante;
 use App\Models\Grupos;
 use App\Models\Periodo_academicos;
 use App\Models\Usuario;
-
+use Illuminate\Validation\Rule;
 class MatriculasController extends Controller
 {
     /**
@@ -39,27 +39,35 @@ class MatriculasController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-      //return  $request->all();
-        //validacion
-      $request->validate(
-            [
-                'id_estudiante'=>'required|exists:estudiantes,id',
-                'id_grupo'=>'required|exists:grupos,id',
-                'id_periodo_academicos'=>'required|exists:periodo_academicos,id',
-                //'id_usuario'=>'required|exists:usuarios,id',
-                'fecha_matricula'=>'required|date',//date
-                'estado'=>'required|in:Activo,Retirado,Suspendido,Expulsado',  //enum
-                'observaciones'=>'required|string|max:255'//string
-            ]
-        );
-        //agregamos al usuario manuelmente
-        $request['id_usuario'] = auth()->id();
-        //crear la matricula
-        Matriculas::create($request->all());
-        return redirect()->route('matriculas.index')->with('success','Matriculas creada correctamente');
-            }
+        public function store(Request $request)
+        {
+            $request->validate([
+                'id_estudiante' => ['required','exists:estudiantes,id',
+                    // Esta regla verifica que el id_estudiante no exista ya en la tabla matriculas
+                    // PERO filtrando por el periodo académico seleccionado.
+                    Rule::unique('matriculas')->where(function ($query) use ($request) {
+                        return $query->where('id_estudiante', $request->id_estudiante)
+                        ->where('id_periodo_academicos', $request->id_periodo_academicos);
+                    }),
+                ],
+                'id_grupo' => 'required|exists:grupos,id',
+                'id_periodo_academicos' => 'required|exists:periodo_academicos,id',
+                'fecha_matricula' => 'required|date',
+                'estado' => 'required|in:Activo,Retirado,Suspendido,Expulsado',
+                'observaciones' => 'required|string|max:255'
+            ], [
+                // Mensaje personalizado para que el usuario entienda qué pasó
+                'id_estudiante.unique' => 'Este estudiante ya se encuentra matriculado en el periodo académico seleccionado.'
+            ]);
+
+            // Agregamos al usuario manualmente
+            $request->merge(['id_usuario' => auth()->id()]);
+
+            // Crear la matrícula
+            Matriculas::create($request->all());
+
+            return redirect()->route('matriculas.index')->with('success', 'Matrícula creada correctamente');
+        }
 
 
     /**

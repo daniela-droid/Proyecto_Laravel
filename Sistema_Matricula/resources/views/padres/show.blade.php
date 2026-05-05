@@ -14,7 +14,7 @@
     
         </div>
         <div class="card-body">
-            <p><strong>Nombre_o_Tutor</strong>{{$padre->Nombre_o_Tutor}}</p>
+            <p><strong>Nombre_o_Tutor:</strong>{{$padre->Nombre_o_Tutor}}</p>
             <p><strong>Apellido:</strong> {{ $padre->Apellido }}</p>
          
             <p><strong>Email:</strong> {{ $padre->Email}}</p>

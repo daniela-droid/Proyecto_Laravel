@@ -8,19 +8,24 @@
             <div class="col-sm-6">
                 <h1 class="m-0 text-dark"><i class="fas fa-student-alt mr-2"></i>Estudiantes Asignados</h1>
             </div>
+            <div class="col-sm-6 text-right">
+                <a href="{{ route('docente.notas.create') }}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-chart-bar mr-1"></i> Cargar notas
+                </a>
+            </div>
         </div>
     </div>
 @stop
 
 @section('content')
 <div class="container-fluid">
-    <div class="card card-outline card-primary card-success">
+    <div class="card card-outline card-primary card-secondary">
         <div class="card-header">
             <h3 class="card-title">Listado de Estudiantes Asignados</h3>
         </div>
         <div class="card-body p-0">
             <table class="table table-hover table-striped">
-                <thead class="alert-success">
+                <thead class="alert-secondary">
                     <tr>
                         <th>Grado</th>
                         <th>Seccion</th>

@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-
-class horarios extends Model
+use \App\Traits\HashRouteKey;
+class Horarios extends Model
 {
     protected $table='horarios';
     /** @use HasFactory<\Database\Factories\HorariosFactory> */
     use HasFactory;
-
+    // use HashRouteKey;
     public $timestamps=true;
     protected $fillable=[
         'id_grupo',

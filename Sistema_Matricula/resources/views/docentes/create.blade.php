@@ -12,82 +12,51 @@
         <div class="card-body">
             <form action="{{ route('docentes.store') }}" method="POST">
                 @csrf {{-- Seguridad de Laravel --}}
-<!-- 
-            <div class="form-group mb-2">
-                <label for="id_usuario">id de usuarios</label>
-                <select name="id_usuario" class="form-control form-control-sm w-50" required>
-                 
-                    <option value="" disabled selected> seleccione el id del usuario que contiene su email </option>
-                    @foreach($usuarios as $usuario)
-                        {{-- Importante: value lleva el ID, pero el usuario ve el Nombre --}}
-                        <option value="{{ $usuario->id }}">{{ $usuario->id}} {{ $usuario->Email }}</option>
-                    @endforeach
-                </select>
-                 <a href="{{route('usuarios.create')}}" class="btn btn-primary">  <i class="fas fa-plus"></i></a>
-              
-            </div> -->
-               
-                <div class="form-group mb-2">
-                        <label for="id_usuario">Usuarios</label>
-                        <div class="input-group w-25">
-                            <input type="hidden" name="id_usuario" id="id_usuario" required>
-                            
-                            <input type="text" id="nombre_user_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
-                            
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modaluser">
-                                    <i class="fas fa-search"></i> Buscar
-                                </button>
-                              <a href="{{route('usuarios.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
-                            </div>
-                         
-                           </div>
-                </div>
-
-                <div class="form-group mb-2">
+ 
+               <div class="row">
+           
+                <div class="col-md-4">
+                    <div class="form-group mb-2">
                     <label for="Nombre">Nombre</label>
-                    <input type="text" name="Nombre" class="form-control form-control-sm w-50" required>
+                    <input type="text" name="Nombre" class="form-control " required>
                 </div>
-
+                </div>
+                <div class="col-md-4">
                 <div class="form-group mb-2">
                     <label for="Apellido">Apellido</label>
-                    <input type="text" name="Apellido" class="form-control form-control-sm w-50" required>
+                    <input type="text" name="Apellido" class="form-control " required>
                 </div>
-
-                <div class="form-group mb-2">
-                       <label for="FechadeNacimiento">Fecha de Nacimiento</label>
-                    <input type="date" name="FechadeNacimiento"  class="form-control form-control-sm w-50" required>
                 </div>
-
-                
+                <div class="col-md-4">
 
                 <div class="form-group mb-2"> 
                     <label for="Email">Email</label>
-                     <input type="text" name="Email" class="form-control form-control-sm w-50" required>
+                     <input type="email" name="Email" class="form-control " >
               
                    </div>
-
-                <div class="form-group mb-2">
-                    <label for="Telefono">Telefono</label>
-                    <input type="text" name="Telefono" class="form-control form-control-sm w-50" required>
                 </div>
+               </div>
 
-<!--               
+             <div class="row">
+                <div class="col-md-4">
+            
                 <div class="form-group mb-2">
-                <label for="id_especialidads">Especialidades</label>
-                <select name="id_especialidads" class="form-control form-control-sm w-50" required>
-                 
-                    <option value="" disabled selected>-- Especialiades --</option>
-                    @foreach($especialidads as $especialidad)
-                        {{-- Importante: value lleva el ID, pero el usuario ve el Nombre --}}
-                        <option value="{{ $especialidad->id }}">{{ $especialidad->Especialidad}} </option>
-                    @endforeach
-                </select>
-              
-            </div> -->
-                  <div class="form-group mb-2">
+                       <label for="FechadeNacimiento">Fecha de Nacimiento</label>
+                    <input type="date" name="FechadeNacimiento"  class="form-control " required>
+                </div>
+                </div>
+                
+                <div class="col-md-4">
+                     <div class="form-group mb-2">
+                    <label for="Telefono">Telefono</label>
+                      <input type="tel" name="Telefono" class="form-control "  title="Por favor, introduce almenos 8 dígitos numéricos" 
+                required>
+                </div>
+                </div>
+                <div class="col-md-">
+                      <div class="form-group mb-2">
                         <label for="id_especialidads">Especialidades</label>
-                        <div class="input-group w-25">
+                        <div class="input-group ">
                             <input type="hidden" name="id_especialidads" id="id_especialidads" required>
                             
                             <input type="text" id="nombre_modalidad_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
@@ -103,11 +72,44 @@
                
                            </div>
                     </div>
+                </div>
+               <div class="col-md-4">
+                 
+               <div class="form-group mb-2">
+                        <label for="id_usuario">Usuarios</label>
+                        <div class="input-group ">
+                            <input type="hidden" name="id_usuario" id="id_usuario" required>
+                            
+                            <input type="text" id="nombre_user_display"  class="form-control form-control-sm w-50" placeholder="Haga clic en la lupa para buscar..." readonly required>
+                            
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modaluser">
+                                    <i class="fas fa-search"></i> Buscar
+                                </button>
+                              <a href="{{route('usuarios.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                            </div>
+                         
+                           </div>
+                    </div>
+                </div>
+            
+               </div>
 
-                
-                   <button type="submit" class="btn btn-primary">Guardar</button>
+             
+            <div class="row">
+                 <div class="col-md-8">
+                    <hr>
+                </div>
+                 <div class="col-md-8">
+                    <button type="submit" class="btn btn-primary">   <i class="fas fa-save"></i> Guardar</button>
                 {{-- Aquí estaba mal, debe ser route() con comillas --}}
                 <a href="{{ route('docentes.index') }}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </div>
+               
+
+               
+
                 </div>
             </form>
         </div>
@@ -165,5 +167,42 @@
                         });
                     });
                             
+        </script>
+
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+    // Usamos la URL actual para que cada formulario tenga su propio "baúl" de datos
+    const storagePrefix = "form_data_" + window.location.pathname;
+    const form = document.querySelector('form');
+    
+    if (!form) return; // Si no hay formulario en esta página, no hace nada
+
+    const inputs = form.querySelectorAll('input, select, textarea');
+
+    // 1. CARGAR: Al entrar, rellena lo que encuentre para ESTA página
+    inputs.forEach(input => {
+        if (input.name && input.type !== 'password') { 
+            const savedValue = localStorage.getItem(storagePrefix + "_" + input.name);
+            if (savedValue !== null) {
+                input.value = savedValue;
+            }
+        }
+    });
+
+    // 2. GUARDAR: Escucha cambios en cualquier input
+    form.addEventListener('input', function(e) {
+        if (e.target.name && e.target.type !== 'password') {
+            localStorage.setItem(storagePrefix + "_" + e.target.name, e.target.value);
+        }
+    });
+
+    // 3. LIMPIAR: Borra solo cuando el usuario guarda (submit)
+    form.addEventListener('submit', function() {
+        inputs.forEach(input => {
+            localStorage.removeItem(storagePrefix + "_" + input.name);
+        });
+    });
+});
+
         </script>
     @stop

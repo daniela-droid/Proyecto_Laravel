@@ -32,7 +32,8 @@ class GradosController extends Controller
     {
         $request->validate([
              'Nombre'=>'required|string|max:255',
-             'Nivel'=>'required|int'
+             'Nivel'=>'required|int',
+             'tipo_nivel'=>'required|in:Primaria,Secundaria'
                 
 
         ]);
@@ -64,8 +65,8 @@ class GradosController extends Controller
     {
          $request->validate([
              'Nombre'=>'required|string|max:255',
-             'Nivel'=>'required|int'
-                
+             'Nivel'=>'required|int',
+            'tipo_nivel'=>'required|in:Primaria,Secundaria'
 
         ]);
         $grado->update($request->all());

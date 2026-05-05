@@ -7,6 +7,7 @@ use App\Models\Grupos;
 use App\Models\Asignatura;
 use App\Models\Docentes;
 use App\Models\Aulas;
+use App\Models\Grados;
 use Illuminate\Http\Request;
 use  Illuminate\views;
 
@@ -17,7 +18,7 @@ class HorariosController extends Controller
      */
     public function index()
     {
-        $horarios=Horarios::with(['grupo','asignatura','docente','aula'])->get();
+        $horarios=Horarios::with(['grupo.matriculas.estudiantes','asignatura','docente','aula'])->get();
         return view('horarios.index',compact('horarios'));
     }
 
@@ -66,6 +67,7 @@ class HorariosController extends Controller
      */
     public function edit(horarios $horario)
     {
+
         $grupo=Grupos::all();
         $asignatura=Asignatura::all();
         $docente=Docentes::all();
@@ -139,7 +141,7 @@ class HorariosController extends Controller
                 return "Error: El usuario con email {$user->Email} no tiene un perfil docente creado.";
             }
 
-            $horarios = \App\Models\Horarios::with(['grupo.grados', 'asignatura'])
+            $horarios = \App\Models\Horarios::with(['grupo.grados', 'notas','asignatura'])
             ->where('id_docente', $docente->id) 
             ->get()
             ->unique(function ($item) {
@@ -148,6 +150,53 @@ class HorariosController extends Controller
             });
 
          return view('docentes.mis_estudiantes', compact('horarios'));
+    }
+
+    //API DE LOS ESTUDAINTES QUE RETORNAN EN LAS NOTAS
+    public function getEstudiantesPorHorario($id, Request $request)
+    {
+        $corteActual = $request->query('corte'); // Recibimos el corte desde el JS
+
+        $horario = \App\Models\Horarios::with([
+            'grupo.matriculas.estudiantes',
+            'grupo.matriculas.notas' // Traemos todas las notas de esas matrículas
+        ])->findOrFail($id);
+
+        $data = $horario->grupo->matriculas->map(function($matricula) use ($corteActual, $id) {
+            $est = $matricula->estudiantes;
+            
+            // 1. Buscamos si ya existe nota para EL CORTE SELECCIONADO
+            $notaDelCorte = $matricula->notas
+                ->where('id_horario', $id)
+                ->where('id_corte_evaluativo', $corteActual)
+                ->first();
+
+            // 2. Traemos el historial (Notas de otros cortes en esta misma materia)
+            $historial = $matricula->notas
+                ->where('id_horario', $id)
+                ->where('id_corte_evaluativo', '!=', $corteActual)
+                ->map(function($n) {
+                    return [
+                        'corte' => $n->cortes->nombre ?? 'N/A',
+                        'valor' => $n->nota_normal
+                    ];
+                });
+
+            return [
+                'id_matricula'   => $matricula->id,
+                'Nombre'         => $est->Nombre . ' ' . $est->Apellido,
+                'Codigo_Persona' => $est->Código_Persona,
+                'Sexo'           => $est->Sexo,
+                'Celular'        => $est->Celular,
+                // Datos de control
+                'nota_actual'    => $notaDelCorte ? $notaDelCorte->nota_normal : null,
+                'nota_especial'  => $notaDelCorte ? $notaDelCorte->nota_especial : null,
+                'observacion'    => $notaDelCorte ? $notaDelCorte->observacion : null,
+                'historial'      => $historial
+            ];
+        });
+
+        return response()->json($data);
     }
 
      public function __construct()

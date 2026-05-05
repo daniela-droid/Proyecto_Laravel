@@ -1,42 +1,33 @@
 @extends('adminlte::page')
 
-@section('title', 'Notas')
 
-@section('content_header')
-    <h1>Lista de Notas</h1>
-@stop
-
+<!-- dejar asi o se duplica -->
 @section('content')
-<div class="container">
-    <div class="card">
-        <div class="card-header">Agregar Notas</div>
-        <div class="card-body">
-         
-            <form action="{{ route('notas.store') }}" method="POST">
-                @csrf {{-- método de seguridad --}}
-
-                <div class="form-group">
-                    <label for="id_estudiantes">Id_estudiantes</label>
-                    <input type="text" name="id_estudiantes" class="form-control form-control-sm w-50" required>
-                </div>
-
-                 <div class="form-group">
-                    <label for="id_asignaturas">Id_asignaturas</label>
-                    <input type="text" name="id_asignaturas" class="form-control form-control-sm w-50" required>
-                </div>
-                 <div class="form-group">
-                    <label for="id_usuarios">Id_Usuarios</label>
-                    <input type="text" name="id_usuarios" class="form-control form-control-sm w-50" required>
-                </div>
-<div class="form-group">
-                <label for="notas">Nota:</label>
-    <input type="number" name="notas" id="notas" class="form-control form-control-sm w-50"  required>
-  </div>
-                <button type="submit" class="btn btn-primary">Guardar</button>
-                {{-- Aquí estaba mal, debe ser route() con comillas --}}
-                <a href="{{ route('notas.index') }}" class="btn btn-secondary">Cancelar</a>
-            </form>
-        </div>
+    <div class="container-fluid pt-3">
+        {{-- ESTA ES LA ÚNICA LÍNEA QUE DEBE EXISTIR --}}
+        @livewire('notas.carga-masiva', ['modo' => 'admin'])
+        <a class="btn btn-secondary" href="{{route('notas.index')}}">volver</a>
     </div>
-</div>
+ 
+@stop
+@section('js')
+<script>
+window.addEventListener('alert', event => {
+    Swal.fire({
+        title: event.detail.message,
+        icon: event.detail.type,
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '<i class="fas fa-list"></i> Ir al Listado',
+        cancelButtonText: '<i class="fas fa-plus"></i> Cargar otro grupo',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Si el profesor quiere ir al Index
+            window.location.href = "{{ route('notas.index') }}";
+        }
+        // Si cancela, se queda en la página actual para seguir trabajando
+    });
+});
+</script>
 @stop

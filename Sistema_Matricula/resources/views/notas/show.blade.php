@@ -14,10 +14,14 @@
     
         </div>
         <div class="card-body">
-           <p><strong>Id_Estudiantes:</strong> {{ $nota->id_estudiantes }}</p>
-            <p><strong>id_Asignaturas:</strong> {{ $nota->id_asignaturas }}</p>
-            <p><strong>id_Usuarios:</strong> {{ $nota->id_usuarios }}</p>
-            <p><strong>Notas:</strong> {{ $nota->notas }}</p>
+            <!-- <p><strong>Id de Nota:</strong> {{ $nota->id }}</p> -->
+           <p><strong>Matriculas:</strong> {{ $nota->id_matricula }}</p>
+            <p><strong>Horarios:</strong> {{ $nota->id_horario }}</p>
+            <p><strong>Corte Evaluativo:</strong> {{ $nota->id_corte_evaluativo }}</p>
+            <p><strong>Nota:</strong> {{ $nota->nota_normal}}</p>
+            <p><strong>Nota Especial:</strong> {{ $nota->nota_especial }}</p>
+            <p><strong>Observación:</strong> {{ $nota->Observaciones }}</p>
+             <p><strong>Id Usuario:</strong> {{ $nota->id_usuario }}</p>
         </div>
         <div class="card-footer">
             <a href="{{ route('notas.index') }}" class="btn btn-secondary">

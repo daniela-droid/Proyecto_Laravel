@@ -1,5 +1,6 @@
 @extends('adminlte::page')
 @section('title','Horarios')
+@section('plugins.Datatables', true)
 @section('content_header')
 <h3>Editar Horario</h3>
 @stop
@@ -15,55 +16,72 @@
                 @csrf
                 @method('PUT')
 
-                 <div class="form-group mb-2">
-                <label for="id_grupo">Grupos</label>
-                <select name="id_grupo" class="form-control form-control-sm w-50" required>
-                    @foreach($grupo as $grupo)
-                        <option value="{{ $grupo->id }}" 
-                            {{ $horario->id_grupo == $grupo->id ? 'selected' : '' }}>
-                            {{ $grupo->Nombre }}
-                        </option>
-                    @endforeach
-                </select>
+                  <div class="form-group mb-2">
+                        <label for="id_grupo">Secciones</label>
+                        <div class="input-group w-50">
+                            <input type="hidden" name="id_grupo" id="id_grupo" value="{{$horario->id_grupo}}"required>
+                            
+                            <input type="text" id="nombre_sec_display" class="form-control form-control-sm" value="{{$horario->grupo->Descripcion}}" readonly required>
+                            
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalsec">
+                                    <i class="fas fa-search "></i> Buscar
+                                </button>
+                              <a href="{{route('grupos.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                            </div>
+                       </div>
+                 </div>
+
+            <div class="form-group mb-2">
+                        <label for="id_asignatura">Asignaturas</label>
+                        <div class="input-group w-50">
+                            <input type="hidden" name="id_asignatura" id="id_asignatura" value="{{$horario->id_asignatura}}"required>
+                            
+                            <input type="text" id="nombre_asig_display" class="form-control form-control-sm" value="{{$horario->asignatura->Nombre}}" readonly required>
+                            
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalasig">
+                                    <i class="fas fa-search "></i> Buscar
+                                </button>
+                              <a href="{{route('asignaturas.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                            </div>
+                         
+                      </div>
+                    </div>
+
+                  <div class="form-group mb-2">
+                        <label for="id_docente">Docentes</label>
+                        <div class="input-group w-50">
+                            <input type="hidden" name="id_docente" id="id_docente" value="{{$horario->id_docente}}"required>
+                            
+                            <input type="text" id="nombre_doc_display" class="form-control form-control-sm" value="{{$horario->docente->Nombre}}" readonly required>
+                            
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modaldoc">
+                                    <i class="fas fa-search "></i> Buscar
+                                </button>
+                              <a href="{{route('docentes.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                            </div>
+                         
+                    </div>
+                 </div>
+
+                   <div class="form-group mb-2">
+                        <label for="id_aula">Aulas</label>
+                        <div class="input-group w-50">
+                            <input type="hidden" name="id_aula" id="id_aula" value="{{$horario->id_aula}}" required>
+                            
+                            <input type="text" id="nombre_aula_display" class="form-control form-control-sm" value="{{$horario->aula->Nombre}}" readonly required>
+                            
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalaula">
+                                    <i class="fas fa-search "></i> Buscar
+                                </button>
+                              <a href="{{route('aulas.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                            </div>
+                         
+                    </div>
             </div>
-
-
-                     <div class="form-group mb-2">
-                <label for="id_asignatura">Asignaturas</label>
-                <select name="id_asignatura" class="form-control form-control-sm w-50" required>
-                    @foreach($asignatura as $asignatura)
-                        <option value="{{ $asignatura->id }}" 
-                            {{ $horario->id_asignatura == $asignatura->id ? 'selected' : '' }}>
-                            {{ $asignatura->Nombre }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-
-                     <div class="form-group mb-2">
-                <label for="id_docente"> Docentes</label>
-                <select name="id_docente" class="form-control form-control-sm w-50" required>
-                    @foreach($docente as $docente)
-                         <option value="{{ $docente->id }}"  {{ $horario->id_docente == $docente->id ?
-                            'selected': ''}}> {{$docente->Nombre}}</option>
-                    @endforeach
-                </select>
-               </div>
-
-
-                     <div class="form-group mb-2">
-                <label for="id_aula">Aulas</label>
-                <select name="id_aula" class="form-control form-control-sm w-50" required>
-                    @foreach($aula as $aula)
-                         <option value="{{ $aula->id }}" {{$horario->id_aula == $aula->id ? 'selected':''}} > 
-                            {{ $aula->Nombre }} </option>
-                    @endforeach
-                </select>
-               </div>
-
-                
-
              <div class="form-group mb-2"> 
                     <label for="Dia_semana">Dia de Semana</label>
                  <select name="Dia_semana" class="form-control form-control-sm w-50" value="{{$horario->Dia_semana}}"required> 
@@ -98,9 +116,93 @@
 </div>
 
 
+    @include('components.modal_horario_grupo')
+    @include('components.modal_horario_asig')
+    @include('components.modal_horario_docente')
+    @include('components.modal_horario_aula')
+@stop
+ {{-- 2. EL JAVASCRIPT VA EN SU PROPIA SECCIÓN --}}
+        @section('js')
+                        <script>
+                        function seleccionarGrupos(id, nombreCompleto) {
+                        $('#id_grupo').val(id);
+                        $('#nombre_sec_display').val(nombreCompleto);
+                        $('#modalsec').modal('hide');
+                    }
 
+                    $(document).ready(function() {
+                        // Inicializar DataTable
+                        var table = $('#tabla_sec_modal').DataTable({
+                            "responsive": true,
+                            "language": {
+                                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                            }
+                        });
 
+                        // Activar el foco en el buscador al abrir el modal
+                        $('#modalsec').on('shown.bs.modal', function () {
+                            $(this).find('input[type="search"]').focus();
+                        });
+                    });
+                    ////////////////secciones//////////////////
+                      function seleccionarAsig(id, nombreCompleto) {
+                        $('#id_asignatura').val(id);
+                        $('#nombre_asig_display').val(nombreCompleto);
+                        $('#modalasig').modal('hide');
+                    }
 
+                    $(document).ready(function() {
+                        // Inicializar DataTable
+                        var table = $('#tabla_asig_modal').DataTable({
+                            "responsive": true,
+                            "language": {
+                                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                            }
+                      });
+                       // Activar el foco en el buscador al abrir el modal
+                        $('#modalasig').on('shown.bs.modal', function () {
+                            $(this).find('input[type="search"]').focus();
+                        });
+                    });
+                    //////////////////docentes////////////////////////////////
+                     function seleccionarDocentes(id, nombreCompleto) {
+                        $('#id_docente').val(id);
+                        $('#nombre_doc_display').val(nombreCompleto);
+                        $('#modaldoc').modal('hide');
+                    }
 
+                    $(document).ready(function() {
+                        // Inicializar DataTable
+                        var table = $('#tabla_doc_modal').DataTable({
+                            "responsive": true,
+                            "language": {
+                                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                            }
+                      });
+                       // Activar el foco en el buscador al abrir el modal
+                        $('#modaldoc').on('shown.bs.modal', function () {
+                            $(this).find('input[type="search"]').focus();
+                        });
+                    });
+                    /////////////////aulas////////////////////////
+                     function seleccionarAulas(id, nombreCompleto) {
+                        $('#id_aula').val(id);
+                        $('#nombre_aula_display').val(nombreCompleto);
+                        $('#modalaula').modal('hide');
+                    }
 
+                    $(document).ready(function() {
+                        // Inicializar DataTable
+                        var table = $('#tabla_aula_modal').DataTable({
+                            "responsive": true,
+                            "language": {
+                                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
+                            }
+                      });
+                       // Activar el foco en el buscador al abrir el modal
+                        $('#modalaula').on('shown.bs.modal', function () {
+                            $(this).find('input[type="search"]').focus();
+                        });
+                    });
+</script>
 @stop

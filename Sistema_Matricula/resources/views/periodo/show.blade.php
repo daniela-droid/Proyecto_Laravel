@@ -10,7 +10,7 @@
         <div class="card-header"></div>
             <div class="card-body">
 
-                <p><strong>ID:</strong> {{$periodo->id}}</p>
+                <!-- <p><strong>ID:</strong> {{$periodo->id}}</p> -->
                 <p><strong>Nombre:</strong>{{$periodo->Nombre}}   </p>
                 <p><strong>Fecha Inicial:</strong>{{$periodo->Fecha_fin }}  </p>
                 <p><strong>Fecha Fin:</strong>  {{$periodo-> Fecha_fin}} </p>

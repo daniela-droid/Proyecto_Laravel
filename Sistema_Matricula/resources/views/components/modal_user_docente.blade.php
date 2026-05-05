@@ -21,7 +21,7 @@
                             <td>{{ $u->Email }} </td>
                             <td>
                                 <button type="button" class="btn btn-sm btn-success" 
-                                    onclick="seleccionarEspecialidades('{{ $u->id }}', '{{$u->Email }} ')">
+                                    onclick="seleccionaruser('{{ $u->id }}', '{{$u->Email }} ')">
                                     <i class="fas fa-check"></i> Seleccionar
                                 </button>
                             </td>

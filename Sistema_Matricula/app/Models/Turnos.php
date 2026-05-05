@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use \App\Traits\HashRouteKey;
 class Turnos extends Model
 {
     protected $table='turnos';
    
     /** @use HasFactory<\Database\Factories\TurnosFactory> */
     use HasFactory;
+    // use HashRouteKey;
     public $timestamps=true;
 
     protected $fillable=[

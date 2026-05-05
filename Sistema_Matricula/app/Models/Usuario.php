@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-
+use \App\Traits\HashRouteKey;
 class Usuario extends Authenticatable//esto es para que laravel sepa que este es para login
 {
      protected $table = 'usuarios';
@@ -14,6 +14,7 @@ class Usuario extends Authenticatable//esto es para que laravel sepa que este es
          use HasFactory, Notifiable;
     /** @use HasFactory<\Database\Factories\UsuariosFactory> */
     use HasFactory;
+    // use HashRouteKey;
     public $timestamps=true;
 
             protected $fillable=[
@@ -44,14 +45,14 @@ class Usuario extends Authenticatable//esto es para que laravel sepa que este es
 
         public function docentes()
     {
-        return $this->hasMany(Docentes::class, 'id_usuario');
+        return $this->hasOne(Docentes::class, 'id_usuario');
     }
 
-    public function admin()
-    {
-        return $this->hasMany(Admin::class, 'id_usuarios');
-    }
-
+   
+     public function admin()
+        {
+            return $this->hasOne(Admin::class, 'id_usuarios','id');
+        }
      public function matriculas()
     {
         return $this->hasMany(Matriculas::class, 'id_usuario');

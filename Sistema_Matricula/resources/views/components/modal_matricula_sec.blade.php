@@ -8,17 +8,29 @@
                 </button>
             </div>
             <div class="modal-body">
+                <!-- Botón para agregar nueva sección -->
+                <div class="mb-3">
+                    <button type="button" class="btn btn-primary btn-sm" onclick="agregarNuevaSeccion()">
+                        <i class="fas fa-plus"></i> Agregar Sección
+                    </button>
+                </div>
+                
                 <table class="table table-striped table-hover datatable" id="tabla_sec_modal">
                     <thead>
                         <tr>
-                            <th>Nombre</th>
+                            <th>Grados</th>
+                            <th>Tipo</th>
+                            <th>Seccion</th>
                            <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($grupos as $g)
                         <tr>
+                            <td>{{$g->grados->Nombre ?? ''}}</td>
+                            <td>{{$g->grados->tipo_nivel ?? ''}}</td>
                             <td>{{ $g->Descripcion }} </td>
+                           
                             <td>
                                 <button type="button" class="btn btn-sm btn-success" 
                                     onclick="seleccionarGrupos('{{ $g->id }}', '{{$g->Descripcion}} ')">
@@ -33,3 +45,12 @@
         </div>
     </div>
 </div>
+
+<script>
+function agregarNuevaSeccion() {
+    // Cerrar el modal actual
+    $('#modalsec').modal('hide');
+    // Redirigir a grupos.create con parámetro from=matriculas
+    window.location.href = '{{ route("grupos.create") }}?from=matriculas';
+}
+</script>

@@ -12,13 +12,13 @@
                 @csrf
                 @method('PUT') {{-- Actualizacion--}}
 
-                        <select name="id_usuario" class="form-control form-control-sm w-50" required>
-                                @foreach($usuarios as $usuario)
-                                    <option value="{{ $usuario->id }}" {{ $docente->id_usuario == $usuario->id ? 'selected' : '' }}>
-                                        {{ $usuario->Email }}
-                                    </option>
-                                @endforeach
-</select>
+                <select name="id_usuario" class="form-control form-control-sm w-50" required>
+                    @foreach($usuarios as $usuario)
+                    <option value="{{ $usuario->id }}" {{ $docente->id_usuario == $usuario->id ? 'selected' : '' }}>
+                      {{ $usuario->id }} {{ $usuario->Email }}
+                    </option>
+                     @endforeach
+                </select>
 
                   <div class="form-group mb-2">
                     <label for="Nombre">Nombre</label>
@@ -47,19 +47,14 @@
                     <input type="text" name="Telefono" class="form-control form-control-sm w-50" value="{{$docente->Telefono}}" required>
                 </div>
 
-                   <div class="form-group mb-2">
-                    <label for="Especialidad">Especialidad</label>
-                    <input type="text" name="Especialidad" class="form-control form-control-sm w-50" value="{{$docente->Especialidad}}"required>
-                </div>
+                
 
             <div class="form-group mb-2">
                 <label for="id_especialidads">Especialidades</label>
                 <select name="id_especialidads" class="form-control form-control-sm w-50" required>
-                 
-                    <option value="" disabled selected>-- Especialiades --</option>
-                    @foreach($especialidads as $especialidad)
-                        {{-- Importante: value lleva el ID, pero el usuario ve el Nombre --}}
-                        <option value="{{ $especialidad->id }}">{{ $especialidad->Especialidad}} </option>
+                 @foreach($especialidads as $especialidad)
+                       <option value="{{ $especialidad->id }}" {{$docente->id_especialidads == $especialidad->id ? 'selected' : ''}}
+                       > {{ $especialidad->id}} {{ $especialidad->Especialidad}} </option>
                     @endforeach
                 </select>
               

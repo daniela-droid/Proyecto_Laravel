@@ -1,0 +1,110 @@
+/* ESTILOS PARA EL SIDEBAR PROFESIONAL */
+
+/* Headers del menú más elegantes */
+.main-sidebar .nav-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.75rem;
+    padding: 12px 15px;
+    margin: 10px 0 5px 0;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Mejorar apariencia de los items del menú */
+.main-sidebar .nav-item > .nav-link {
+    border-radius: 8px;
+    margin: 2px 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.main-sidebar .nav-item > .nav-link:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Iconos más prominentes */
+.main-sidebar .nav-icon {
+    width: 20px;
+    text-align: center;
+    margin-right: 10px;
+    opacity: 0.9;
+}
+
+/* Submenús más elegantes */
+.main-sidebar .nav-treeview .nav-item > .nav-link {
+    padding-left: 40px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    margin: 1px 8px;
+}
+
+.main-sidebar .nav-treeview .nav-item > .nav-link:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+/* Logo mejorado */
+.brand-link {
+    background: linear-gradient(135deg, #233858 0%, #34495e 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Sidebar background sutil */
+.main-sidebar {
+    background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+/* ESTILOS PARA TABLAS EXISTENTES */
+.tabla-sga-personalizada {
+    width: 100% !important;
+}
+
+/* 1. Eliminar flechas de ordenamiento CON FUERZA */
+.tabla-sga-personalizada thead th {
+    background-image: none !important;
+    position: relative;
+}
+
+.tabla-sga-personalizada thead th::before, 
+.tabla-sga-personalizada thead th::after {
+    display: none !important;
+    content: "" !important;
+}
+
+/* 2. Encabezado Cielo Claro */
+.tabla-sga-personalizada thead th {
+    background-color: #8acbfa !important; /* Tu celeste cielo */
+    color: #233858 !important;           /* Tu azul oscuro */
+    border-bottom: 2px solid #233858 !important;
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px !important;
+    white-space: nowrap;
+}
+
+/* 3. Centrado de la columna de acciones (última columna) */
+.tabla-sga-personalizada tbody td:last-child {
+    text-align: center !important;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+
+.compact-table th,
+   .compact-table td {
+    white-space: nowrap;      /* No rompe líneas */
+    overflow: hidden;         /* Oculta exceso de texto */
+    text-overflow: ellipsis;  /* Muestra "..." si es muy largo */
+    vertical-align: middle;
+    max-width: 170px;         /* Ajusta  */
+ 
+}
+
+ 

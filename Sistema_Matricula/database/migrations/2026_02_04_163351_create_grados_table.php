@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('Nombre');
             $table->integer('Nivel');
+            $table->enum('tipo_nivel',['Primaria','Secundaria']);
             $table->timestamps();
         });
     }

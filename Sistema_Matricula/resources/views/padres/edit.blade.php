@@ -28,7 +28,7 @@
 
                 <div class="form-group mb-2"> 
                     <label for="Email">Email</label>
-                     <input type="text" name="Email" class="form-control form-control-sm w-50" value="{{$padre->Email}}"required>
+                     <input type="Email" name="Email" class="form-control form-control-sm w-50" value="{{$padre->Email}}"required>
               
                    </div>
                 

@@ -40,6 +40,22 @@ class ComarcaController extends Controller
         return redirect()->route('comarcas.index')->with('success','Comarca creada');
     }
     
+        public function storeRapido(Request $request)
+    {
+        $request->validate([
+           'Comarca'=>'required|string|max:255',
+            'Direccion'=>'required|string|max:255'
+        ]);
+
+        $comarca = Comarca::create($request->all());
+
+        return response()->json([
+            'success' => true,
+            'id' => $comarca->id,
+            'nombre' => $comarca->Comarca
+        ]);
+    }
+
 
     /**
      * Display the specified resource.

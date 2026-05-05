@@ -51,7 +51,22 @@ class GruposController extends Controller
 
         ]);
         Grupos::create($request->all());
-    return redirect()->route('grupos.index')->with('succes','Grupo creado correctamete');
+        
+        if ($request->from === 'matriculas') {
+            return view('grupos.confirmacion', [
+                'mensaje' => 'Grupo creado correctamente',
+                'opciones' => [
+                    'matriculas' => 'Volver a Crear Matrícula',
+                    'index' => 'Ir al Listado de Grupos'
+                ],
+                'rutas' => [
+                    'matriculas' => route('matriculas.create'),
+                    'index' => route('grupos.index')
+                ]
+            ]);
+        }
+        
+        return redirect()->route('grupos.index')->with('succes','Grupo creado correctamete');
 
     }
 

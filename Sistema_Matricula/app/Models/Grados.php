@@ -4,19 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-class grados extends Model
+use \App\Traits\HashRouteKey;
+class Grados extends Model
 {
      protected $table='grados';
     /** @use HasFactory<\Database\Factories\GradosFactory> */
-    use HasFactory;
-
+    
+    // use HashRouteKey;
  use HasFactory;
     public $timestamps=true;
 
     protected $fillable=[
              'Nombre',
-             'Nivel'
+             'Nivel',
+             'tipo_nivel'
                 
 
     ];

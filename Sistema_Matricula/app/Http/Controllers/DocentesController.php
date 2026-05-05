@@ -63,9 +63,9 @@ class DocentesController extends Controller
      */
     public function edit(Docentes $docente)
     {
-        $usuario=Usuario::all();
-        $especialidad=Especialidad::all();
-        return view('docentes.edit',compact('docente','usuario','especialidad'));
+        $usuarios=Usuario::all();
+        $especialidads=Especialidad::all();
+        return view('docentes.edit',compact('docente','usuarios','especialidads'));
     }
 
     /**

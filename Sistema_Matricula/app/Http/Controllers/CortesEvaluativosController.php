@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\cortes_evaluativos;
 use App\Models\modalidades;
 use App\Models\Periodo_academicos;
-
+use App\Models\Horarios;
 use Illuminate\Http\Request;
 
 class CortesEvaluativosController extends Controller
