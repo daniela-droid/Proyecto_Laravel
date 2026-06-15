@@ -65,6 +65,10 @@ class GruposController extends Controller
                 ]
             ]);
         }
+
+        if ($request->input('redirect_choice') === 'horarios') {
+            return redirect()->route('horarios.create')->with('success', 'Grupo creado correctamente');
+        }
         
         return redirect()->route('grupos.index')->with('succes','Grupo creado correctamete');
 

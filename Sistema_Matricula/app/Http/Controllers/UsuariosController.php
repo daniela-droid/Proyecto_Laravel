@@ -44,9 +44,13 @@ class UsuariosController extends Controller
             'rol'      => $request->rol,
         ]);
 
-        return redirect()->route('usuarios.index')->with('success','Usuario creado correctamente');
-
+        $redirectChoice = $request->input('redirect_choice', 'usuarios');
+        if ($redirectChoice === 'docentes') {
+            return redirect()->route('docentes.create')->with('success','Usuario creado correctamente');
         }
+
+        return redirect()->route('usuarios.index')->with('success','Usuario creado correctamente');
+    }
 
     /**
      * Display the specified resource.

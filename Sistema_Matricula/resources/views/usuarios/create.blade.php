@@ -27,8 +27,11 @@
                 </div>
             @endif
 
-            <form action="{{ route('usuarios.store') }}" method="POST">
+            <form action="{{ route('usuarios.store') }}" method="POST" id="formUsuarioCreate">
                 @csrf {{-- token de seguridad --}}
+                @if(request()->query('from') === 'docentes')
+                    <input type="hidden" name="redirect_choice" id="redirect_choice" value="usuarios">
+                @endif
 
               <div class="row">
     <div class="col-md-4">
@@ -125,39 +128,57 @@ function togglePassword(inputId, btn) {
 </script>
 
 <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('formUsuarioCreate');
+                const redirectInput = document.getElementById('redirect_choice');
+
+                if (form && redirectInput) {
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const regresar = confirm(
+                            'Usuario creado correctamente.\n\n' +
+                            'Aceptar = Volver a Docentes.\n' +
+                            'Cancelar = Ir al índice de Usuarios.'
+                        );
+                        redirectInput.value = regresar ? 'docentes' : 'usuarios';
+                        form.submit();
+                    });
+                }
+            });
+        </script>
+
+        <script>
         document.addEventListener("DOMContentLoaded", function() {
-    // Usamos la URL actual para que cada formulario tenga su propio "baúl" de datos
-    const storagePrefix = "form_data_" + window.location.pathname;
-    const form = document.querySelector('form');
-    
-    if (!form) return; // Si no hay formulario en esta página, no hace nada
+            const storagePrefix = "form_data_" + window.location.pathname;
+            const form = document.querySelector('form');
+            
+            if (!form) return; // Si no hay formulario en esta página, no hace nada
 
-    const inputs = form.querySelectorAll('input, select, textarea');
+            const inputs = form.querySelectorAll('input, select, textarea');
 
-    // 1. CARGAR: Al entrar, rellena lo que encuentre para ESTA página
-    inputs.forEach(input => {
-        if (input.name && input.type !== 'password') { 
-            const savedValue = localStorage.getItem(storagePrefix + "_" + input.name);
-            if (savedValue !== null) {
-                input.value = savedValue;
-            }
-        }
-    });
+            // 1. CARGAR: Al entrar, rellena lo que encuentre para ESTA página
+            inputs.forEach(input => {
+                if (input.name && input.type !== 'password') { 
+                    const savedValue = localStorage.getItem(storagePrefix + "_" + input.name);
+                    if (savedValue !== null) {
+                        input.value = savedValue;
+                    }
+                }
+            });
 
-    // 2. GUARDAR: Escucha cambios en cualquier input
-    form.addEventListener('input', function(e) {
-        if (e.target.name && e.target.type !== 'password') {
-            localStorage.setItem(storagePrefix + "_" + e.target.name, e.target.value);
-        }
-    });
+            // 2. GUARDAR: Escucha cambios en cualquier input
+            form.addEventListener('input', function(e) {
+                if (e.target.name && e.target.type !== 'password') {
+                    localStorage.setItem(storagePrefix + "_" + e.target.name, e.target.value);
+                }
+            });
 
-    // 3. LIMPIAR: Borra solo cuando el usuario guarda (submit)
-    form.addEventListener('submit', function() {
-        inputs.forEach(input => {
-            localStorage.removeItem(storagePrefix + "_" + input.name);
+            // 3. LIMPIAR: Borra solo cuando el usuario guarda (submit)
+            form.addEventListener('submit', function() {
+                inputs.forEach(input => {
+                    localStorage.removeItem(storagePrefix + "_" + input.name);
+                });
+            });
         });
-    });
-});
-
         </script>
 @endsection

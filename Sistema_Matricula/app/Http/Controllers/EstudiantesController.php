@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Estudiante;
 use App\Models\Comarca;
+use App\Models\Grados;
 use App\Models\Padres;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class EstudiantesController extends Controller
 {
@@ -43,12 +45,22 @@ class EstudiantesController extends Controller
     }
 
     //metodo de tablas de estudiante de primaria
-    public function primaria(){
-     $estudiantesPrimaria = Estudiante::whereHas('matriculas.grupos.grados', function ($query) {
-        $query->where('tipo_nivel', 'Primaria');
-    })->get();
+    public function primaria(Request $request){
+        $gradoSelected = $request->query('grado');
 
-    return view('estudiantes.primaria',compact('estudiantesPrimaria'));
+        $grados = Grados::where('tipo_nivel', 'Primaria')
+            ->orderBy('Nombre')
+            ->get();
+
+        $estudiantesPrimaria = Estudiante::whereHas('matriculas.grupos.grados', function ($query) use ($gradoSelected) {
+            $query->where('tipo_nivel', 'Primaria');
+            if ($gradoSelected) {
+                $query->where('id', $gradoSelected);
+            }
+        })->with(['matriculas.grupos.grados'])
+          ->get();
+
+        return view('estudiantes.primaria', compact('estudiantesPrimaria', 'grados', 'gradoSelected'));
     }
     //metodo de tablas de estudiante de secundaria 
     public function secundaria(){
@@ -64,23 +76,39 @@ class EstudiantesController extends Controller
      */
     public function store(Request $request)
     {
-      
-        $request ->validate([
-        'Código_Persona' => 'required|integer|unique:estudiantes,Código_Persona',
-        'Nombre' => 'required|string|max:255',
-        'Apellido' => 'required|string|max:255',
-        'Sexo' => 'required|string|max:12',
-        'Fecha_N' => 'required|date',
-        'Celular' => 'required|integer',
-        'id_padre'=>'required|exists:padres,id',
-        'id_comarca'=>'required|exists:comarcas,id'
+        $request->merge([
+            'Código_Persona' => trim((string) $request->input('Código_Persona', '')),
+            'c_temporal' => strtoupper(trim((string) $request->input('c_temporal', ''))),
         ]);
-                
+      
+        $validated = $request->validate([
+            'Código_Persona' => ['nullable','regex:/^[0-9]{7,8}$/','unique:estudiantes,Código_Persona'],
+            'c_temporal' => ['nullable','regex:/^[0-9A-F]{16}$/'],
+            'Nombre' => 'required|string|max:255',
+            'Apellido' => 'required|string|max:255',
+            'Sexo' => 'required|string|max:12',
+            'Fecha_N' => 'required|date',
+            'Celular' => ['required', 'string', 'regex:/^\+505[0-9]{8}$/'],
+            'id_padre' => 'required|exists:padres,id',
+            'id_comarca' => 'required|exists:comarcas,id'
+        ]);
 
-        Estudiante::create($request->all());
+        $validated['Nombre'] = $this->formatName($validated['Nombre']);
+        $validated['Apellido'] = $this->formatName($validated['Apellido']);
+        $validated['Código_Persona'] = isset($validated['Código_Persona']) ? trim($validated['Código_Persona']) : '';
+        $validated['c_temporal'] = isset($validated['c_temporal']) ? strtoupper(trim($validated['c_temporal'])) : '';
+
+        $estudiante = Estudiante::create($validated);
         
         if ($request->from === 'matriculas') {
-            return redirect()->route('matriculas.create')->with('success', 'Estudiante creado correctamente. Ahora puedes continuar con la matrícula.');
+            $redirectChoice = $request->input('redirect_choice', 'matriculas');
+
+            if ($redirectChoice === 'matriculas') {
+                return redirect()->route('matriculas.create', ['selected_estudiante' => $estudiante->id])
+                    ->with('success', 'Estudiante creado correctamente. Ahora puedes continuar con la matrícula.');
+            }
+
+            return redirect()->route('estudiantes.index')->with('success', 'Estudiante creado correctamente');
         }
         
         return redirect()->route('estudiantes.index')->with('success', 'Estudiante creado correctamente');
@@ -114,20 +142,43 @@ class EstudiantesController extends Controller
      */
     public function update(Request $request, Estudiante $estudiante)
     {
-        $request ->validate([
-        'Código_Persona' => 'required|integer',
-        'Nombre' => 'required|string|max:255',
-        'Apellido' => 'required|string|max:255',
-        'Sexo' => 'required|string|max:12',
-        'Fecha_N' => 'required|date',
-        'Celular' => 'required|integer',
-        'id_padre'=>'required|exists:padres,id',
-        'id_comarca'=>'required|exists:comarcas,id'
+        $request->merge([
+            'Código_Persona' => trim((string) $request->input('Código_Persona', '')),
+            'c_temporal' => strtoupper(trim((string) $request->input('c_temporal', ''))),
         ]);
 
-      $estudiante->update($request->all());
+        $validated = $request->validate([
+            'Código_Persona' => [
+                'nullable',
+                'regex:/^[0-9]{7,8}$/',
+                Rule::unique('estudiantes', 'Código_Persona')->ignore($estudiante->id),
+            ],
+            'c_temporal' => ['nullable','regex:/^[0-9A-F]{16}$/'],
+            'Nombre' => 'required|string|max:255',
+            'Apellido' => 'required|string|max:255',
+            'Sexo' => 'required|string|max:12',
+            'Fecha_N' => 'required|date',
+            'Celular' => ['required', 'string', 'regex:/^\+505[0-9]{8}$/'],
+            'id_padre' => 'required|exists:padres,id',
+            'id_comarca' => 'required|exists:comarcas,id'
+        ]);
+
+        $validated['Nombre'] = $this->formatName($validated['Nombre']);
+        $validated['Apellido'] = $this->formatName($validated['Apellido']);
+        $validated['Código_Persona'] = isset($validated['Código_Persona']) ? trim($validated['Código_Persona']) : '';
+        $validated['c_temporal'] = isset($validated['c_temporal']) ? strtoupper(trim($validated['c_temporal'])) : '';
+
+        $estudiante->update($validated);
 
         return redirect()->route('estudiantes.index')->with('success','estudiante actualizado correctamente');
+    }
+
+    private function formatName(string $value): string
+    {
+        return collect(explode(' ', trim($value)))
+            ->filter()
+            ->map(fn($word) => ucfirst(strtolower($word)))
+            ->join(' ');
     }
 
     /**

@@ -39,14 +39,19 @@
                         <option value="">-- Seleccione Asignaturas--</option>
                         <option value="Lengua y Literatura"> Lengua y Literatura</option>
                         <option value="Matemática"> Matemática</option>
+                        
                         <option value="Ciencias Naturales"> Ciencias Naturales</option>
                         <option value="Estudios Sociales">Estudios Sociales</option>
                         <option value="Educación Física"> Educación Física</option>
-                        <option value="Arte y Cultura"> Arte y Cultura</option>
+                        <option value="Taller de Arte y Cultura"> Taller de Arte y Cultura</option>
+                       
                         <option value="Inglés"> Inglés</option>
+                        <option value="Educación para Aprender, Emprender, Prosperar">A.E.P</option>
+                         <option value="Educación Física"> Educación Artistica</option>
                         <option value="Formación Personal y Ciudadana">Danza</option>
                         <option value="Computación"> Derecho de la mujer</option>
-                        <option value="Música">Creciendo en Valores</option>
+                        <option value="Creciendo en Valores">Creciendo en Valores</option>
+                        <option value="Conociendo mi mundo">Conociendo mi mundo</option>
                     </select>
                 </div>
                 </div>

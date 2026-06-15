@@ -37,7 +37,23 @@ class ModalidadesController extends Controller
         modalidades::create($request->all());
         return redirect()->route('modalidades.index')->with('success','Modalida Creada Correctamente');
     }
+     public function storeRapido(Request $request)
+    {
+        $request->validate([
+           'nombre'=>'required|string|max:255',
+            'codigo'=>'required|string|max:255',
+            'descripcion'=>'required|string|max:255',
+           
+        ]);
 
+        $modalidad = modalidades::create($request->all());
+
+        return response()->json([
+            'success' => true,
+            'id' => $modalidad->id,
+            'nombre' => $modalidad->nombre
+        ]);
+    }
     /**
      * Display the specified resource.
      */

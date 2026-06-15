@@ -11,10 +11,10 @@
             <h4 class="mb-0" style="background-color: #e0e5ee; ><i class="fas fa-user-plus"></i> Agregar Sección</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('grupos.store') }}" method="POST">
+            <form action="{{ route('grupos.store') }}" method="POST" id="formGrupoCreate">
                 @csrf {{-- Seguridad de Laravel --}}
                 <input type="hidden" name="from" value="{{ request('from') }}">
-
+                <input type="hidden" name="redirect_choice" id="redirect_choice" value="grupos">
 
                 <div class="row">
                 
@@ -26,6 +26,10 @@
                             <option value="A">A</option>
                             <option value="B">B</option>
                             <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="G">G</option>
                         </select>
                     </div>
                 </div>
@@ -59,7 +63,7 @@
                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalturno">
                                     <i class="fas fa-search "></i> Buscar
                                 </button>
-                              <a href="{{route('turnos.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                             
                             </div>
                          
                            </div>
@@ -79,7 +83,7 @@
                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalgrado">
                                     <i class="fas fa-search "></i> Buscar
                                 </button>
-                              <a href="{{route('grados.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                             
                             </div>
                          
                            </div>
@@ -127,9 +131,46 @@
                         $('#modalturno').modal('hide');
                     }
 
+                    function agregarTurnoNuevo() {
+                        fetch('/turnos/store-rapido', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: new FormData(document.getElementById('formTurnoRapido'))
+                        })
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.success) {
+                                if (window.tablaTurnos) {
+                                    window.tablaTurnos.row.add([
+                                        `<strong>${data.nombre}</strong>`,
+                                        `<button class="btn btn-sm btn-success" onclick="seleccionarturnos(${data.id}, '${data.nombre}')">
+                                            <i class="fas fa-check"></i> Seleccionar
+                                        </button>`
+                                    ]).draw(false);
+                                } else {
+                                    $('#tabla_turno_modal tbody').prepend(`
+                                        <tr>
+                                            <td><strong>${data.nombre}</strong></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-success" onclick="seleccionarturnos(${data.id}, '${data.nombre}')">
+                                                    <i class="fas fa-check"></i> Seleccionar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `);
+                                }
+                                seleccionarturnos(data.id, data.nombre);
+                                document.getElementById('formTurnoRapido').reset();
+                                alert('Turno creado y agregado a la lista');
+                            }
+                        });
+                    }
+
                     $(document).ready(function() {
                         // Inicializar DataTable
-                        var table = $('#tabla_turno_modal').DataTable({
+                        window.tablaTurnos = $('#tabla_turno_modal').DataTable({
                             "responsive": true,
                             "language": {
                                 "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
@@ -148,9 +189,46 @@
                         $('#modalgrado').modal('hide');
                     }
 
+                    function agregarGradoNuevo() {
+                        fetch('/grados/store-rapido', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: new FormData(document.getElementById('formGradoRapido'))
+                        })
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.success) {
+                                if (window.tablaGrados) {
+                                    window.tablaGrados.row.add([
+                                        `<strong>${data.nombre}</strong>`,
+                                        `<button class="btn btn-sm btn-success" onclick="seleccionargrados(${data.id}, '${data.nombre}')">
+                                            <i class="fas fa-check"></i> Seleccionar
+                                        </button>`
+                                    ]).draw(false);
+                                } else {
+                                    $('#tabla_grado_modal tbody').prepend(`
+                                        <tr>
+                                            <td><strong>${data.nombre}</strong></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-success" onclick="seleccionargrados(${data.id}, '${data.nombre}')">
+                                                    <i class="fas fa-check"></i> Seleccionar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `);
+                                }
+                                seleccionargrados(data.id, data.nombre);
+                                document.getElementById('formGradoRapido').reset();
+                                alert('Grado creado y agregado a la lista');
+                            }
+                        });
+                    }
+
                     $(document).ready(function() {
                         // Inicializar DataTable
-                        var table = $('#tabla_grado_modal').DataTable({
+                        window.tablaGrados = $('#tabla_grado_modal').DataTable({
                             "responsive": true,
                             "language": {
                                 "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
@@ -165,9 +243,27 @@
 </script>
 
 <script>
-        document.addEventListener("DOMContentLoaded", function() {
-    // Usamos la URL actual para que cada formulario tenga su propio "baúl" de datos
-    const storagePrefix = "form_data_" + window.location.pathname;
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('formGrupoCreate');
+                const redirectInput = document.getElementById('redirect_choice');
+                const returnFromHorarios = '{{ request('from') === 'horarios' ? '1' : '0' }}';
+
+                if (form && redirectInput && returnFromHorarios === '1') {
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const regresar = confirm(
+                            'Sección creada correctamente.\n\n' +
+                            'Aceptar = Volver a Crear Horario.\n' +
+                            'Cancelar = Ir al índice de Secciones.'
+                        );
+                        redirectInput.value = regresar ? 'horarios' : 'grupos';
+                        form.submit();
+                    });
+                }
+            });
+        </script>
+
+        <script>
     const form = document.querySelector('form');
     
     if (!form) return; // Si no hay formulario en esta página, no hace nada

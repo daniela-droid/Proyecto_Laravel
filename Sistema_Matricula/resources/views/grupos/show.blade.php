@@ -17,9 +17,9 @@
             <p><strong>Código:</strong>{{$grupo->Código}}</p>
            <p><strong>Nombre:</strong> {{ $grupo->Nombre}}</p>
             <p><strong>Descripcion:</strong> {{ $grupo->Descripcion }}</p>
-             <p><strong>Turno:</strong> {{ $grupo->id_turno}}</p>
-            <p><strong>Grado:</strong> {{ $grupo->id_grado }}</p>
-            <p><strong>Periodo Académico:</strong>{{$grupo->id_periodo_academicos}}</p>
+             <p><strong>Turno: </strong> {{ $grupo->turnos->Nombre }}</p>
+            <p><strong>Grado: </strong> {{ $grupo->grados->Nombre }}</p>
+            <p><strong>Periodo Académico:</strong>{{$grupo->periodos->Nombre}}</p>
             
            
         </div>

@@ -22,9 +22,9 @@
                  <div class="form-group mb-2">
                         <label for="id_estudiante">Estudiantes</label>
                         <div class="input-group ">
-                            <input type="hidden" name="id_estudiante" id="id_estudiante" required>
+                            <input type="hidden" name="id_estudiante" id="id_estudiante" required value="{{ old('id_estudiante', $selectedStudent->id ?? '') }}">
                             
-                            <input type="text" id="nombre_stu_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
+                            <input type="text" name="nombre_stu_display" id="nombre_stu_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required value="{{ old('nombre_stu_display', optional($selectedStudent)->Nombre) }}">
                             
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalstu">
@@ -42,7 +42,7 @@
                         <div class="input-group ">
                             <input type="hidden" name="id_grupo" id="id_grupo" required>
                             
-                            <input type="text" id="nombre_sec_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
+                            <input type="text" name="nombre_sec_display" id="nombre_sec_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required value="{{ old('nombre_sec_display') }}">
                             
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalsec">

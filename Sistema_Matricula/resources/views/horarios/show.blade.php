@@ -15,13 +15,13 @@
     </div>
         <div class="card-body">
         <!-- <p><strong>ID:</strong>{{$horario->id}}</p> -->
-        <p><strong>Grupo:</strong>{{$horario->id_grupo}}</p>
-        <p><strong>Asignatura:</strong>{{$horario->id_asignatura}}</p>
-        <p><strong>Docente:</strong>{{$horario->id_docente}}</p>
-        <p><strong>Aula:</strong>{{$horario->id_aula}}</p>
-        <p><strong>Dia de Semana:</strong>{{$horario->Dia_semana}}</p>
-        <p><strong>Hora de Inicio:</strong>{{$horario->Hora_inicio}}</p>
-        <p><strong>Hora de Culminar:</strong>{{$horario->Hora_fin}}</p>
+        <p><strong>Grupo: </strong>{{$horario->grupo->Descripcion}}</p>
+        <p><strong>Asignatura: </strong>{{$horario->asignatura->Nombre}}</p>
+        <p><strong>Docente: </strong>{{$horario->docente->Nombre}}</p>
+        <p><strong>Aula: </strong>{{$horario->aula->Nombre}}</p>
+        <p><strong>Dia de Semana: </strong>{{$horario->Dia_semana}}</p>
+        <p><strong>Hora de Inicio: </strong>{{$horario->Hora_inicio}}</p>
+        <p><strong>Hora de Culminar: </strong>{{$horario->Hora_fin}}</p>
 
         </div>
         <div class="card-footer">

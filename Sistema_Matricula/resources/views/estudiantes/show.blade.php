@@ -2,114 +2,180 @@
 
 @section('title', 'Detalle del Estudiante')
 
+@section('css')
+<style>
+    .student-panel {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 1.75rem;
+        box-shadow: 0 18px 38px rgba(15, 23, 42, 0.06);
+    }
+
+    .student-panel h2,
+    .student-panel h3 {
+        margin-bottom: 0.35rem;
+        font-weight: 700;
+    }
+
+    .student-panel p,
+    .student-panel dd {
+        color: #475569;
+        margin-bottom: 1rem;
+    }
+
+    .student-panel dt {
+        font-weight: 600;
+        color: #334155;
+    }
+
+    .student-panel .avatar-circle {
+        width: 82px;
+        height: 82px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #eff6ff;
+        color: #1d4ed8;
+        margin-bottom: 1rem;
+    }
+
+    .student-panel .actions a {
+        border-radius: 999px;
+        padding: 0.7rem 1.2rem;
+        font-weight: 600;
+    }
+
+    .student-panel table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .student-panel th,
+    .student-panel td {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 0.95rem 0.75rem;
+        vertical-align: middle;
+        color: #334155;
+    }
+
+    .student-panel thead th {
+        border-bottom: 2px solid #cbd5e1;
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    .student-panel tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .student-panel .table-empty {
+        color: #83b0f0;
+        text-align: center;
+        padding: 2rem 0;
+    }
+</style>
+@stop
+
 @section('content_header')
-    <h1>Detalles del Estudiante</h1>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="mb-1">Perfil del Estudiante</h1>
+      
+    </div>
+</div>
 @stop
 
 @section('content')
 <div class="container-fluid">
-    <div class="row">
-        {{-- COLUMNA IZQUIERDA: INFORMACIÓN PERSONAL --}}
-        <div class="col-md-4">
-            <div class="card card-info card-outline">
-                <div class="card-body box-profile">
-                    <div class="text-center">
-                        {{-- Icono representativo o foto --}}
-                        <i class="fas fa-user-graduate fa-4x img-fluid img-circle text-info mb-3"></i>
+    <div class="row gx-4 gy-4">
+        <div class="col-lg-4">
+            <section class="student-panel">
+                <div class="text-center mb-4">
+                    <div class="avatar-circle mx-auto">
+                        <i class="fas fa-user-graduate fa-lg"></i>
                     </div>
-
-                    <h3 class="profile-username text-center">{{ $estudiante->Nombre }} {{ $estudiante->Apellido }}</h3>
-                    <p class="text-muted text-center">Código: {{ $estudiante->Código_Persona }}</p>
-
-                    <ul class="list-group list-group-unbordered mb-3">
-                        <li class="list-group-item">
-                            <b>Sexo</b> <a class="float-right text-dark">{{ $estudiante->Sexo }}</a>
-                        </li>
-                        <li class="list-group-item">
-                            <b>Edad</b> <a class="float-right text-dark">{{ $estudiante->edad }} años</a>
-                        </li>
-                        <li class="list-group-item">
-                            <b>Celular</b> <a class="float-right text-dark">{{ $estudiante->Celular }}</a>
-                        </li>
-                        <li class="list-group-item">
-                            <b>Comarca</b> <a class="float-right text-dark">{{ $estudiante->comarca->Comarca }}</a>
-                        </li>
-                    </ul>
-
-                    <strong><i class="fas fa-users mr-1"></i> Tutor</strong>
-                    <p class="text-muted">
-                        {{ $estudiante->padre?->Nombre_o_Tutor }} {{ $estudiante->padre?->Apellido }}
-                    </p>
-                    <hr>
-                    <strong><i class="fas fa-calendar-alt mr-1"></i> Nacimiento</strong>
-                    <p class="text-muted">{{ $estudiante->Fecha_N }}</p>
+                    <h2>{{ $estudiante->Nombre }} {{ $estudiante->Apellido }}</h2>
+                    <p class="text-muted">Código único: {{ $estudiante->Código_Persona }}</p>
+                    <p class="text-muted">Código Temporal: {{ $estudiante->c_temporal }}</p>
                 </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col-6">
-                            <a href="{{ route('estudiantes.index') }}" class="btn btn-sm btn-block btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Volver
-                            </a>
-                        </div>
-                        <div class="col-6">
-                            <a href="{{ route('estudiantes.edit', $estudiante->id) }}" class="btn btn-sm btn-block btn-warning">
-                                <i class="fas fa-edit"></i> Editar
-                            </a>
-                        </div>
-                    </div>
+
+                <dl>
+                    <dt>Sexo</dt>
+                    <dd>{{ $estudiante->Sexo }}</dd>
+
+                    <dt>Edad</dt>
+                    <dd>{{ $estudiante->edad }} años</dd>
+
+                    <dt>Celular</dt>
+                    <dd>{{ $estudiante->Celular }}</dd>
+
+                    <dt>Comarca</dt>
+                    <dd>{{ $estudiante->comarca->Comarca ?? 'Sin comarca registrada' }}</dd>
+
+                    <dt>Tutor</dt>
+                    <dd>{{ $estudiante->padre?->Nombre_o_Tutor ?? 'No asignado' }} {{ $estudiante->padre?->Apellido ?? '' }}</dd>
+
+                    <dt>Nacimiento</dt>
+                    <dd>{{ $estudiante->Fecha_N }}</dd>
+                </dl>
+
+                <div class="d-flex gap-2 actions mt-4">
+                    <a href="{{ route('estudiantes.index') }}" class="btn btn-outline-secondary w-100">
+                        Volver
+                    </a>
+                    <a href="{{ route('estudiantes.edit', $estudiante->id) }}" class="btn btn-primary w-100">
+                        Editar
+                    </a>
                 </div>
-            </div>
+            </section>
         </div>
 
-        {{-- COLUMNA DERECHA: TABLA DE HISTORIAL --}}
-        <div class="col-md-8">
-            <div class="card card-primary card-outline">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-history mr-1"></i> 
-                        Historial de Matrículas
-                    </h3>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Fecha</th>
-                                    <th>Grado/Nivel</th>
-                                    <th>Sección</th>
-                                    <th class="text-right">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($estudiante->matriculas as $matricula)
-                                    <tr>
-                                        <td><span class="badge badge-secondary">#{{ $matricula->id }}</span></td>
-                                        <td>{{ $matricula->fecha_matricula }}</td>
-                                        <td><strong>{{ $matricula->grupos->Grados->Nombre }}</strong></td>
-                                        <td>{{ $matricula->grupos->Descripcion }}</td>
-                                        <td class="text-right">
-                                            <a href="{{ route('matriculas.show', $matricula->id) }}" class="btn btn-xs btn-outline-info">
-                                                <i class="fas fa-eye"></i> Ver
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center py-4 text-muted">
-                                            <i class="fas fa-info-circle mr-1"></i> 
-                                            Sin registros de matrícula actualmente.
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+        <div class="col-lg-8 ">
+            <section class="student-panel">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h3 class="mb-1">Historial de Matrículas</h3>
+                        <p class="text-muted mb-0">Últimas inscripciones del estudiante.</p>
                     </div>
                 </div>
-            </div>
-            
-            {{-- Puedes agregar aquí otro card pequeño para estadísticas o notas rápidas --}}
+
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Fecha</th>
+                                <th>Grado</th>
+                                <th>Sección</th>
+                                <th class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($estudiante->matriculas as $matricula)
+                                <tr>
+                                    <td>#{{ $matricula->id }}</td>
+                                    <td>{{ $matricula->fecha_matricula }}</td>
+                                    <td>{{ $matricula->grupos->Grados->Nombre ?? 'N/D' }}</td>
+                                    <td>{{ $matricula->grupos->Descripcion ?? 'N/D' }}</td>
+                                    <td class="text-end">
+                                        <a href="{{ route('matriculas.show', $matricula->id) }}" class="btn btn-sm btn-outline-primary">
+                                            Ver
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="table-empty">
+                                        No hay registros de matrícula actualmente.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </div>
     </div>
 </div>

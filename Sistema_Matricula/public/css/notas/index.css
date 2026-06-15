@@ -1,0 +1,47 @@
+
+
+/* <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css"> */
+
+    .bg-navy { background-color: #001f3f; color: white; }
+    .text-navy { color: #001f3f; }
+    .table-xs td { padding: 0.2rem; font-size: 0.85rem; }
+    .sticky-top { z-index: 1020; }
+.input-group-sm  {
+     width: 350px !important;
+  
+}
+  .buscador-simple {
+    
+    border-right: none !important;
+}
+.limpiar-simple {
+
+    border-left: none !important;
+    padding: 0.25rem 0.5rem !important; /* Mismo tamaño input */
+    font-size: 0.875rem !important;
+}
+.limpiar-simple:hover {
+       background: #dc3545 !important;
+         color: white !important;
+}
+
+    /* Ajustes para la columna de acciones en el índice de notas */
+    .grade-card th:last-child,
+    .grade-card td.acciones-col {
+        width: 1%;
+        white-space: nowrap;
+    }
+
+    .grade-card .btn-ver-detalles,
+    .grade-card .btn-warning {
+        padding: 0.2rem 0.5rem !important;
+        min-width: 0;
+        white-space: nowrap;
+    }
+
+    .grade-card .btn-ver-detalles i,
+    .grade-card .btn-warning i {
+        margin-right: 0.25rem;
+    }
+
+

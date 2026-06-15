@@ -9,141 +9,126 @@
 
 <div class="container">
     <div class="card">
-      <div class="card-header"> <h4 class="mb-0"><i class="fas fa-user-plus"></i> Agregar Horario</h4></div>
-           
+        <div class="card-header">
+            <h4 class="mb-0"><i class="fas fa-user-plus"></i> Agregar Horario</h4>
+        </div>
+
         <div class="card-body">
+            <form action="{{ route('horarios.store') }}" method="POST">
+                @csrf
 
-        <form action="{{route('horarios.store')}}" method="POST">
-             @csrf 
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="id_grupo">Secciones</label>
+                            <div class="input-group">
+                                <input type="hidden" name="id_grupo" id="id_grupo" required>
+                                <input type="text" id="nombre_sec_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
 
-
-            <div class="row">
-                <div class="col-md-4">
-                <div class="form-group mb-2">
-                        <label for="id_grupo">Secciones</label>
-                        <div class="input-group ">
-                            <input type="hidden" name="id_grupo" id="id_grupo" required>
-                            
-                            <input type="text" id="nombre_sec_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
-                            
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalsec">
-                                    <i class="fas fa-search "></i> Buscar
-                                </button>
-                              <a href="{{route('grupos.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalsec">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                </div>
                             </div>
-                         
-                </div>
-            </div>
-
-                </div>
-                <div class="col-md-4">
-
-                      <div class="form-group mb-2">
-                        <label for="id_asignatura">Asignaturas</label>
-                        <div class="input-group ">
-                            <input type="hidden" name="id_asignatura" id="id_asignatura" required>
-                            
-                            <input type="text" id="nombre_asig_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
-                            
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalasig">
-                                    <i class="fas fa-search "></i> Buscar
-                                </button>
-                              <a href="{{route('asignaturas.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
-                            </div>
-                         
-                      </div>
+                        </div>
                     </div>
 
-                </div>
-                <div class="col-md-4">
-                <div class="form-group mb-2">
-                        <label for="id_docente">Docentes</label>
-                        <div class="input-group ">
-                            <input type="hidden" name="id_docente" id="id_docente" required>
-                            
-                            <input type="text" id="nombre_doc_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
-                            
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modaldoc">
-                                    <i class="fas fa-search "></i> Buscar
-                                </button>
-                              <a href="{{route('docentes.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="id_asignatura">Asignaturas</label>
+                            <div class="input-group">
+                                <input type="hidden" name="id_asignatura" id="id_asignatura" required>
+                                <input type="text" id="nombre_asig_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
+
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalasig">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                </div>
                             </div>
-                         
+                        </div>
                     </div>
-            </div>
-                </div>
-            </div>
 
-              <div class="row">
-                <div class="col-md-4">
-            <div class="form-group mb-2">
-                        <label for="id_aula">Aulas</label>
-                        <div class="input-group ">
-                            <input type="hidden" name="id_aula" id="id_aula" required>
-                            
-                            <input type="text" id="nombre_aula_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
-                            
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalaula">
-                                    <i class="fas fa-search "></i> Buscar
-                                </button>
-                              <a href="{{route('aulas.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="id_docente">Docentes</label>
+                            <div class="input-group">
+                                <input type="hidden" name="id_docente" id="id_docente" required>
+                                <input type="text" id="nombre_doc_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
+
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modaldoc">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                </div>
                             </div>
-                         
-                    </div>
-            </div>
-
-                </div>
-                <div class="col-md-4">
-                   <div class="form-group mb-2"> 
-                    <label for="Dia_semana">Dia de Semana</label>
-                 <select name="Dia_semana" class="form-control" required> 
-                    <option value="Lunes">Lunes</option> 
-                    <option value="Martes">Martes</option>
-                    <option value="Miercoles">Miercoles</option>
-                    <option value="Jueves">Jueves</option>
-                    <option value="Viernes">Viernes</option>
-                    <option value="Sabado">Sabado</option>
-                </select>
-                 </div>
-                </div>
-                <div class="col-md-4">
-               <div class="form-group mb-2">
-               <label for="Hora_inicio">Hora de Inicio</label>
-                 <input type="time" name="Hora_inicio"style="background-color:lightblue" class="form-control" required>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-4">
 
-                  <div class="form-group mb-2">
-                 <label for="Hora_fin">Hora de Culminacion</label>
-                 <input type="time" name="Hora_fin" style="background-color:lightblue"class="form-control " required>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="id_aula">Aulas</label>
+                            <div class="input-group">
+                                <input type="hidden" name="id_aula" id="id_aula" required>
+                                <input type="text" id="nombre_aula_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
+
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalaula">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="Dia_semana">Dia de Semana</label>
+                            <select name="Dia_semana" class="form-control" required>
+                                <option value="Lunes">Lunes</option>
+                                <option value="Martes">Martes</option>
+                                <option value="Miercoles">Miercoles</option>
+                                <option value="Jueves">Jueves</option>
+                                <option value="Viernes">Viernes</option>
+                                <option value="Sabado">Sabado</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="Hora_inicio">Hora de Inicio</label>
+                            <input type="time" name="Hora_inicio" style="background-color:lightblue" class="form-control" required>
+                        </div>
+                    </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="Hora_fin">Hora de Culminacion</label>
+                            <input type="time" name="Hora_fin" style="background-color:lightblue" class="form-control" required>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-              <div class="row">
-                <div class="col-md-12">
-        <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <hr>
+                    </div>
+
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Guardar
+                        </button>
+                        <a href="{{ route('horarios.index') }}" class="btn btn-secondary">Cancelar</a>
+                    </div>
                 </div>
-                <div class="col-md-4">
 
-               
-                     <button type="submit" class="btn btn-primary">   <i class="fas fa-save"></i> Guardar</button>
-                     <a href="{{route('horarios.index')}}" class="btn btn-secondary">Cancelar</a>
-             
-                </div>
-               
-            </div>
-               
-        
-                </form>
-
-             
+            </form>
         </div>
     </div>
 </div>
@@ -184,6 +169,34 @@
                         $('#modalasig').modal('hide');
                     }
 
+                    function agregarAsignaturaNueva() {
+                        fetch('/asignaturas/store-rapido', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: new FormData(document.getElementById('formAsignaturaRapido'))
+                        })
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.success) {
+                                $('#tabla_asig_modal tbody').prepend(`
+                                    <tr>
+                                        <td><strong>${data.nombre}</strong></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success" onclick="seleccionarAsig(${data.id}, '${data.nombre}')">
+                                                <i class="fas fa-check"></i> Seleccionar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `);
+                                seleccionarAsig(data.id, data.nombre);
+                                document.getElementById('formAsignaturaRapido').reset();
+                                alert('Asignatura creada y agregada a la lista');
+                            }
+                        });
+                    }
+
                     $(document).ready(function() {
                         // Inicializar DataTable
                         var table = $('#tabla_asig_modal').DataTable({
@@ -222,6 +235,34 @@
                         $('#id_aula').val(id);
                         $('#nombre_aula_display').val(nombreCompleto);
                         $('#modalaula').modal('hide');
+                    }
+
+                    function agregarAulaNueva() {
+                        fetch('/aulas/store-rapido', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: new FormData(document.getElementById('formAulaRapido'))
+                        })
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.success) {
+                                $('#tabla_aula_modal tbody').prepend(`
+                                    <tr>
+                                        <td><strong>${data.nombre}</strong></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success" onclick="seleccionarAulas(${data.id}, '${data.nombre}')">
+                                                <i class="fas fa-check"></i> Seleccionar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `);
+                                seleccionarAulas(data.id, data.nombre);
+                                document.getElementById('formAulaRapido').reset();
+                                alert('Aula creada y agregada a la lista');
+                            }
+                        });
                     }
 
                     $(document).ready(function() {

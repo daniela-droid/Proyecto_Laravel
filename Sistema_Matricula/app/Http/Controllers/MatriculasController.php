@@ -28,12 +28,19 @@ class MatriculasController extends Controller
      */
     public function create()
     {
-        //traer estudiantes y asignaturas para el select
-        $estudiantes=Estudiante::all();
-        $grupos=Grupos::all();
-        $periodos=Periodo_academicos::all();
-        $usuarios=Usuario::all();
-        return view('matriculas.create',compact('estudiantes','grupos','periodos','usuarios'));
+        // traer estudiantes y asignaturas para el select
+        $estudiantes = Estudiante::all();
+        $grupos = Grupos::all();
+        $periodos = Periodo_academicos::all();
+        $usuarios = Usuario::all();
+
+        $selectedStudent = null;
+        $selectedStudentId = request('selected_estudiante');
+        if ($selectedStudentId) {
+            $selectedStudent = Estudiante::find($selectedStudentId);
+        }
+
+        return view('matriculas.create', compact('estudiantes', 'grupos', 'periodos', 'usuarios', 'selectedStudent'));
     }
 
     /**
@@ -111,7 +118,29 @@ class MatriculasController extends Controller
      return redirect()->route('matriculas.index')->with('success', 'Matrícula actualizada correctamente');
 }
 
+        public function updateStatusOnly(Request $request, $id)
+        {
+            $request->validate([
+                'estado' => ['required', \Illuminate\Validation\Rule::in(['Activo', 'Retirado', 'Suspendido', 'Expulsado'])], 
+            ]);
 
+            try {
+                $matricula = \App\Models\Matriculas::findOrFail($id);
+                $matricula->estado = $request->input('estado');
+                $matricula->save(); 
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Estado actualizado con éxito.'
+                ]);
+
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error en el servidor: ' . $e->getMessage()
+                ], 500);
+            }
+        }
     /**
      * Remove the specified resource from storage.
      */

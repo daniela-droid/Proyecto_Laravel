@@ -19,6 +19,7 @@ class Notas extends Model
                     'nota_especial',
                     'observacion', //por si algun estudainte esta pendiente
                      'id_usuario',
+                     'promedio'
 
          ];
 
@@ -26,6 +27,7 @@ class Notas extends Model
          protected $casts = [
         'nota_normal' => 'double',
         'nota_especial' => 'double',
+        'promedio' => 'double',
     ];
     //relaciones
    public function matriculas()

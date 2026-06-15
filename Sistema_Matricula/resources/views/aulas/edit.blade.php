@@ -12,20 +12,28 @@
          <div style="background-color: #e0e5ee; color: dark; padding: 10px 20px; border-radius: 5px;">
         <div class="card-header">Editar Aula</div>
         <div class="card-body">
-            <form action="{{ route('aulas.update', $aula->id) }}" method="POST">
+            <form class="edit-form"  action="{{ route('aulas.update', $aula->id) }}" method="POST">
                 @csrf
                 @method('PUT') {{-- Actualizacion--}}
 
-               <div class="form-group">
+            <div class="row">
+
+            <div class="col-md-4">
+                <div class="form-group">
                     <label for="Nombre">Nombre</label>
-                    <input type="text" name="Nombre" class="form-control form-control-sm w-50" value="{{$aula->Nombre}}"required>
+                    <input type="text" name="Nombre" class="form-control " value="{{$aula->Nombre}}"required>
                 </div>
-
-                     <div class="form-group">
+            </div>
+            <div class="col-md-4">
+                 <div class="form-group">
                     <label for="Capacidad">Capacidad</label>
-                    <input type="text" name="Capacidad" class="form-control form-control-sm w-50" value="{{$aula->Capacidad}}"required>
+                    <input type="text" name="Capacidad" class="form-control " value="{{$aula->Capacidad}}"required>
                 </div>
-
+            </div>
+               
+                    
+            </div>
+            <hr>
               <button type="submit" class="btn btn-success">Actualizar</button>
                 <a href="{{ route('aulas.index') }}" class="btn btn-secondary">Cancelar</a>
             </form>

@@ -39,6 +39,22 @@ class EspecialidadController extends Controller
         return redirect()->route('especialidades.index')->with('success','Especialidad Creada');
     }
 
+     public function storeRapido(Request $request)
+    {
+        $request->validate([
+           'Especialidad'=>'required|string|max:70',
+            'Descripcion'=>'required|string|max:255',
+         
+        ]);
+
+        $especialidad = Especialidad::create($request->all());
+
+        return response()->json([
+            'success' => true,
+            'id' => $especialidad->id,
+            'nombre' => $especialidad->Especialidad
+        ]);
+    }
     /**
      * Display the specified resource.
      */

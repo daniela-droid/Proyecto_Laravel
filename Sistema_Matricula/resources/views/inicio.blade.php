@@ -94,6 +94,86 @@
                     </div>
                 </div>
             </div>
+        @elseif(Auth::user()->rol === 'docentes')
+            @php
+                // Notificaciones sin leer del docente
+                $notificacionesNoLeidas = Auth::user()->unreadNotifications()->where('type', 'App\\Notifications\\SolicitudCorreccionNotaResuelta')->get();
+                $cantidadNoLeidas = $notificacionesNoLeidas->count();
+            @endphp
+            <div class="col-md-8">
+                <div class="card shadow-sm" style="border-left: 5px solid #184c77;">
+                    <div class="card-header" style="background: linear-gradient(90deg, #263a4d 0%, #8a5f2f 100%); color: white;">
+                        <h5 class="m-0"><i class="fas fa-bell"></i> Notificaciones de Solicitudes de Corrección</h5>
+                    </div>
+                    <div class="card-body">
+                        @if($cantidadNoLeidas > 0)
+                            <div class="alert alert-info" role="alert">
+                                Tienes <strong>{{ $cantidadNoLeidas }} notificación(es) sin leer</strong>
+                            </div>
+                            
+                            @foreach($notificacionesNoLeidas as $notificacion)
+                                @php
+                                    $data = $notificacion->data;
+                                    $estadoBadge = $data['accion'] === 'aprobada' ? 'badge-success' : 'badge-danger';
+                                @endphp
+                                <div class="alert alert-{{ $data['color'] }} alert-dismissible fade show" role="alert">
+                                    <strong><i class="fas {{ $data['icono'] }}"></i> {{ $data['mensaje'] }}</strong>
+                                    
+                                    <div class="mt-2" style="font-size: 0.95rem;">
+                                        @if($data['nota_sugerida'])
+                                            <p><strong>Nota sugerida:</strong> {{ $data['nota_sugerida'] }}</p>
+                                        @endif
+                                        
+                                        @if($data['respuesta_admin'])
+                                            <p><strong>Comentario del admin:</strong></p>
+                                            <p style="padding: 8px; background-color: rgba(0,0,0,0.05); border-left: 3px solid #999; margin: 5px 0;">
+                                                {{ $data['respuesta_admin'] }}
+                                            </p>
+                                        @endif
+                                        
+                                        @if($data['accion'] === 'aprobada' && $data['aprobada_hasta'])
+                                            <p class="mb-0"><strong>Válida hasta:</strong> {{ \Carbon\Carbon::parse($data['aprobada_hasta'])->format('d/m/Y H:i') }}</p>
+                                        @endif
+                                    </div>
+                                    
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="marcarComoLeida('{{ $notificacion->id }}')">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="alert alert-success" role="alert">
+                             No tienes notificaciones pendientes
+                            </div>
+                        @endif
+
+                        @php
+                            // Mostrar también notificaciones ya leídas
+                            $notificacionesLeidas = Auth::user()->readNotifications()->where('type', 'App\\Notifications\\SolicitudCorreccionNotaResuelta')->orderBy('read_at', 'desc')->limit(5)->get();
+                        @endphp
+                        
+                        @if($notificacionesLeidas->count() > 0)
+                            <div class="mt-3">
+                                <h6 style="color: #666;">Historial reciente:</h6>
+                                <div class="list-group list-group-sm">
+                                    @foreach($notificacionesLeidas as $notificacion)
+                                        @php
+                                            $data = $notificacion->data;
+                                        @endphp
+                                        <div class="list-group-item" style="background-color: #f8f9fa; border-left: 3px solid {{ $data['accion'] === 'aprobada' ? '#28a745' : '#dc3545' }};">
+                                            <small>
+                                                <strong><i class="fas {{ $data['icono'] }}"></i> {{ $data['mensaje'] }}</strong>
+                                                <br>
+                                                <span style="color: #999;">{{ $notificacion->read_at->format('d/m/Y H:i') }}</span>
+                                            </small>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
         @endif
     </div>
 </div>
@@ -118,5 +198,21 @@
     $('.carousel').carousel({
         interval: 3000
     })
+
+    // Función para marcar notificación como leída
+    function marcarComoLeida(notificationId) {
+        fetch(`/notificaciones/${notificationId}/marcar-leida`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        }).then(response => {
+            if (response.ok) {
+                // La notificación se ha marcado como leída
+                console.log('Notificación marcada como leída');
+            }
+        }).catch(error => console.error('Error:', error));
+    }
 </script>
 @stop

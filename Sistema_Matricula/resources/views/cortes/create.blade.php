@@ -17,7 +17,7 @@
                     <div class="col-md-4">
                      <div class="form-group mb-2">
                         <label for="id_modalidades">Modalidades</label>
-                        <div class="input-group w-50">
+                        <div class="input-group ">
                             <input type="hidden" name="id_modalidades" id="id_modalidades" required>
                             
                             <input type="text" id="nombre_m_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
@@ -26,7 +26,7 @@
                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalm">
                                     <i class="fas fa-search "></i> Buscar
                                 </button>
-                              <a href="{{route('modalidades.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                             
                             </div>
                          
                          </div>
@@ -112,6 +112,48 @@
                         $('#id_modalidades').val(id);
                         $('#nombre_m_display').val(nombreCompleto);
                         $('#modalm').modal('hide');
+                    }
+
+                    function agregarModalidadNueva() {
+                        var form = document.getElementById('formModalidadRapido');
+
+                        if (!form.checkValidity()) {
+                            form.reportValidity();
+                            return;
+                        }
+
+                        var formData = new FormData(form);
+
+                        $.ajax({
+                            url: '{{ url('modalidades/store-rapido') }}',
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(response) {
+                                if (response.success) {
+                                    var table = $('#tabla_m_modal').DataTable();
+                                    table.row.add([
+                                        response.nombre,
+                                        '<button type="button" class="btn btn-sm btn-success" onclick="seleccionarm(\'' + response.id + '\', \'' + response.nombre + '\')"><i class="fas fa-check"></i> Seleccionar</button>'
+                                    ]).draw();
+
+                                    seleccionarm(response.id, response.nombre);
+                                    form.reset();
+                                    $('#pills-buscar-modalidad-tab').tab('show');
+                                } else {
+                                    alert('Error al agregar la modalidad');
+                                }
+                            },
+                            error: function(xhr) {
+                                if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                                    alert(Object.values(xhr.responseJSON.errors).flat().join('\n'));
+                                    return;
+                                }
+
+                                alert('Error al procesar la solicitud');
+                            }
+                        });
                     }
 
                     $(document).ready(function() {

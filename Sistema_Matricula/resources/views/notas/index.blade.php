@@ -40,23 +40,25 @@
                 <div class="card-body p-0">
                     @if($notasPorGrado->isNotEmpty())
                         <div class="accordion" id="notasPorGradoAccordion">
-                            @foreach($notasPorGrado as $grado => $notasPorMatricula)
+                            @foreach($notasPorGrado as $grado => $matriculasGrado)
                                 @php
                                     $collapseId = 'collapse-' . str_replace(' ', '-', $grado) . '-' . $loop->index;
-                                    $estudiantesValidos = $notasPorMatricula->filter(function($notasAlumno) {
-                                        $ultimaNota = $notasAlumno->first();
-                                        return $ultimaNota->matriculas?->estudiantes;
+                                    $estudiantesValidos = $matriculasGrado->filter(function($datosAlumno) {
+                                        return $datosAlumno['matricula']->estudiantes;
                                     })->count();
                                 @endphp
                                 @if($estudiantesValidos > 0)
                                     <div class="card grade-card mb-3">
-                                        <div class="card-header bg-secondary text-white py-2">
-                                            <button class="btn btn-link text-left text-white font-weight-bold mb-0 w-100 d-flex justify-content-between align-items-center" type="button" data-toggle="collapse" data-target="#{{ $collapseId }}" aria-expanded="true" aria-controls="{{ $collapseId }}">
-                                                <span><i class="fas fa-chevron-down mr-2"></i> Grado: {{ $grado }} ({{ $estudiantesValidos }} estudiantes)</span>
+                                        <div class="card-header bg-navy text-white py-2 d-flex align-items-center">
+                                            <button class="btn btn-link text-left text-white font-weight-bold mb-0 flex-grow-1 d-flex justify-content-between align-items-center collapsed" type="button" data-toggle="collapse" data-target="#{{ $collapseId }}" aria-expanded="false" aria-controls="{{ $collapseId }}">
+                                                <span><i class="fas fa-chevron-right mr-2"></i> Grado: {{ $grado }} ({{ $estudiantesValidos }} estudiantes)</span>
                                                 <span class="small text-white-50">Mostrar / ocultar</span>
                                             </button>
+                                            <button type="button" class="btn btn-light btn-sm ml-2 btn-reporte-grado" data-grado="{{ $grado }}">
+                                                <i class="fas fa-print mr-1"></i> Reporte
+                                            </button>
                                         </div>
-                                        <div id="{{ $collapseId }}" class="collapse show">
+                                        <div id="{{ $collapseId }}" class="collapse">
                                             <div class="card-body p-0">
                                                 <div class="table-responsive">
                                                     <table class="table table-hover table-sm mb-0 tabla-grado" data-page-size="10">
@@ -71,11 +73,13 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach($notasPorMatricula as $id_matricula => $notasAlumno)
+                                                            @foreach($matriculasGrado as $id_matricula => $datosAlumno)
                                                                 @php
+                                                                    $matricula = $datosAlumno['matricula'];
+                                                                    $notasAlumno = $datosAlumno['notas'];
                                                                     $ultimaNota = $notasAlumno->first();
-                                                                    $est = $ultimaNota->matriculas?->estudiantes;
-                                                                    $grupo = $ultimaNota->horarios?->grupo;
+                                                                    $est = $matricula->estudiantes;
+                                                                    $grupo = $matricula->grupos;
                                                                 @endphp
                                                                 @if($est)
                                                                     <tr class="data-row">
@@ -87,18 +91,16 @@
                                                                             <div class="text-sm">{{ $grado }}</div>
                                                                             <small class="text-muted">{{ $grupo?->Nombre ?? 'Sin grupo' }}</small>
                                                                         </td>
-                                                                        <td>{{ $ultimaNota->horarios?->asignatura?->Nombre ?? 'Sin asignatura' }}</td>
-                                                                        <td>{{ $ultimaNota->cortes?->nombre ?? 'Sin corte' }}</td>
+                                                                        <td>{{ $ultimaNota?->horarios?->asignatura?->Nombre ?? 'Sin notas' }}</td>
+                                                                        <td>{{ $ultimaNota?->cortes?->nombre ?? 'Sin notas' }}</td>
                                                                         <td class="text-center">{{ $notasAlumno->count() }}</td>
                                                                         <td class="text-right text-nowrap acciones-col">
                                                                             <button class="btn btn-xs btn-info btn-ver-detalles" 
-                                                                                    data-nombre="{{ $est->Nombre }}"
+                                                                                    data-nombre="{{ trim($est->Nombre . ' ' . $est->Apellido) }}"
                                                                                     data-id-matricula="{{ $id_matricula }}">
                                                                                 <i class="fas fa-history mr-1"></i>Notas
                                                                             </button>
-                                                                            <!-- <a href="{{ route('notas.edit', $ultimaNota->id) }}" class="btn btn-xs btn-warning">
-                                                                                <i class="fas fa-edit mr-1"></i> Editar
-                                                                            </a> -->
+                                                                            {{-- La edición individual se hace desde el panel de detalle, cuando ya existe una nota. --}}
                                                                         </td>
                                                                     </tr>
                                                                 @endif
@@ -116,7 +118,7 @@
                     @else
                         <div class="text-center py-5 text-muted">
                             <i class="fas fa-user-graduate fa-3x mb-3 opacity-50"></i>
-                            <p>No hay estudiantes con notas registradas aún.</p>
+                    <p>No hay estudiantes matriculados para mostrar.</p>
                         </div>
                     @endif
                 </div>
@@ -148,236 +150,33 @@
 
 @section('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
-<style>
-    .bg-navy { background-color: #001f3f; color: white; }
-    .text-navy { color: #001f3f; }
-    .table-xs td { padding: 0.2rem; font-size: 0.85rem; }
-    .sticky-top { z-index: 1020; }
-.input-group-sm  {
-     width: 350px !important;
-  
-}
-  .buscador-simple {
-    
-    border-right: none !important;
-}
-.limpiar-simple {
-
-    border-left: none !important;
-    padding: 0.25rem 0.5rem !important; /* Mismo tamaño input */
-    font-size: 0.875rem !important;
-}
-.limpiar-simple:hover {
-       background: #dc3545 !important;
-         color: white !important;
-}
-
-    /* Ajustes para la columna de acciones en el índice de notas */
-    .grade-card th:last-child,
-    .grade-card td.acciones-col {
-        width: 1%;
-        white-space: nowrap;
-    }
-
-    .grade-card .btn-ver-detalles,
-    .grade-card .btn-warning {
-        padding: 0.2rem 0.5rem !important;
-        min-width: 0;
-        white-space: nowrap;
-    }
-
-    .grade-card .btn-ver-detalles i,
-    .grade-card .btn-warning i {
-        margin-right: 0.25rem;
-    }
-
-</style>
+<link rel="stylesheet" href="{{ asset('css/notas/index.css') }}">
 @stop
+
 
 
 @section('js')
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 <script>
-
-    
-$(document).ready(function() {
-    $(document).on('click', '.btn-ver-detalles', function() {
-        const nombre = $(this).data('nombre');
-        const idMatricula = $(this).data('id-matricula');
-        $('#panelDetalle').attr('data-matricula', idMatricula);
-        cargarHistorial(idMatricula, nombre);
-    });
-
-    function cargarHistorial(idMatricula, nombre) {
-        $('#contenidoDetalle').html(`
-            <div class="text-center py-4">
-                <i class="fas fa-spinner fa-spin fa-2x text-primary mb-2"></i>
-                <p>Cargando historial de ${nombre}...</p>
-            </div>
-        `);
-
-        $.ajax({
-            url: `/notas/matricula/${idMatricula}/historial`,
-            method: 'GET',
-            success: function(data) {
-                console.log('✅ Datos recibidos:', data);
-                
-                let filas = '';
-                data.notas.forEach(function(n) {
-                    // Color según nota_normal
-                    let colorNormal = n.nota_normal < 60 ? 'text-danger' : 
-                                     n.nota_normal >= 70 ? 'text-success' : 'text-warning';
-                    
-                    // Nota a mostrar (prioridad: especial > normal)
-                    let notaPrincipal = n.nota_especial || n.nota_normal;
-                    let colorPrincipal = n.nota_especial ? 
-                        (n.nota_especial < 60 ? 'text-danger' : 'text-success') : 
-                        colorNormal;
-                    
-                    filas += `
-                        <tr class="table-hover">
-                            <td>
-                                <div class="font-weight-bold">${n.horarios.asignatura.Nombre}</div>
-                                <small class="badge badge-primary">${n.cortes.nombre}</small>
-                                <br><small class="text-muted">${n.created_at}</small>
-                            </td>
-                            <td class="text-center">
-                                <div class="h4 mb-1 ${colorPrincipal} font-weight-bold">${notaPrincipal}</div>
-                                ${n.nota_especial ? `<small class="text-muted">Especial</small>` : ''}
-                                ${n.nota_normal !== n.nota_especial && n.nota_normal ? 
-                                    `<div class="small ${colorNormal}">Normal: ${n.nota_normal}</div>` : ''}
-                            </td>
-                            <td class="text-right align-middle">
-                                <div class="btn-group btn-group-sm">
-                                    <a href="/notas/${n.id}/edit" class="btn btn-outline-primary" title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <button class="btn btn-outline-danger btn-delete-ajax" 
-                                            data-id="${n.id}" data-materia="${n.horarios.asignatura.Nombre}"
-                                            title="Eliminar">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        ${n.observaciones ? `
-                        <tr>
-                            <td colspan="3" class="bg-light p-2 small">
-                                <i class="fas fa-comment-dots text-info mr-1"></i>
-                                <em>${n.observaciones}</em>
-                            </td>
-                        </tr>` : ''}
-                    `;
-                });
-
-                const html = `
-                    <div class="mb-3 pb-2 border-bottom">
-                        <h5 class="text-navy font-weight-bold mb-1">${nombre}</h5>
-                        <span class="badge badge-success">${data.count} calificaciones registradas</span>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-sm table-hover">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Materia / Corte</th>
-                                    <th class="text-center">Calificación</th>
-                                    <th class="text-right">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>${filas}</tbody>
-                        </table>
-                    </div>
-                    <div class="mt-3 text-right">
-                        <button onclick="window.print()" class="btn btn-outline-secondary btn-sm">
-                            <i class="fas fa-print mr-1"></i>Imprimir expediente
-                        </button>
-                    </div>
-                `;
-                
-                $('#contenidoDetalle').html(html);
-            },
-            error: function(xhr) {
-                console.error('Error:', xhr);
-                $('#contenidoDetalle').html(`
-                    <div class="alert alert-danger">
-                        <i class="fas fa-exclamation-triangle mr-2"></i>
-                        Error: ${xhr.status} - ${xhr.statusText}
-                    </div>
-                `);
-            }
-        });
-    }
-
-    // Delete AJAX
-    $(document).on('click', '.btn-delete-ajax', function() {
-        const notaId = $(this).data('id');
-        $('#modalDelete-' + notaId).modal('show');
-    });
-});
+    window.NotasIndex = {
+        reportesPorGrado: @json($reportesPorGrado),
+        nombreCentro: @json($nombreCentro ?: 'Centro educativo no especificado'),
+        csrfToken: @json(csrf_token()),
+        notasCreateUrl: @json(route('notas.create')),
+        sloganUrl: @json(asset('img/reportes/Slogan 2026.png'))
+    };
 </script>
-
-<script>
-    (function() {
-        const initGradeTables = () => {
-            const buscador = $('#buscadorInput');
-            const limpiar = $('#btnLimpiar');
-            const dataTables = [];
-
-            if (!($.fn.DataTable || $.fn.dataTable)) {
-                return;
-            }
-
-            $('.tabla-grado').each(function() {
-                const table = $(this).DataTable({
-                    pageLength: 10,
-                    lengthChange: false,
-                    info: false,
-                    searching: true,
-                    ordering: false,
-                    paging: true,
-                    dom: 'tp',
-                    language: {
-                        url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
-                    }
-                });
-                dataTables.push({
-                    table,
-                    card: $(this).closest('.grade-card')
-                });
-            });
-
-            const refreshCards = () => {
-                const texto = buscador.val().toLowerCase().trim();
-
-                dataTables.forEach(({ table, card }) => {
-                    table.search(texto).draw();
-                    const visibleRows = table.rows({ filter: 'applied' }).data().length;
-                    card.toggle(visibleRows > 0);
-                });
-            };
-
-            buscador.on('input', refreshCards);
-            limpiar.on('click', function() {
-                buscador.val('');
-                refreshCards();
-            });
-
-            refreshCards();
-        };
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initGradeTables);
-        } else {
-            initGradeTables();
-        }
-    })();
-</script>
+<script src="{{ asset('js/notas/calificaciones.js') }}"></script>
+<script src="{{ asset('js/notas/reportes.js') }}"></script>
+<script src="{{ asset('js/notas/historial.js') }}"></script>
+<script src="{{ asset('js/notas/tablas.js') }}"></script>
+<script src="{{ asset('js/notas/index.js') }}"></script>
 
 {{-- MODALES DE ELIMINACIÓN --}}
 @foreach($notasPorGrado as $grado => $notasPorMatricula)
-    @foreach($notasPorMatricula as $id_matricula => $notasAlumno)
-        @foreach($notasAlumno as $nota)
+    @foreach($notasPorMatricula as $id_matricula => $datosAlumno)
+        @foreach($datosAlumno['notas'] as $nota)
             @if($nota->matriculas?->estudiantes && $nota->horarios?->asignatura)
                 <x-delete-modal 
                     id="modalDelete-{{ $nota->id }}" 

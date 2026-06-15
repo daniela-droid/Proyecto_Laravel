@@ -12,19 +12,27 @@
          <div style="background-color: #e0e5ee; color: dark; padding: 10px 20px; border-radius: 5px;">
         <div class="card-header">Editar Comarca</div>
         <div class="card-body">
-            <form action="{{ route('comarcas.update', $comarca->id) }}" method="POST">
+            <form class="edit-form"  action="{{ route('comarcas.update', $comarca->id) }}" method="POST">
                 @csrf
                 @method('PUT') {{-- Actualizacion--}}
 
-                <div class="form-group">
-                    <label for="Comarca">Comarca</label>
-                    <input type="text" name="Comarca" class="form-control form-control-sm w-50"value="{{$comarca->Comarca}}" required>
-                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                          <div class="form-group">
+                                <label for="Comarca">Comarca</label>
+                                <input type="text" name="Comarca" class="form-control "value="{{$comarca->Comarca}}" required>
+                            </div>
+                    </div>
+                    <div class="col-md-4">
 
                      <div class="form-group">
                     <label for="Direccion">Direccion</label>
-                    <input type="text" name="Direccion" class="form-control form-control-sm w-50"value="{{$comarca->Direccion}}" required>
+                    <input type="text" name="Direccion" class="form-control "value="{{$comarca->Direccion}}" required>
                 </div>
+                    </div>
+                </div>
+              
+                <hr>
 
               <button type="submit" class="btn btn-success">Actualizar</button>
                 <a href="{{ route('comarcas.index') }}" class="btn btn-secondary">Cancelar</a>

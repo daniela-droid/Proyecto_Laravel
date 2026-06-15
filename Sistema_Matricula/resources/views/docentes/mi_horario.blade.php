@@ -14,13 +14,13 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="card card-outline card-success">
+    <div class="card card-outline card-navy">
         <div class="card-header">
             <h3 class="card-title">Listado de clases asignadas</h3>
         </div>
         <div class="card-body p-0">
             <table class="table table-hover table-striped">
-                <thead class="bg-primary bg-success">
+                <thead class="bg-primary bg-navy">
                     <tr>
                         <th>Día</th>
                         <th>Hora Inicio</th>

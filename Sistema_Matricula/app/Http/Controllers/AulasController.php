@@ -39,6 +39,22 @@ class AulasController extends Controller
         return redirect()->route('aulas.index')->with('success','Aula creada');
     }
 
+    public function storeRapido(Request $request)
+    {
+        $request->validate([
+           'Nombre'=>'required|string|max:255',
+            'Capacidad'=>'required|string|max:60',
+         
+        ]);
+
+        $aula = Aulas::create($request->all());
+
+        return response()->json([
+            'success' => true,
+            'id' => $aula->id,
+            'nombre' => $aula->Nombre
+        ]);
+    }
     /**
      * Display the specified resource.
      */

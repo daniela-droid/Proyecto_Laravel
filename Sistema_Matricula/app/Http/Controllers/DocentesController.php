@@ -34,20 +34,48 @@ class DocentesController extends Controller
     
     public function store(Request $request)
     {
-       $request->validate([
-           
+       $validated = $request->validate($this->rulesDocente(), $this->messagesDocente());
+
+        $validated['Telefono'] = trim($validated['Telefono']);
+
+        $usuario = Usuario::findOrFail($validated['id_usuario']);
+
+        Docentes::create([
+            'id_usuario' => $validated['id_usuario'],
+            'Nombre' => $validated['Nombre'],
+            'Apellido' => $validated['Apellido'],
+            'FechadeNacimiento' => $validated['FechadeNacimiento'],
+            'Telefono' => $validated['Telefono'],
+            'id_especialidads' => $validated['id_especialidads'],
+            'Email' => $usuario->Email,
+        ]);
+
+        $redirectChoice = $request->input('redirect_choice', 'docentes');
+        if ($redirectChoice === 'horarios') {
+            return redirect()->route('horarios.create')->with('success', 'Docente creado correctamente');
+        }
+
+        return redirect()->route('docentes.index')->with('success','Docente creado correctamente');
+
+    }
+
+    private function rulesDocente(): array
+    {
+        return [
             'id_usuario'=>'required|exists:usuarios,id',
             'Nombre'=>'required|string|max:255',
             'Apellido'=>'required|string|max:255',
             'FechadeNacimiento'=>'required|date',
-            'Email'=>'required|string|max:255',
-            'Telefono'=>'required|integer',
-            'id_especialidads'=>'required|exists:especialidads,id'
+            'Telefono'=>['required', 'string', 'regex:/^\+505[0-9]{8}$/'],
+            'id_especialidads'=>'required|exists:especialidads,id',
+        ];
+    }
 
-        ]);
-    Docentes::create($request->all());
-    return redirect()->route('docentes.index')->with('secces','Docente creado correctamente');
-
+    private function messagesDocente(): array
+    {
+        return [
+            'Telefono.regex' => 'El teléfono debe tener el formato +50512345678.',
+        ];
     }
 
     /**
@@ -73,18 +101,21 @@ class DocentesController extends Controller
      */
     public function update(Request $request, Docentes $docente)
     {
-       $request->validate([
+       $validated = $request->validate([
            
             'id_usuario'=>'required|exists:usuarios,id|unique:docentes,id_usuario,'. $docente->id,
             'Nombre'=>'required|string|max:255',
             'Apellido'=>'required|string|max:255',
             'FechadeNacimiento'=>'required|date',
             'Email'=>'required|string|max:255|unique:docentes,Email,' . $docente->id,
-            'Telefono'=>'required|integer',
+            'Telefono'=>['required', 'string', 'regex:/^\+505[0-9]{8}$/'],
             'id_especialidads'=>'required|exists:especialidads,id'
 
-        ]);
-        $docente->update($request->all());
+        ], $this->messagesDocente());
+
+        $validated['Telefono'] = trim($validated['Telefono']);
+
+        $docente->update($validated);
         return redirect()->route('docentes.index')->with('succes','Docentes Actualizado correctamete');
     }
 

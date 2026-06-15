@@ -12,79 +12,82 @@
     <div class="card">
         <div class="card-header">Editar Matriculas</div>
         <div class="card-body">
-            <form action="{{ route('matriculas.update', $matricula->id) }}" method="POST">
+            <form class="edit-form" action="{{ route('matriculas.update', $matricula->id) }}" method="POST">
                 @csrf
-                @method('PUT') {{-- Actualizacion--}}
+                @method('PUT') {{-- Actualizacion --}}
 
-               <div class="form-group mb-2">
-                    <label for="id_estudiante">Estudiantes</label>
-                    <div class="input-group w-50">
-                        <input type="hidden" name="id_estudiante" id="id_estudiante" value="{{ $matricula->id_estudiante }}" required>
-                        
-                        <input type="text" id="nombre_stu_display" 
-                            class="form-control form-control-sm" 
-                            value="{{ $matricula->estudiantes->Nombre }} {{ $matricula->estudiantes->Apellido }}" 
-                            readonly required>
-                        
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalstu">
-                                <i class="fas fa-search"></i> Cambiar
-                            </button>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="id_estudiante">Estudiantes</label>
+                            <div class="input-group">
+                                <input type="hidden" name="id_estudiante" id="id_estudiante" value="{{ $matricula->id_estudiante }}" required>
+                                <input type="text" id="nombre_stu_display" class="form-control form-control-sm" value="{{ $matricula->estudiantes->Nombre }} {{ $matricula->estudiantes->Apellido }}" readonly required>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalstu">
+                                        <i class="fas fa-search"></i> Cambiar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="id_grupo">Secciones</label>
+                            <div class="input-group">
+                                <input type="hidden" name="id_grupo" id="id_grupo" value="{{ $matricula->id_grupo }}" required>
+                                <input type="text" id="nombre_sec_display" class="form-control form-control-sm" value="{{ $matricula->grupos->Descripcion }}" readonly required>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalsec">
+                                        <i class="fas fa-search"></i> Cambiar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="id_periodo_academicos">Periodos Academicos</label>
+                            <select name="id_periodo_academicos" class="form-control form-control-sm" required>
+                                @foreach($periodos as $periodo)
+                                    <option value="{{ $periodo->id }}" {{ $matricula->id_periodo_academicos == $periodo->id ? 'selected' : '' }}>{{ $periodo->Nombre }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>
 
-               <div class="form-group mb-2">
-                    <label for="id_grupo">Secciones</label>
-                    <div class="input-group w-50">
-                        <input type="hidden" name="id_grupo" id="id_grupo" value="{{ $matricula->id_grupo }}" required>
-                        
-                        <input type="text" id="nombre_sec_display" 
-                            class="form-control form-control-sm" 
-                            value="{{ $matricula->grupos->Descripcion}}" 
-                            readonly required>
-                        
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalsec">
-                                <i class="fas fa-search"></i> Cambiar
-                            </button>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="fecha_matricula">Fecha</label>
+                            <input type="date" name="fecha_matricula" class="form-control form-control-sm" value="{{ $matricula->fecha_matricula }}" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="estado">Estado</label>
+                            <select name="estado" class="form-control form-control-sm" required>
+                                <option value="Activo" {{ $matricula->estado == 'Activo' ? 'selected' : '' }}>Activo</option>
+                                <option value="Retirado" {{ $matricula->estado == 'Retirado' ? 'selected' : '' }}>Retirado</option>
+                                <option value="Suspendido" {{ $matricula->estado == 'Suspendido' ? 'selected' : '' }}>Suspendido</option>
+                                <option value="Expulsado" {{ $matricula->estado == 'Expulsado' ? 'selected' : '' }}>Expulsado</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="observaciones">Observaciones</label>
+                            <input type="text" name="observaciones" class="form-control form-control-sm" value="{{ $matricula->observaciones }}" required>
                         </div>
                     </div>
                 </div>
 
-             <div class="form-group mb-3">
-                <label for="id_periodo_academicos">Periodos Academicos</label>
-                <select name="id_periodo_academicos" class="form-control form-control-sm w-50" required>
-                    @foreach($periodos as $periodo)
-                       <option value="{{$periodo->id }}" {{$matricula->id_periodo_academicos == $periodo->id ? 'selected' : ''}}
-                       >{{$periodo->Nombre }}</option>
-                    @endforeach
-                </select>
-            </div>
-           
-            
-
-             <div class="form-group mb-2">
-                    <label for="fecha_matricula">Fecha</label>
-                    <input type="date" name="fecha_matricula" class="form-control form-control-sm w-50" value="{{$matricula->fecha_matricula}}"required>
-            </div>
-
-             <div class="form-group mb-2"> 
-                    <label for="">Estado</label>
-                 <select name="estado" class="form-control form-control-sm w-50" value="{{$matricula->estado}}"required> 
-                    <option value="Activo">Activo</option> 
-                    <option value="Retirado">Retirado</option> 
-                    <option value="Suspendido">Suspendido</option> 
-                    <option value="Expulsado">Expulsado</option> 
-                </select>
-                 </div>
-
-                 <div class="form-group mb-2">
-                    <label for="observaciones">Observaciones</label>
-                    <input type="text" name="observaciones" class="form-control form-control-sm w-50" value="{{$matricula->observaciones}}" required>
-                </div>
-
-              <button type="submit" class="btn btn-success">Actualizar</button>
+                <button type="submit" class="btn btn-success">Actualizar</button>
                 <a href="{{ route('matriculas.index') }}" class="btn btn-secondary">Cancelar</a>
             </form>
         </div>

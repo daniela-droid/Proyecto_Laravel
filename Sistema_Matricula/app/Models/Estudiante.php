@@ -16,6 +16,7 @@ class Estudiante extends Model
 
     protected $fillable=[
             'Código_Persona',
+            'c_temporal',
             'Nombre',
             'Apellido',
             'Sexo',

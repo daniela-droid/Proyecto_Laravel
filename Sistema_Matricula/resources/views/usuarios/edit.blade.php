@@ -23,28 +23,35 @@
                 </div>
             @endif
 
-            <form action="{{ route('usuarios.update', $usuario->id) }}" method="POST">
+            <form class="edit-form" action="{{ route('usuarios.update', $usuario->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
-                <div class="form-group">
-                    <label for="Email">Email</label>
-                    <input type="email" name="Email" class="form-control form-control-sm w-50" value="{{ old('Email', $usuario->Email) }}" required>
-                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="Email">Email</label>
+                            <input type="email" name="Email" class="form-control form-control-sm" value="{{ old('Email', $usuario->Email) }}" required>
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label for="password">Nuevo Password (dejar en blanco para no cambiar)</label>
-                    <input type="password" name="password" class="form-control form-control-sm w-50">
-                    <small class="text-muted">Si no desea cambiar la contraseña, deje este campo vacío.</small>
-                </div>
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="password">Nuevo Password</label>
+                            <input type="password" name="password" class="form-control form-control-sm">
+                            <small class="text-muted">Dejar en blanco para no cambiar</small>
+                        </div>
+                    </div>
 
-
-                <div class="form-group">
-                    <label for="rol">Rol</label>
-                    <select name="rol" class="form-control form-control-sm w-50" required>
-                        <option value="admin" {{ $usuario->rol == 'admin' ? 'selected' : '' }}>admin</option>
-                        <option value="docentes" {{ $usuario->rol == 'docentes' ? 'selected' : '' }}>docentes</option>
-                    </select>
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="rol">Rol</label>
+                            <select name="rol" class="form-control form-control-sm" required>
+                                <option value="admin" {{ $usuario->rol == 'admin' ? 'selected' : '' }}>admin</option>
+                                <option value="docentes" {{ $usuario->rol == 'docentes' ? 'selected' : '' }}>docentes</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-success">Actualizar</button>

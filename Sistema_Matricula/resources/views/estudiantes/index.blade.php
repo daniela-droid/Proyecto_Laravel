@@ -2,6 +2,8 @@
 
 @section('title', 'Estudiantes')
 
+@section('plugins.DatatablesPlugins', true)
+
 @section('css')
  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css"> -->
@@ -67,7 +69,7 @@ a{
 @stop
 
 @section('content')
-<div class="card">
+<!-- <div class="card"> -->
             <div style="background-color: #f7f9fc; border-radius: 5px; ">
         <div class="card-body" id="body">
         <div class="container">
@@ -133,14 +135,15 @@ a{
         <i class="fas fa-plus" theme="blue"></i> Agregar
         </a>
 
-
+<hr>
 
  <!-- Botón Editar -->
 <div id="table" class="container ">
     @php  
         if(count($estudiantes)>0){
             $heads = [
-                 'Código de Persona',
+                'Código Unico de Persona',
+                'Código Temporal',
                 'Nombres', 
                 'Apellidos',
                 'Sexo',
@@ -158,6 +161,17 @@ a{
         if(count($estudiantes)>0){
             $data=[];
             foreach($estudiantes as $estudiante){
+                $codigoPersona = trim((string) $estudiante->Código_Persona);
+                $codigoTemporal = trim((string) $estudiante->c_temporal);
+                $sinCodigos = $codigoPersona === '' && $codigoTemporal === '';
+                $codigoPersonaCell = $codigoPersona !== ''
+                    ? e($codigoPersona)
+                    : '<span class="text-muted">Sin código único</span>';
+                $codigoTemporalCell = $codigoTemporal !== ''
+                    ? e($codigoTemporal)
+                    : ($sinCodigos
+                        ? '<a href="' . route('estudiantes.edit', $estudiante->id) . '" class="badge badge-warning text-dark px-2 py-1" title="Agregar código temporal"><i class="fas fa-exclamation-triangle"></i> Agregar temporal</a>'
+                        : '<span class="text-muted">No requerido</span>');
                 $btnEdit = '<a href="' . route('estudiantes.edit', $estudiante->id) . '" class="btn btn-xs btn-default text-primary mx-1 shadow" title="Edit">
                                 <i class="fa fa-lg fa-fw fa-pen"></i>
                             </a>';
@@ -169,7 +183,8 @@ a{
                             </a>';
 
                 $data[] = [ 
-                    $estudiante->Código_Persona,     
+                    $codigoPersonaCell,
+                    $codigoTemporalCell,
                     $estudiante->Nombre, 
                     $estudiante->Apellido,
                     $estudiante->Sexo,
@@ -196,12 +211,13 @@ a{
             'language' => [
                 'url' => '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
             ],
+            
             'columnDefs' => [
                 ['targets' => -1, 'className' => 'text-center'] 
             ],
-            // Ajustado a 10 columnas exactas para que coincida con $heads
+            // Ajustado a 11 columnas exactas para que coincida con $heads
             'columns' => (count($estudiantes) > 0) 
-                ? [null, null, null, null, null, null, null, null, null, ['orderable' => false]] 
+                ? [null,null, null, null, null, null, null, null, null, null, ['orderable' => false]] 
                 : [['orderable' => false]],
         ];
     @endphp
@@ -210,8 +226,38 @@ a{
     <div class="row">
         <div class="col">
             
-            <!-- <x-adminlte-card icon="fas fa-user-graduate"  theme="lightblue" title="Listado de Estudiantes"> -->
-                <x-adminlte-datatable id="table1" :heads="$heads" head-theme="light" theme="light" :config="$config" striped hoverable>
+            <!-- <x-adminlte-card icon="fas fa-user-graduate"  theme="navy" title="Listado de Estudiantes"> -->
+             <x-adminlte-datatable id="table1" :heads="$heads" head-theme="light" theme="light" :config="$config" striped hoverable  with-buttons>
+                
+             @php        
+                $config['dom'] = '<"row" <"col-sm-7" B> <"col-sm-5 d-flex justify-content-end" i> >
+                                <"row" <"col-12" tr> >
+                                <"row" <"col-sm-12 d-flex justify-content-start" f> >';
+                $config['paging'] = false;
+                $config["lengthMenu"] = [ 10, 50, 100, 500];
+                $config['buttons'] = [
+                    [
+                        'extend' => 'copy',
+                        'text' => 'Copiar'
+                    ],
+                    [
+                        'extend' => 'csv',
+                        'text' => 'CSV'
+                    ],
+                    [
+                        'extend' => 'excel',
+                        'text' => 'Excel'
+                    ],
+                    [
+                        'extend' => 'pdf',
+                        'text' => 'PDF'
+                    ],
+                    [
+                        'extend' => 'print',
+                        'text' => 'Imprimir'
+                    ]
+                ];
+                @endphp
                     @foreach($config['data'] as $row)
                         <tr>
                             @foreach($row as $cell)
@@ -246,6 +292,15 @@ a{
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/js/jquery.overlayScrollbars.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- DataTables Buttons -->
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 
   <script>
     $(document).ready(function() {

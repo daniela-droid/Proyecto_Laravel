@@ -79,6 +79,24 @@
             if(count($matriculas)>0){
                 $data=[];
                 foreach($matriculas as $matricula){
+                $estadosDisponibles = ['Activo', 'Retirado', 'Suspendido', 'Expulsado'];
+            $selectEstado = '<select class="form-control form-control-sm select-toggle-estado shadow-sm" data-id="' . $matricula->id . '">';
+
+            foreach ($estadosDisponibles as $est) {
+                $selected = ($matricula->estado == $est) ? 'selected' : '';
+                
+                // Opcional: Agregar colores de texto a las opciones para que se vea mejor
+                $style = '';
+                if ($est == 'Activo') $style = 'style="color: green; font-weight: bold;"';
+                if ($est == 'Retirado') $style = 'style="color: gray;"';
+                if ($est == 'Suspendido') $style = 'style="color: orange;"';
+                if ($est == 'Expulsado') $style = 'style="color: red;"';
+
+                $selectEstado .= '<option value="' . $est . '" ' . $selected . ' ' . $style . '>' . $est . '</option>';
+            }
+            $selectEstado .= '</select>';
+
+
                     $btnEdit = '<a href="' . route('matriculas.edit', $matricula->id) . '" class="btn btn-xs btn-default text-primary mx-1 shadow" title="Edit">
                                     <i class="fa fa-lg fa-fw fa-pen"></i>
                                 </a>';
@@ -98,7 +116,7 @@
                         $matricula->grupos->grados->tipo_nivel ?? '',
                         $matricula->periodos->Nombre ?? '', 
                         $matricula->fecha_matricula, 
-                        $matricula->estado , 
+                         $selectEstado,
                                
                         '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'
                             
@@ -166,4 +184,53 @@
 
     
     </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Escuchar el cambio del select dentro de tu Datatable de AdminLTE
+    document.querySelector('#table1').addEventListener('change', function (e) {
+        const target = e.target.closest('.select-toggle-estado');
+        if (!target) return;
+
+        const matriculaId = target.getAttribute('data-id');
+        const nuevoEstado = target.value;
+
+        // Deshabilitar momentáneamente para evitar que hagan doble clic
+        target.disabled = true;
+
+        // Petición al servidor obligando la ruta limpia
+        fetch(`/matriculas/${matriculaId}/update-status-only`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ estado: nuevoEstado })
+        })
+        .then(response => {
+            // Si Laravel arroja un error 404, 500 o de validación, enviamos el texto al siguiente paso
+            if (!response.ok) {
+                return response.json().then(err => { throw err; });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // EXITO: La BD confirmó el guardado, ahora recargamos seguros
+                window.location.reload();
+            } else {
+                alert('El servidor respondió con error: ' + data.message);
+                window.location.reload();
+            }
+        })
+        .catch(error => {
+            console.error('Error capturado:', error);
+            // Si la ruta no existe o falla la validación, esta alerta te dirá el porqué
+            alert('ERROR CRÍTICO: ' + (error.message || 'La ruta /matriculas/' + matriculaId + '/update-status-only no fue encontrada o la validación falló. Revisa tu archivo de rutas.'));
+            window.location.reload();
+        });
+    });
+});
+</script>
 @stop

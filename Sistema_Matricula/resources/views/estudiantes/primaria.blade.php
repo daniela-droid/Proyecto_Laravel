@@ -5,6 +5,7 @@
     <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css"> -->
      <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <!-- Estilos de DataTables Buttons -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/css/OverlayScrollbars.min.css">
  
@@ -61,27 +62,54 @@ a{
 <div class="card">
 <div class="card-body">
 
-
  <hr>
         <h4><i class="fas fa-graduation-cap"></i> Estudiantes de Primaria</h4>
-        <x-adminlte-datatable id="tableprimaria" :heads="['Nombres', 'Apellidos', 'Grado/Sección']" theme="light" striped>
-            @foreach($estudiantesPrimaria as $estudiante)
-                <tr>
-                    <td>{{ $estudiante->Nombre }}</td>
-                    <td>{{ $estudiante->Apellido }}</td>
-                    <td>
-                        {{-- Accediendo a la relación que mencionaste --}}
-                        {{ $estudiante->matriculas->last()->grupos->grados->Nombre ?? 'N/A' }} 
-                        ({{ $estudiante->matriculas->last()->grupos->Descripcion ?? '' }})
-                    </td>
-                </tr>
-            @endforeach
-        </x-adminlte-datatable>
+
+        <form method="GET" action="{{ route('estudiantes.primaria') }}" class="mb-4">
+            <div class="row align-items-end">
+                <div class="col-md-4">
+                    <label for="grado" class="form-label">Seleccionar grado</label>
+                    <select name="grado" id="grado" class="form-control">
+                        <option value="">Todos los grados</option>
+                        @foreach($grados as $grado)
+                            <option value="{{ $grado->id }}" {{ $gradoSelected == $grado->id ? 'selected' : '' }}>
+                                {{ $grado->Nombre }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                    <a href="{{ route('estudiantes.primaria') }}" class="btn btn-secondary">Limpiar</a>
+                </div>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table id="tableprimaria" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Grado / Sección</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($estudiantesPrimaria as $estudiante)
+                        <tr>
+                            <td>{{ $estudiante->Nombre }}</td>
+                            <td>{{ $estudiante->Apellido }}</td>
+                            <td>
+                                {{ $estudiante->matriculas->last()->grupos->grados->Nombre ?? 'N/A' }}
+                                ({{ $estudiante->matriculas->last()->grupos->Descripcion ?? '-' }})
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
         <a href="{{route('estudiantes.index')}}" class="btn btn-primary">Volver</a>
-
-
-
 
 </div>
 
@@ -94,22 +122,36 @@ a{
 @section('js')
     <!-- jQuery ya viene con AdminLTE -->
     <!-- DataTables -->
-    
-
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/js/jquery.overlayScrollbars.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 
   <script>
     $(document).ready(function() {
-        $('.select-buscable').select2({
-            placeholder: "Escribe para buscar...",
-            allowClear: true,
-            width: '50%' // Para que mantenga el tamaño que definiste en Bootstrap
+        $('#tableprimaria').DataTable({
+            dom: '<"row" <"col-sm-7" B> <"col-sm-5 d-flex justify-content-end" i> >' +
+                 '<"row" <"col-12" tr> >' +
+                 '<"row" <"col-sm-12 d-flex justify-content-start" f> >',
+            paging: true,
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100],
+            buttons: [
+                { extend: 'copy', text: 'Copiar' },
+                { extend: 'csv', text: 'CSV' },
+                { extend: 'excel', text: 'Excel' },
+                { extend: 'pdf', text: 'PDF' },
+                { extend: 'print', text: 'Imprimir' }
+            ],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+            }
         });
     });
-
-//   
-
-</script>
+  </script>
 @stop

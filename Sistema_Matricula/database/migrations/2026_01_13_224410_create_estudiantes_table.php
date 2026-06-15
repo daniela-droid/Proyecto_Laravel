@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('estudiantes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('Código_Persona');
+            $table->string('Código_Persona');
+            $table->string('c_temporal');
             $table->string('Nombre');
             $table->string('Apellido');
             $table->string('Sexo');
             $table->date('Fecha_N');
-           
-            $table->integer('Celular');
+           $table->string('Celular');
             $table->unsignedBigInteger('id_padre')->index('estudiantes_id_padre_foreign')->nullable();;
             $table->unsignedBigInteger('id_comarca')->index('estudiantes_id_comarca_foreign');
             $table->timestamps();

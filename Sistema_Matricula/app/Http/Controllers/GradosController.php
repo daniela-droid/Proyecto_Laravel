@@ -39,9 +39,25 @@ class GradosController extends Controller
         ]);
 
         Grados::create($request->all());
-        return redirect()->route('grados.index')->with('success',);
+        return redirect()->route('grados.index')->with('success','Grado creado exitosamente');
     }
 
+     public function storeRapido(Request $request)
+    {
+        $request->validate([
+           'Nombre'=>'required|string|max:255',
+            'Nivel'=>'required|int',
+            'tipo_nivel'=>'required|in:Primaria,Secundaria'
+        ]);
+
+        $grado = Grados::create($request->all());
+
+        return response()->json([
+            'success' => true,
+            'id' => $grado->id,
+            'nombre' => $grado->Nombre
+        ]);
+    }
     /**
      * Display the specified resource.
      */

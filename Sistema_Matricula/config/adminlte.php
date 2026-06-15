@@ -161,7 +161,7 @@ return [
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
 
-    
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Views Classes
@@ -330,94 +330,100 @@ return [
             'icon_color' => 'cyan',
         ],
 
+        [
+            'type' => 'sidebar-menu-search',
+            'text' => 'Buscar menú...',
+        ],
+
         ['header' => 'GESTIÓN ACADÉMICA'],
         [
-            'text' => 'Estudiantes',
-            'url' => '/estudiantes',
-            'icon' => 'fas fa-user-graduate',
+            'text' => 'Gestión Académica',
+            'icon' => 'fas fa-school',
             'icon_color' => 'blue',
             'can' => 'admin-only',
-        ],
-        [
-            'text' => 'Matrículas',
-            'url' => '/matriculas',
-            'icon' => 'fas fa-clipboard-list',
-            'icon_color' => 'green',
-            'can' => 'admin-only',
-        ],
-        [
-            'text' => 'Notas',
-            'url' => '/notas',
-            'icon' => 'fas fa-chart-bar',
-            'icon_color' => 'orange',
-            'can' => 'admin-only',
-        ],
-        [
-            'text' => 'Solicitudes de Notas',
-            'url' => '/admin/solicitudes-notas',
-            'icon' => 'fas fa-bell',
-            'icon_color' => 'warning',
-            'can' => 'admin-only',
-        ],
-        [
-            'text' => 'Asignaturas',
-            'url' => '/asignaturas',
-            'icon' => 'fas fa-book',
-            'icon_color' => 'purple',
-            'can' => 'admin-only',
+            'submenu' => [
+                [
+                    'text' => 'Estudiantes',
+                    'url' => '/estudiantes',
+                    'icon' => 'fas fa-user-graduate',
+                ],
+                [
+                    'text' => 'Matrículas',
+                    'url' => '/matriculas',
+                    'icon' => 'fas fa-clipboard-list',
+                ],
+                [
+                    'text' => 'Notas',
+                    'url' => '/notas',
+                    'icon' => 'fas fa-chart-bar',
+                ],
+                [
+                    'text' => 'Solicitudes de Notas',
+                    'url' => '/admin/solicitudes-notas',
+                    'icon' => 'fas fa-bell',
+                ],
+                [
+                    'text' => 'Asignaturas',
+                    'url' => '/asignaturas',
+                    'icon' => 'fas fa-book',
+                ],
+            ],
         ],
 
         ['header' => 'ESTRUCTURA EDUCATIVA'],
         [
-            'text' => 'Grados',
-            'url' => '/grados',
+            'text' => 'Estructura Educativa',
             'icon' => 'fas fa-layer-group',
             'icon_color' => 'indigo',
             'can' => 'admin-only',
+            'submenu' => [
+                [
+                    'text' => 'Grados',
+                    'url' => '/grados',
+                    'icon' => 'fas fa-chart-pie',
+                ],
+                [
+                    'text' => 'Secciones',
+                    'url' => '/grupos',
+                    'icon' => 'fas fa-users',
+                ],
+                [
+                    'text' => 'Aulas',
+                    'url' => '/aulas',
+                    'icon' => 'fas fa-school',
+                ],
+                [
+                    'text' => 'Horarios',
+                    'url' => '/horarios',
+                    'icon' => 'fas fa-calendar-alt',
+                ],
+            ],
         ],
-        [
-            'text' => 'Secciones',
-            'url' => '/grupos',
-            'icon' => 'fas fa-users',
-            'icon_color' => 'teal',
-            'can' => 'admin-only',
-        ],
-        [
-            'text' => 'Aulas',
-            'url' => '/aulas',
-            'icon' => 'fas fa-school',
-            'icon_color' => 'brown',
-            'can' => 'admin-only',
-        ],
-        [
-            'text' => 'Horarios',
-            'url' => '/horarios',
-            'icon' => 'fas fa-calendar-alt',
-            'icon_color' => 'pink',
-            'can' => 'admin-only',
-        ],
+
 
         ['header' => 'PERSONAL'],
         [
-            'text' => 'Docentes',
-            'url' => '/docentes',
-            'icon' => 'fas fa-chalkboard-teacher',
+            'text' => 'Personal',
+            'icon' => 'fas fa-users-cog',
             'icon_color' => 'red',
             'can' => 'admin-only',
-        ],
-        [
-            'text' => 'Padres/Tutores',
-            'url' => '/padres',
-            'icon' => 'fas fa-user-friends',
-            'icon_color' => 'yellow',
-            'can' => 'admin-only',
-        ],
-        [
-            'text' => 'Usuarios',
-            'url' => '/usuarios',
-            'icon' => 'fas fa-user-cog',
-            'icon_color' => 'gray',
-            'can' => 'admin-only',
+            'submenu' => [
+                [
+                    'text' => 'Docentes',
+                    'url' => '/docentes',
+                    'icon' => 'fas fa-chalkboard-teacher',
+                ],
+                [
+                    'text' => 'Padres/Tutores',
+                    'url' => '/padres',
+                    'icon' => 'fas fa-user-friends',
+                ],
+                [
+                    'text' => 'Usuarios',
+                    'url' => '/usuarios',
+                    'icon' => 'fas fa-user-cog',
+                ],
+            ],
         ],
 
         ['header' => 'CONFIGURACIÓN'],
@@ -463,55 +469,61 @@ return [
         ['header' => 'REPORTES'],
         [
             'text' => 'Reportes',
-            'url' => '/reportesadm',
             'icon' => 'fas fa-chart-line',
             'icon_color' => 'success',
-            'can' => 'admin-only',
-        ],
-        [
-            'text' => 'Reportes',
-            'url' => '/reportes',
-            'icon' => 'fas fa-chart-line',
-            'icon_color' => 'success',
-            'can' => 'docente-only',
+            'submenu' => [
+                [
+                    'text' => 'Reportes Administrador',
+                    'url' => '/reportesadm',
+                    'icon' => 'fas fa-user-shield',
+                    'can' => 'admin-only',
+                ],
+                [
+                    'text' => 'Reportes Docente',
+                    'url' => '/reportes',
+                    'icon' => 'fas fa-chalkboard-teacher',
+                    'can' => 'docente-only',
+                ],
+            ],
         ],
 
         ['header' => 'ÁREA DOCENTE'],
         [
-            'text' => 'Mi Horario',
-            'url' => '/mi-horario',
-            'icon' => 'fas fa-calendar-day',
+            'text' => 'Área Docente',
+            'icon' => 'fas fa-chalkboard-teacher',
             'icon_color' => 'warning',
             'can' => 'docente-only',
-        ],
-        [
-            'text' => 'Mis Estudiantes',
-            'url' => '/mis-estudiantes',
-            'icon' => 'fas fa-user-graduate',
-            'icon_color' => 'info',
-            'can' => 'docente-only',
-        ],
-        [
-            'text' => 'Cargar Notas',
-            'url' => '/docente/notas/create',
-            'icon' => 'fas fa-chart-bar',
-            'icon_color' => 'orange',
-            'can' => 'docente-only',
+            'submenu' => [
+                [
+                    'text' => 'Mi Horario',
+                    'url' => '/mi-horario',
+                    'icon' => 'fas fa-calendar-day',
+                ],
+                [
+                    'text' => 'Mis Estudiantes',
+                    'url' => '/mis-estudiantes',
+                    'icon' => 'fas fa-user-graduate',
+                ],
+                [
+                    'text' => 'Cargar Notas',
+                    'url' => '/docente/notas/create',
+                    'icon' => 'fas fa-chart-bar',
+                ],
+            ],
         ],
 
         ['header' => 'SISTEMA'],
         [
-            'text' => 'Administradores',
-            'url' => '/admins',
-            'icon' => 'fas fa-user-shield',
+            'text' => 'Sistema',
+            'icon' => 'fas fa-tools',
             'icon_color' => 'danger',
-            'can' => 'admin-only',
-        ],
-        [
-            'text' => 'Ayuda',
-            'icon' => 'fas fa-question-circle',
-            'icon_color' => 'secondary',
             'submenu' => [
+                [
+                    'text' => 'Administradores',
+                    'url' => '/admins',
+                    'icon' => 'fas fa-user-shield',
+                    'can' => 'admin-only',
+                ],
                 [
                     'text' => 'Guía del Sistema',
                     'url' => '/guia-sistema',
@@ -568,18 +580,63 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables/js/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables/js/dataTables.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
-                    'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
+                    'asset' => true,
+                    'location' => 'vendor/datatables/css/dataTables.bootstrap4.min.css',
+                ],
+            ],
+        ],
+        'DatatablesPlugins' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/buttons/js/dataTables.buttons.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.bootstrap4.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.html5.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.print.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/jszip/jszip.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/pdfmake/pdfmake.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/pdfmake/vfs_fonts.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/datatables-plugins/buttons/css/buttons.bootstrap4.min.css',
                 ],
             ],
         ],

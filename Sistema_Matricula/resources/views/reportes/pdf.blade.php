@@ -19,7 +19,7 @@
 
     <div class="content">
         <p><span class="label">ID del Reporte:</span> {{ $reporte->id }}</p>
-        <p><span class="label">Id del Estudiante:</span> {{ $reporte->id_estudiante }}</p>
+        <p><span class="label">Nombre del Estudiante:</span> {{ $reporte->estudiantes->Nombre }}</p>
         <p><span class="label">Título:</span> {{ $reporte->titulo }}</p>
         <p><span class="label">Categoría:</span> {{ ucfirst($reporte->tipo) }}</p>
         <p><span class="label">Fecha de Creación:</span> {{ $reporte->created_at->format('d/m/Y H:i') }}</p>
@@ -30,7 +30,7 @@
 
     <div class="footer">
         <p>Generado automáticamente por el Sistema de Control de Acceso</p>
-        <p>Usuario responsable: {{ $reporte->id_docente }}</p>
+        <p>Usuario responsable: {{ $reporte->docentes->Nombre }}</p>
     </div>
 </body>
 </html>

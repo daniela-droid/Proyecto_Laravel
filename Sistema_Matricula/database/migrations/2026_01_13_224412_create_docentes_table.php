@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('Apellido');
             $table->date('FechadeNacimiento');
             $table->string('Email');
-            $table->integer('Telefono');
+            $table->string('Telefono');
             $table->unsignedBigInteger('id_especialidads')->index('docentes_id_especialidads_foreign');
             $table->timestamps();
 

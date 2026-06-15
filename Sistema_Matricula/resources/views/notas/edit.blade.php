@@ -11,7 +11,7 @@
     <div class="card">
         <div class="card-header">Editar Notas</div>
         <div class="card-body">
-            <form action="{{ route('notas.update', $nota->id) }}" method="POST">
+            <form class="edit-form"  action="{{ route('notas.update', $nota->id) }}" method="POST">
                 @csrf
                 @method('PUT') {{-- Actualizacion--}}
 

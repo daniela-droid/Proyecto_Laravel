@@ -86,16 +86,32 @@
             
         if(count($grupos)>0){
             $data=[];
+            $currentYear = now()->year;
             foreach($grupos as $grupo){
-                $btnEdit = '<a href="' . route('grupos.edit', $grupo->id) . '" class="btn btn-xs btn-default text-primary mx-1 shadow" title="Edit">
-                                <i class="fa fa-lg fa-fw fa-pen"></i>
-                            </a>';
-                $btnDelete = '<button class="btn btn-xs btn-default text-danger mx-1 shadow" data-toggle="modal" title="Delete" data-target="#modalDelete-'.$grupo->id.'">
-                                <i class="fa fa-lg fa-fw fa-trash"></i>
-                            </button>';
-                $btnDetails = '<a href="' . route('grupos.show', $grupo->id) . '" class="btn btn-xs btn-default text-teal mx-1 shadow" title="Details">
-                                <i class="fa fa-lg fa-fw fa-eye"></i>
-                            </a>';
+                // Extraer año del periodo académico (asumiendo formato "ID Nombre Año" o similar)
+                $periodoNombre = $grupo->periodos->Nombre ?? '';
+                $periodoYear = intval(substr($periodoNombre, -4)); // Extrae los últimos 4 caracteres como año
+                
+                // Validar si el periodo es anterior al año actual
+                $isOldYear = $periodoYear < $currentYear;
+                
+                if($isOldYear) {
+                    $btnDelete = '<button class="btn btn-xs btn-default text-danger mx-1 shadow" data-toggle="modal" title="Delete" data-target="#modalDelete-'.$grupo->id.'">
+                                    <i class="fa fa-lg fa-fw fa-trash"></i>
+                                </button>';
+                    $actions = '<span class="badge badge-warning">No disponible</span> <nobr>'.$btnDelete.'</nobr>';
+                } else {
+                    $btnEdit = '<a href="' . route('grupos.edit', $grupo->id) . '" class="btn btn-xs btn-default text-primary mx-1 shadow" title="Edit">
+                                    <i class="fa fa-lg fa-fw fa-pen"></i>
+                                </a>';
+                    $btnDelete = '<button class="btn btn-xs btn-default text-danger mx-1 shadow" data-toggle="modal" title="Delete" data-target="#modalDelete-'.$grupo->id.'">
+                                    <i class="fa fa-lg fa-fw fa-trash"></i>
+                                </button>';
+                    $btnDetails = '<a href="' . route('grupos.show', $grupo->id) . '" class="btn btn-xs btn-default text-teal mx-1 shadow" title="Details">
+                                    <i class="fa fa-lg fa-fw fa-eye"></i>
+                                </a>';
+                    $actions = '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>';
+                }
 
                 $data[] = [ 
                     
@@ -105,8 +121,7 @@
                     $grupo->turnos->Nombre ?? '',
                     $grupo->grados->Nombre ?? '',
                     $grupo->periodos->Nombre ?? '',
-
-                    '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'                    
+                    $actions                    
                 ];
             }
         }else{              

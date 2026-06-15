@@ -18,7 +18,7 @@ class HorariosController extends Controller
      */
     public function index()
     {
-        $horarios=Horarios::with(['grupo.matriculas.estudiantes','asignatura','docente','aula'])->get();
+        $horarios=Horarios::with(['grupo.grados','asignatura','docente','aula'])->get();
         return view('horarios.index',compact('horarios'));
     }
 
@@ -27,7 +27,7 @@ class HorariosController extends Controller
      */
     public function create()
     {
-        $grupo=Grupos::all();
+        $grupo=Grupos::with(['grados', 'turnos'])->get();
         $asignatura=Asignatura::all();
         $docente=Docentes::all();
         $aula=Aulas::all();
@@ -68,7 +68,7 @@ class HorariosController extends Controller
     public function edit(horarios $horario)
     {
 
-        $grupo=Grupos::all();
+        $grupo=Grupos::with(['grados', 'turnos'])->get();
         $asignatura=Asignatura::all();
         $docente=Docentes::all();
         $aula=Aulas::all();

@@ -22,7 +22,7 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-    <div class="card card-outline card-primary shadow-sm">
+    <div class="card card-outline card-navy shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover mb-0">
@@ -104,6 +104,13 @@
                                     @else
                                         <span class="text-muted small">Atendida</span>
                                     @endif
+                                    <form action="{{ route('admin.solicitudes-notas.destroy', $solicitud) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Está seguro de que desea eliminar esta solicitud?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-xs btn-warning">
+                                            <i class="fas fa-trash mr-1"></i>Borrar
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty

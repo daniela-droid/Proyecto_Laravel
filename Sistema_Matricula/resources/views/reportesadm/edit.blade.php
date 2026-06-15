@@ -11,7 +11,7 @@
     <div class="card">
         <div class="card-header">Editar Reporte</div>
         <div class="card-body">
-            <form action="{{ route('reportesadm.update', $reporte->id) }}" method="POST">
+            <form class="edit-form"  action="{{ route('reportesadm.update', $reporte->id) }}" method="POST">
                 @csrf
                 @method('PUT') {{-- Actualizacion--}}
 

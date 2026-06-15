@@ -10,6 +10,7 @@ use App\Models\Horarios;
 use App\Models\Grupos;
 use App\Models\cortes_evaluativos;
 use App\Models\Usuario;
+use App\Models\Centros_educativos;
 
 class NotasController extends Controller
 {
@@ -18,30 +19,168 @@ class NotasController extends Controller
      */
     public function index()
     {
+        $centroEducativo = Centros_educativos::principal();
+        $nombreCentro = $centroEducativo?->nombre;
+        $ordenGrados = function ($grado) {
+            $nombre = mb_strtolower((string) $grado, 'UTF-8');
+            $orden = [
+                'primero' => 1,
+                'primer' => 1,
+                'segundo' => 2,
+                'tercero' => 3,
+                'tercer' => 3,
+                'cuarto' => 4,
+                'quinto' => 5,
+                'sexto' => 6,
+            ];
+
+            foreach ($orden as $texto => $numero) {
+                if (str_contains($nombre, $texto)) {
+                    return $numero;
+                }
+            }
+
+            return 99;
+        };
+
         $notas = Notas::with([
             'matriculas.estudiantes',
             'horarios.asignatura',
+            'horarios.docente',
+            'horarios.grupo.turnos',
             'horarios.grupo.grados',
-            'cortes',
+            'cortes.modalidades',
         ])->get();
 
-        $notasPorGrado = $notas
+        $matriculas = Matriculas::with([
+            'estudiantes',
+            'grupos.grados',
+            'grupos.turnos',
+            'notas.horarios.asignatura',
+            'notas.horarios.docente',
+            'notas.horarios.grupo.grados',
+            'notas.cortes',
+        ])->get();
+
+        $notasPorGrado = $matriculas
+            ->groupBy(function ($matricula) {
+                return $matricula->grupos?->grados?->Nombre ?? 'Sin grado';
+            })
+            ->map(function ($matriculasPorGrado) {
+                return $matriculasPorGrado
+                    ->mapWithKeys(function ($matricula) {
+                        return [
+                            $matricula->id => [
+                                'matricula' => $matricula,
+                                'notas' => $matricula->notas->sortByDesc('created_at')->values(),
+                            ],
+                        ];
+                    })
+                    ->sortBy(function ($datosAlumno) {
+                        return $datosAlumno['matricula']->estudiantes?->Nombre ?? '';
+                    });
+            })
+            ->sortBy(function ($matriculasGrado, $grado) use ($ordenGrados) {
+                return $ordenGrados($grado);
+            });
+
+        $reportesPorGrado = $notas
             ->groupBy(function ($nota) {
                 return $nota->horarios?->grupo?->grados?->Nombre ?? 'Sin grado';
             })
-            ->map(function ($notasPorGrado) {
-                return $notasPorGrado
-                    ->groupBy('id_matricula')
-                    ->map(function ($notasAlumno) {
-                        return $notasAlumno->sortByDesc('created_at');
+            ->map(function ($notasGrado, $grado) use ($nombreCentro) {
+                $cortes = $notasGrado
+                    ->map(function ($nota) {
+                        return $nota->cortes?->nombre ?? 'Sin corte';
                     })
-                    ->sortBy(function ($notasAlumno) {
-                        return $notasAlumno->first()->matriculas?->estudiantes?->Nombre ?? '';
-                    });
-            })
-            ->sortKeys(); // Ordenar grados alfabéticamente
+                    ->unique()
+                    ->values();
+                $turnos = $notasGrado
+                    ->map(function ($nota) {
+                        return $nota->horarios?->grupo?->turnos?->Nombre;
+                    })
+                    ->filter()
+                    ->unique()
+                    ->values();
+                $modalidades = $notasGrado
+                    ->map(function ($nota) {
+                        return $nota->cortes?->modalidades?->nombre
+                            ?? $nota->horarios?->grupo?->grados?->tipo_nivel;
+                    })
+                    ->filter()
+                    ->unique()
+                    ->values();
+                $docentes = $notasGrado
+                    ->map(function ($nota) {
+                        return trim(($nota->horarios?->docente?->Nombre ?? '') . ' ' . ($nota->horarios?->docente?->Apellido ?? '')) ?: null;
+                    })
+                    ->filter()
+                    ->unique()
+                    ->values();
+                $asignaturas = $notasGrado
+                    ->groupBy('id_horario')
+                    ->map(function ($notasAsignatura, $idHorario) {
+                        $primeraNota = $notasAsignatura->first();
 
-        return view('notas.index', compact('notasPorGrado'));
+                        return [
+                            'key' => (string) $idHorario,
+                            'nombre' => $primeraNota->horarios?->asignatura?->Nombre ?? 'Sin asignatura',
+                        ];
+                    })
+                    ->sortBy('nombre')
+                    ->values();
+
+                return [
+                    'grado' => $grado,
+                    'centro' => $nombreCentro ?: 'Centro educativo no especificado',
+                    'corte' => $cortes->isNotEmpty() ? $cortes->implode(', ') : 'Sin corte',
+                    'turno' => $turnos->isNotEmpty() ? $turnos->implode(', ') : 'Sin turno',
+                    'modalidad' => $modalidades->isNotEmpty() ? $modalidades->implode(', ') : 'Sin modalidad',
+                    'docentes' => $docentes->isNotEmpty() ? $docentes->implode(', ') : 'Sin docente',
+                    'asignaturas' => $asignaturas,
+                    'filas' => $notasGrado
+                        ->groupBy('id_matricula')
+                        ->map(function ($notasFila) use ($asignaturas) {
+                            $primeraNota = $notasFila->first();
+                            $estudiante = $primeraNota->matriculas?->estudiantes;
+                            $notasPorAsignatura = $notasFila->groupBy('id_horario');
+
+                            return [
+                                'codigo' => $estudiante?->{'Código_Persona'} ?? '',
+                                'estudiante' => trim(($estudiante?->Nombre ?? '') . ' ' . ($estudiante?->Apellido ?? '')),
+                                'grupo' => $primeraNota->horarios?->grupo?->Nombre ?? 'Sin grupo',
+                                'asignaturas' => $asignaturas->mapWithKeys(function ($asignatura) use ($notasPorAsignatura) {
+                                    $notasMateria = $notasPorAsignatura->get((int) $asignatura['key'], collect())
+                                        ->sortBy(function ($nota) {
+                                            return $nota->cortes?->nombre ?? '';
+                                        })
+                                        ->values();
+
+                                    return [
+                                        $asignatura['key'] => $notasMateria->map(function ($nota) {
+                                            return [
+                                                'corte' => $nota->cortes?->nombre ?? 'Sin corte',
+                                                'nota_normal' => $nota->nota_normal,
+                                                'nota_especial' => $nota->nota_especial,
+                                                'promedio' => $nota->promedio,
+                                                'observacion' => $nota->observacion,
+                                            ];
+                                        }),
+                                    ];
+                                }),
+                            ];
+                        })
+                        ->sortBy(function ($fila) {
+                            return $fila['estudiante'];
+                        })
+                        ->values(),
+                ];
+            })
+            ->sortBy(function ($reporte, $grado) use ($ordenGrados) {
+                return $ordenGrados($grado);
+            });
+
+        return view('notas.index', compact('notasPorGrado', 'reportesPorGrado', 'nombreCentro'));
     }
 
     /**
@@ -125,26 +264,41 @@ class NotasController extends Controller
 //metodo para ver historial de notas
 public function historialMatricula($idMatricula)
     {
+        $matricula = Matriculas::with(['estudiantes', 'grupos.grados'])->find($idMatricula);
+        $estudiante = $matricula?->estudiantes;
+        $grupo = $matricula?->grupos;
+        $grado = $grupo?->grados;
+
         $notas = Notas::with([
-            'matriculas.estudiantes', 
-            'horarios.asignatura', 
+            'matriculas.estudiantes',
+            'horarios.asignatura',
+            'horarios.docente',
             'cortes'
         ])
         ->where('id_matricula', $idMatricula)
-        ->orderBy('created_at', 'desc')
-        ->get();
+        ->get()
+        ->sortBy(function ($nota) {
+            $asignatura = $nota->horarios?->asignatura?->Nombre ?? '';
+            $corte = $nota->cortes?->nombre ?? '';
+            return trim($asignatura . '|' . $corte);
+        })
+        ->values();
 
-        // Transformar datos para frontend
         $notasTransformadas = $notas->map(function ($nota) {
             return [
                 'id' => $nota->id,
+                'id_horario' => $nota->id_horario,
                 'nota_normal' => $nota->nota_normal,
                 'nota_especial' => $nota->nota_especial ?? null,
+                'promedio' => $nota->promedio ?? null,
                 'observacion' => $nota->observacion ?? null,
                 'created_at' => $nota->created_at?->format('d/m/Y H:i') ?? null,
                 'horarios' => [
                     'asignatura' => [
                         'Nombre' => $nota->horarios?->asignatura?->Nombre ?? 'Sin asignatura',
+                    ],
+                    'docente' => [
+                        'Nombre' => trim(($nota->horarios?->docente?->Nombre ?? '') . ' ' . ($nota->horarios?->docente?->Apellido ?? '')) ?: 'Sin docente',
                     ],
                 ],
                 'cortes' => [
@@ -157,6 +311,64 @@ public function historialMatricula($idMatricula)
             'success' => true,
             'notas' => $notasTransformadas,
             'count' => $notas->count(),
+            'estudiante' => [
+                'nombre' => trim(($estudiante?->Nombre ?? '') . ' ' . ($estudiante?->Apellido ?? '')) ?: 'Estudiante desconocido',
+                'codigo' => $estudiante?->Código_Persona ?? '',
+                'grado' => $grado?->Nombre ?? '',
+                'grupo' => $grupo?->Nombre ?? '',
+            ],
+        ]);
+    }
+
+    public function calcularPromedioMatricula($idMatricula)
+    {
+        $notas = Notas::where('id_matricula', $idMatricula)
+            ->whereNotNull('id_horario')
+            ->orderBy('id_horario')
+            ->orderBy('id_corte_evaluativo')
+            ->get();
+
+        $promediosAsignaturas = $notas
+            ->groupBy('id_horario')
+            ->map(function ($notasAsignatura) {
+                $calificaciones = $notasAsignatura
+                    ->map(function ($nota) {
+                        return $nota->nota_especial !== null ? $nota->nota_especial : $nota->nota_normal;
+                    })
+                    ->filter(function ($nota) {
+                        return $nota !== null && $nota !== '' && is_numeric($nota);
+                    })
+                    ->values();
+
+                if ($calificaciones->isEmpty()) {
+                    return null;
+                }
+
+                return $calificaciones->sum() / $calificaciones->count();
+            })
+            ->filter(function ($promedioAsignatura) {
+                return $promedioAsignatura !== null;
+            })
+            ->values();
+
+        if ($promediosAsignaturas->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Este estudiante no tiene calificaciones suficientes para sacar el promedio.',
+            ], 422);
+        }
+
+        $promedio = round($promediosAsignaturas->sum() / $promediosAsignaturas->count(), 2);
+
+        Notas::whereIn('id', $notas->pluck('id'))->update([
+            'promedio' => $promedio,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'promedio' => $promedio,
+            'excelencia' => $promedio > 85,
+            'message' => $promedio > 85 ? 'Excelencia' : 'Promedio calculado',
         ]);
     }
 

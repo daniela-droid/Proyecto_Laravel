@@ -54,7 +54,7 @@
 <!-- <div style="background-color: #233858; color: white; padding: 10px 20px; border-radius: 5px;">
     <h1 style="margin: 0; font-size: 1.5rem;">Aulas</h1>
 </div> -->
-<h4><strong>Aulas </strong><i class="fas fa-school text-navy"></i></h4>
+<h4><strong>Aulas </strong><i class="fas fa-chalkboard-teacher text-navy"></i></h4>
 
 @stop
 

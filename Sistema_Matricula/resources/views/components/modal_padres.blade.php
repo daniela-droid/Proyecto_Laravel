@@ -1,7 +1,7 @@
 <div class="modal fade" id="modalBuscarPadre" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header bg-navy text-white">
                 <h5 class="modal-title">  Padres/Tutores</h5>
                 <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
             </div>
@@ -23,8 +23,7 @@
                 <div class="tab-content">
                     <!--  PESTAÑA 1: BÚSQUEDA (tu tabla actual) -->
                     <div class="tab-pane fade show active" id="pills-buscar">
-               <!-- Cambia SOLO esta línea -->
-            <table class="table table-sm table-striped table-hover datatable w-100" id="tabla_padres_modal">    
+                        <table class="table table-sm table-striped table-hover datatable w-100" id="tabla_padres_modal">
                             <thead>
                                 <tr>
                                     <th>Nombre Completo</th>
@@ -38,7 +37,7 @@
                                     <td><strong>{{ $p->Nombre_o_Tutor }} {{ $p->Apellido }}</strong></td>
                                     <td><span class="badge badge-info">{{ $p->Parentesco ?? 'Tutor' }}</span></td>
                                     <td>
-                                        <button class="btn btn-sm btn-success btn-seleccionar-padre" data-id="{{ $p->id }}" data-nombre="{{ $p->Nombre_o_Tutor }} {{ $p->Apellido }}">
+                                        <button type="button" class="btn btn-sm btn-success btn-seleccionar-padre" data-id="{{ $p->id }}" data-nombre="{{ $p->Nombre_o_Tutor }} {{ $p->Apellido }}">
                                             <i class="fas fa-check"></i> Seleccionar
                                         </button>
                                     </td>
@@ -69,11 +68,11 @@
                                          <div class="row">
                                     <div class="col-md-4">
                                         <label class="small">Cédula</label>
-                                        <input name="Cedula" class="form-control">
+                                        <input name="Cedula" class="form-control text-uppercase input-cedula-padre" pattern="[0-9]{13}[A-Z]" maxlength="14" placeholder="5662811021000F">
                                     </div>
                                     <div class="col-md-4">
                                         <label class="small">Teléfono</label>
-                                        <input name="Telefono" class="form-control ">
+                                        <input name="Telefono" class="form-control input-telefono-padre" pattern="\+505[0-9]{8}" maxlength="12" placeholder="+50512345678">
                                     </div>  
                                     </div>
                        

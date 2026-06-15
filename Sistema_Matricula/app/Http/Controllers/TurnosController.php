@@ -42,6 +42,22 @@ class TurnosController extends Controller
 
     }
 
+    public function storeRapido(Request $request)
+    {
+        $request->validate([
+           'Nombre'=>'required|string|max:255',
+            'Descripcion'=>'required|string|max:255',
+           
+        ]);
+
+        $turno = Turnos::create($request->all());
+
+        return response()->json([
+            'success' => true,
+            'id' => $turno->id,
+            'nombre' => $turno->Nombre
+        ]);
+    }
     /**
      * Display the specified resource.
      */

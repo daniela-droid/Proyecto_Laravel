@@ -465,14 +465,14 @@ new class extends Component
 <div class="p-0">
 
     {{-- 2. BLOQUE DE FILTROS Y BOTÓN GUARDAR --}}
-    <div class="card card-outline card-primary shadow-sm mb-3">
+    <div class="card card-outline card-navy shadow-sm mb-3">
         <div class="card-body">
             <div class="row align-items-end">
                 {{-- Periodo Académico --}}
                 <div class="col-md-2">
-                    <label class="text-muted small font-weight-bold">PERIODO</label>
-                    <select wire:model.live="id_periodo" class="form-control form-control-sm font-weight-bold">
-                        <option value="">-- Año --</option>
+                    <label class="text-muted  font-weight-bold">PERIODO</label>
+                    <select wire:model.live="id_periodo" class="form-control form-control font-weight-bold">
+                        <option value="">-Año --</option>
                         @foreach($periodos as $periodo)
                             <option value="{{ $periodo->id }}">{{ $periodo->Nombre }}</option>
                         @endforeach
@@ -481,9 +481,9 @@ new class extends Component
 
                 {{-- Grado --}}
                 <div class="col-md-2">
-                    <label class="text-muted small font-weight-bold">GRADO</label>
-                    <select wire:model.live="id_grado" class="form-control form-control-sm" @disabled(!$id_periodo)>
-                        <option value="">-- Seleccione grado --</option>
+                    <label class="text-muted  font-weight-bold">GRADO</label>
+                    <select wire:model.live="id_grado" class="form-control form-control" @disabled(!$id_periodo)>
+                        <option value="">-Seleccione grado --</option>
                         @foreach($grados as $grado)
                             <option value="{{ $grado->id }}">{{ $grado->Nombre }}</option>
                         @endforeach
@@ -492,9 +492,9 @@ new class extends Component
 
                 {{-- Grupo --}}
                 <div class="col-md-2">
-                    <label class="text-muted small font-weight-bold">GRUPO</label>
-                    <select wire:model.live="id_grupo" class="form-control form-control-sm" @disabled(!$id_grado || $grupos->isEmpty())>
-                        <option value="">-- Seleccione grupo --</option>
+                    <label class="text-muted  font-weight-bold">GRUPO</label>
+                    <select wire:model.live="id_grupo" class="form-control form-control" @disabled(!$id_grado || $grupos->isEmpty())>
+                        <option value="">-Seleccione grupo --</option>
                         @foreach($grupos as $grupo)
                             <option value="{{ $grupo->id }}">{{ $grupo->Nombre }}</option>
                         @endforeach
@@ -503,9 +503,9 @@ new class extends Component
 
                 {{-- Asignatura --}}
                 <div class="col-md-3">
-                    <label class="text-muted small font-weight-bold">ASIGNATURA</label>
-                    <select wire:model.live="id_asignatura" class="form-control form-control-sm" @disabled(!$id_grupo || $asignaturas->isEmpty())>
-                        <option value="">-- Seleccione asignatura --</option>
+                    <label class="text-muted  font-weight-bold">ASIGNATURA</label>
+                    <select wire:model.live="id_asignatura" class="form-control form-control" @disabled(!$id_grupo || $asignaturas->isEmpty())>
+                        <option value="">-Seleccione asignatura --</option>
                         @foreach($asignaturas as $asignatura)
                             <option value="{{ $asignatura->id }}">{{ $asignatura->Nombre }}</option>
                         @endforeach
@@ -514,9 +514,9 @@ new class extends Component
 
                 {{-- Corte Evaluativo --}}
                 <div class="col-md-3">
-                    <label class="text-muted small font-weight-bold">CORTE EVALUATIVO</label>
-                    <select wire:model.live="id_corte_evaluativo" class="form-control form-control-sm" @disabled(!$id_periodo)>
-                        <option value="">-- Seleccionar --</option>
+                    <label class="text-muted  font-weight-bold">CORTE EVALUATIVO</label>
+                    <select wire:model.live="id_corte_evaluativo" class="form-control form-control" @disabled(!$id_periodo)>
+                        <option value="">-Seleccionar --</option>
                         @foreach($cortes as $corte)
                             <option value="{{ $corte->id }}">{{ $corte->nombre }} ({{ $corte->ponderacion }}%)</option>
                         @endforeach
@@ -568,9 +568,9 @@ new class extends Component
         {{-- Listado Principal (Izquierda) --}}
         <div class="col-md-8">
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-white py-2">
+                <div class="card-header bg-navy py-2">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h3 class="card-title text-bold mb-0 text-primary small text-uppercase">Info de Estudiantes</h3>
+                        <h3 class="card-title text-bold mb-0 text-info small text-uppercase">Info de Estudiantes</h3>
                         {{-- Buscador --}}
                         <div class="card-tools">
                             <div class="input-group input-group-sm" style="width: 200px;">
@@ -704,7 +704,7 @@ new class extends Component
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"></i> Cancelar</button>
                 <button type="button" class="btn btn-warning" wire:click="enviarSolicitudCorreccion">
                     <i class="fas fa-paper-plane mr-1"></i> Enviar solicitud
                 </button>

@@ -10,113 +10,101 @@
             <h4 class="mb-0"><i class="fas fa-user-plus"></i> Agregar Docente</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('docentes.store') }}" method="POST">
+            <form action="{{ route('docentes.store') }}" method="POST" id="formDocenteCreate">
                 @csrf {{-- Seguridad de Laravel --}}
+                @if(request()->query('from') === 'horarios')
+                    <input type="hidden" name="redirect_choice" id="redirect_choice" value="docentes">
+                @endif
  
                <div class="row">
-           
                 <div class="col-md-4">
                     <div class="form-group mb-2">
-                    <label for="Nombre">Nombre</label>
-                    <input type="text" name="Nombre" class="form-control " required>
-                </div>
-                </div>
-                <div class="col-md-4">
-                <div class="form-group mb-2">
-                    <label for="Apellido">Apellido</label>
-                    <input type="text" name="Apellido" class="form-control " required>
-                </div>
+                        <label for="Nombre">Nombre</label>
+                        <input type="text" name="Nombre" class="form-control" required>
+                    </div>
                 </div>
                 <div class="col-md-4">
-
-                <div class="form-group mb-2"> 
-                    <label for="Email">Email</label>
-                     <input type="email" name="Email" class="form-control " >
-              
-                   </div>
+                    <div class="form-group mb-2">
+                        <label for="Apellido">Apellido</label>
+                        <input type="text" name="Apellido" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-2">
+                        <label for="FechadeNacimiento">Fecha de Nacimiento</label>
+                        <input type="date" name="FechadeNacimiento" class="form-control" required>
+                    </div>
                 </div>
                </div>
 
-             <div class="row">
+               <div class="row">
                 <div class="col-md-4">
-            
-                <div class="form-group mb-2">
-                       <label for="FechadeNacimiento">Fecha de Nacimiento</label>
-                    <input type="date" name="FechadeNacimiento"  class="form-control " required>
+                    <div class="form-group mb-2">
+                        <label for="Telefono">Telefono</label>
+                        <input type="tel" name="Telefono" id="Telefono" class="form-control @error('Telefono') is-invalid @enderror" pattern="\+505[0-9]{8}" maxlength="12" placeholder="+50512345678" title="Debe tener el formato +50512345678" required>
+                        @error('Telefono')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
-                </div>
-                
                 <div class="col-md-4">
-                     <div class="form-group mb-2">
-                    <label for="Telefono">Telefono</label>
-                      <input type="tel" name="Telefono" class="form-control "  title="Por favor, introduce almenos 8 dígitos numéricos" 
-                required>
-                </div>
-                </div>
-                <div class="col-md-">
-                      <div class="form-group mb-2">
+                    <div class="form-group mb-2">
                         <label for="id_especialidads">Especialidades</label>
-                        <div class="input-group ">
+                        <div class="input-group">
                             <input type="hidden" name="id_especialidads" id="id_especialidads" required>
-                            
                             <input type="text" id="nombre_modalidad_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
-                            
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalespecialidad">
                                     <i class="fas fa-search"></i> Buscar
                                 </button>
-
                             </div>
-                         
-                            <a href="{{route('especialidades.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
-               
-                           </div>
+                            <!-- <a href="{{route('especialidades.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">
+                                <i class="fas fa-plus"></i>
+                            </a> -->
+                        </div>
                     </div>
                 </div>
-               <div class="col-md-4">
-                 
-               <div class="form-group mb-2">
+                <div class="col-md-4">
+                    <div class="form-group mb-2">
                         <label for="id_usuario">Usuarios</label>
-                        <div class="input-group ">
+                        <div class="input-group">
                             <input type="hidden" name="id_usuario" id="id_usuario" required>
-                            
-                            <input type="text" id="nombre_user_display"  class="form-control form-control-sm w-50" placeholder="Haga clic en la lupa para buscar..." readonly required>
-                            
+                            <input type="text" id="nombre_user_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required>
                             <div class="input-group-append">
                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modaluser">
                                     <i class="fas fa-search"></i> Buscar
                                 </button>
-                              <a href="{{route('usuarios.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                                <!-- <a href="{{ route('usuarios.create', ['from' => 'docentes']) }}" class="btn btn-sm btn-primary ms-1 ml-2">
+                                    <i class="fas fa-plus"></i>
+                                </a> -->
                             </div>
-                         
-                           </div>
+                        </div>
                     </div>
                 </div>
-            
                </div>
 
              
-            <div class="row">
-                 <div class="col-md-8">
+            <div class="row mt-3">
+                <div class="col-md-12">
                     <hr>
                 </div>
-                 <div class="col-md-8">
-                    <button type="submit" class="btn btn-primary">   <i class="fas fa-save"></i> Guardar</button>
-                {{-- Aquí estaba mal, debe ser route() con comillas --}}
-                <a href="{{ route('docentes.index') }}" class="btn btn-secondary">Cancelar</a>
+                <div class="col-md-12 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                    <a href="{{ route('docentes.index') }}" class="btn btn-secondary">Cancelar</a>
                 </div>
             </div>
                
 
-               
-
-                </div>
             </form>
+        
         </div>
-    </div>
-</div>
+        </div>
+   </div>
 
-   {{-- 1. EL MODAL SE INCLUYE AQUÍ (Antes del stop del contenido) --}}
+
+   {{-- Los MODAL  --}}
             @include('components.modal_especialidades')
             @include('components.modal_user_docente')
 @endsection
@@ -132,7 +120,7 @@
 
                     $(document).ready(function() {
                         // Inicializar DataTable
-                        var table = $('#tabla_especialidades_modal').DataTable({
+                        window.tablaEspecialidades = $('#tabla_especialidades_modal').DataTable({
                             "responsive": true,
                             "language": {
                                 "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
@@ -144,6 +132,44 @@
                             $(this).find('input[type="search"]').focus();
                         });
                     });
+
+                    function agregarEspecialidadNueva() {
+                        fetch('/especialidades/store-rapido', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: new FormData(document.getElementById('formEspecialidadRapido'))
+                        })
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.success) {
+                                if (window.tablaEspecialidades) {
+                                    window.tablaEspecialidades.row.add([
+                                        `<strong>${data.nombre}</strong>`,
+                                        `<button class="btn btn-sm btn-success" onclick="seleccionarEspecialidades(${data.id}, '${data.nombre}')">
+                                            <i class="fas fa-check"></i> Seleccionar
+                                        </button>`
+                                    ]).draw(false);
+                                } else {
+                                    $('#tabla_especialidades_modal tbody').prepend(`
+                                        <tr>
+                                            <td><strong>${data.nombre}</strong></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-success" onclick="seleccionarEspecialidades(${data.id}, '${data.nombre}')">
+                                                    <i class="fas fa-check"></i> Seleccionar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `);
+                                }
+
+                                seleccionarEspecialidades(data.id, data.nombre);
+                                document.getElementById('formEspecialidadRapido').reset();
+                                alert('Especialidad creada y agregada a la lista');
+                            }
+                        });
+                    }
 ////////////////////////////////////////////////////////////////////////////////////
                    
                         function seleccionaruser(id, nombreCompleto) {
@@ -167,6 +193,35 @@
                         });
                     });
                             
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('formDocenteCreate');
+                const redirectInput = document.getElementById('redirect_choice');
+                const telefonoInput = document.getElementById('Telefono');
+
+                telefonoInput?.addEventListener('input', function() {
+                    let value = this.value.replace(/[^\d+]/g, '');
+                    if (!value.startsWith('+505')) {
+                        value = '+505' + value.replace(/^\+?505?/, '');
+                    }
+                    this.value = value.slice(0, 12);
+                });
+
+                if (form && redirectInput) {
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const regresar = confirm(
+                            'Docente creado correctamente.\n\n' +
+                            'Aceptar = Volver al formulario de Horarios.\n' +
+                            'Cancelar = Ir al índice de Docentes.'
+                        );
+                        redirectInput.value = regresar ? 'horarios' : 'docentes';
+                        form.submit();
+                    });
+                }
+            });
         </script>
 
         <script>

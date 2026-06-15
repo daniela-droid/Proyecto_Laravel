@@ -13,20 +13,27 @@
         <div class="card-header">Agregar Turno</div>
         <div class="card-body">
          
-            <form action="{{ route('turnos.update', $turno->id) }}" method="POST">
+            <form class="edit-form"  action="{{ route('turnos.update', $turno->id) }}" method="POST">
                 @csrf {{-- método de seguridad --}}
                  @method('PUT') {{-- Actualizacion--}}
 
-                 
-                <div class="form-group">
-                    <label for="Nombre">Nombre</label>
-                    <input type="text" name="Nombre" class="form-control form-control-sm w-50" value="{{$turno->Nombre}}"required>
-                </div>
-
-                 <div class="form-group">
-                    <label for="Descripcion">Descripcion</label>
-                    <input type="text" name="Descripcion" class="form-control form-control-sm w-50" value="{{$turno->Descripcion}}" required>
-                </div>
+                 <div class="row">
+                    <div class="col-md-4">
+                         <div class="form-group">
+                            <label for="Nombre">Nombre</label>
+                            <input type="text" name="Nombre" class="form-control " value="{{$turno->Nombre}}"required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="Descripcion">Descripcion</label>
+                            <input type="text" name="Descripcion" class="form-control " value="{{$turno->Descripcion}}" required>
+                        </div>
+                    </div>
+                 </div>
+               
+                    <hr>
+              
 
                 <button type="submit" class="btn btn-primary">Guardar</button>
                 <a href="{{ route('turnos.index') }}" class="btn btn-secondary">Cancelar</a>

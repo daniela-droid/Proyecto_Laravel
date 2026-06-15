@@ -1,7 +1,7 @@
 <div class="modal fade" id="modalEstudiantes" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-info text-white">
+            <div class="modal-header bg-navy text-white">
                 <h5 class="modal-title" id="tituloModal">Lista de Estudiantes</h5>
                 <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>

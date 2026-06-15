@@ -11,22 +11,27 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-   public function login(Request $request) {
+  public function login(Request $request) {
     $credentials = $request->validate([
         'Email' => 'required|email',
         'password' => 'required'
     ]);
 
-    if (Auth::attempt(['Email' => $request->Email, 'password' => $request->password])) {
+    // 1. Intentamos el login con los datos reales
+    $authSuccess = Auth::attempt(['Email' => $request->Email, 'password' => $request->password]);
+
+    // 2. 💡 EL TRUCO: Reemplazamos inmediatamente la contraseña por asteriscos en la petición
+    $request->merge(['password' => '********']);
+
+    if ($authSuccess) {
         $request->session()->regenerate();
         $user = Auth::user();
 
-        // AQUÍ decides a dónde va cada uno
         if ($user->rol === 'docentes') {
             return redirect()->route('docente.mi_horario');
         }
         
-        return redirect()->intended('/inicio'); // Para el admin
+        return redirect()->intended('/inicio');
     }
 
     return back()->withErrors(['Email' => 'Credenciales incorrectas']);

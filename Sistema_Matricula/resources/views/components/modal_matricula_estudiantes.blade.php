@@ -1,7 +1,7 @@
 <div class="modal fade" id="modalstu" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-info text-white">
+            <div class="modal-header bg-navy text-white">
                 <h5 class="modal-title">Seleccionar Estudiantes</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -11,7 +11,8 @@
                 <table class="table table-striped table-hover datatable" id="tabla_stu_modal">
                     <thead>
                         <tr>
-                            <th>Nombre</th>
+                            <th>Nombre y Apellido</th>
+                           
                            <th>Acción</th>
                         </tr>
                     </thead>
@@ -20,6 +21,7 @@
                 <tr>
                     <td>
                         {{ $e->Nombre }}
+                        {{$e->Apellido}}
                         {{-- Si el conteo de matriculas es mayor a 0, mostramos que ya está --}}
                         @if($e->matriculas->count() > 0)
                             <span class="badge badge-danger">Ya Matriculado</span>
@@ -34,7 +36,7 @@
                         @else
                             {{-- Botón activo si no tiene ninguna matrícula --}}
                             <button type="button" class="btn btn-sm btn-success" 
-                                onclick="seleccionarEstu('{{ $e->id }}', '{{$e->Nombre }}')">
+                                onclick="seleccionarEstu('{{ $e->id }}', '{{$e->Nombre }}','{{$e->Apellido }}')">
                                 <i class="fas fa-check"></i> Seleccionar
                             </button>
                         @endif

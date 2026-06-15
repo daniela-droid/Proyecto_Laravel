@@ -61,31 +61,40 @@ Route::get('/acceso-denegado', function() {
         Route::resource('docentes', DocentesController::class);
         Route::resource('grupos', GruposController::class);
         Route::resource('grados', GradosController::class);
+        Route::post('grados/store-rapido', [GradosController::class, 'storeRapido']);
         Route::resource('aulas', AulasController::class);
+        Route::post('aulas/store-rapido', [AulasController::class, 'storeRapido']);
         Route::resource('estudiantes', EstudiantesController::class);
          Route::get('/estudiantes-primaria', [EstudiantesController::class, 'primaria'])->name('estudiantes.primaria');
         Route::get('/estudiantes-secundaria', [EstudiantesController::class, 'secundaria'])->name('estudiantes.secundaria');
         Route::post('estudiantes/store-rapido', [EstudiantesController::class, 'storeRapido']);
         Route::resource('asignaturas', AsignaturasController::class);
+        Route::post('asignaturas/store-rapido', [AsignaturasController::class, 'storeRapido']);
         Route::resource('horarios', HorariosController::class);
          Route::resource('turnos', TurnosController::class);
+        Route::post('turnos/store-rapido', [TurnosController::class, 'storeRapido']);
         Route::resource('especialidades', EspecialidadController::class)->parameters([
         'especialidades' => 'especialidad'
         ]);
+        Route::post('especialidades/store-rapido', [EspecialidadController::class, 'storeRapido']);
         Route::resource('periodo', PeriodoAcademicoController::class);
         Route::resource('padres', PadresController::class);
          Route::post('padres/store-rapido', [PadresController::class, 'storeRapido']);
         Route::resource('comarcas', ComarcaController::class);
         Route::post('comarcas/store-rapido', [ComarcaController::class, 'storeRapido']);
         Route::resource('matriculas', MatriculasController::class);
-  
+        Route::patch('/matriculas/{id}/update-status-only', [App\Http\Controllers\MatriculasController::class, 'updateStatusOnly'])
+     ->name('matriculas.updateStatusOnly');
         Route::resource('modalidades', ModalidadesController::class);
+        Route::post('modalidades/store-rapido', [ModalidadesController::class, 'storeRapido']);
         Route::resource('cortes', CortesEvaluativosController::class);
         Route::get('/notas/matricula/{idMatricula}/historial', [NotasController::class, 'historialMatricula'])->name('notas.historial');
+        Route::post('/notas/matricula/{idMatricula}/promedio', [NotasController::class, 'calcularPromedioMatricula'])->name('notas.promedio');
         Route::resource('notas', NotasController::class);
         Route::get('/admin/solicitudes-notas', [SolicitudesCorreccionNotasController::class, 'index'])->name('admin.solicitudes-notas.index');
         Route::post('/admin/solicitudes-notas/{solicitud}/aprobar', [SolicitudesCorreccionNotasController::class, 'aprobar'])->name('admin.solicitudes-notas.aprobar');
         Route::post('/admin/solicitudes-notas/{solicitud}/rechazar', [SolicitudesCorreccionNotasController::class, 'rechazar'])->name('admin.solicitudes-notas.rechazar');
+        Route::delete('/admin/solicitudes-notas/{solicitud}', [SolicitudesCorreccionNotasController::class, 'destroy'])->name('admin.solicitudes-notas.destroy');
          Route::resource('reportesadm', ReportesAdminController::class)->parameters([
          'reportesadm'=>'reporte']);
          Route::get('/reporte-pdf/{tipo}/{id}', [ReportesAdmController::class, 'generarPdf'])->name('reportes.pdf');
@@ -132,6 +141,17 @@ Route::get('/acceso-denegado', function() {
   
         Route::get('/guia-sistema', function (){ return view('description');})->name('guia.description');
         Route::get('/guia-politicas', function (){ return view('Politicas');})->name('guia.Politicas');
+
+        // Ruta para marcar notificaciones como leídas
+        Route::post('/notificaciones/{notificationId}/marcar-leida', function ($notificationId) {
+            $notification = auth()->user()->notifications()->find($notificationId);
+            if ($notification) {
+                $notification->markAsRead();
+                return response()->json(['success' => true]);
+            }
+            return response()->json(['success' => false], 404);
+        })->name('notificaciones.marcar-leida');
+
         // --- grupo docente---
         Route::middleware('role:docentes')->group(function () {
         Route::get('/mi-horario', [HorariosController::class, 'miHorario'])->name('docente.mi_horario');

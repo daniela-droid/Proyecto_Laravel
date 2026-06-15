@@ -27,46 +27,54 @@ button:hover{
             <form id="formEstudianteCreate" action="{{ route('estudiantes.store') }}" method="POST">
                 @csrf {{-- Seguridad de Laravel --}}
                 <input type="hidden" name="from" value="{{ request('from') }}">
+                <input type="hidden" name="redirect_choice" id="redirect_choice" value="matriculas">
 
-                    <div class="row display-flex">
-
+                    <div class="row">
                         <div class="col-md-4">
-                <div class="form-group mb-2">
-                    <label for="Código_Persona">Código de Persona</label>
-                    <input type="number" name="Código_Persona" class="form-control @error('Código_Persona') is-invalid @enderror" required value="{{ old('Código_Persona') }}">
-                    @error('Código_Persona')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                </div>
+                            <div class="form-group mb-2">
+                                <label for="codigo_persona">Código Unico de Persona</label>
+                                <input id="codigo_persona" type="text" name="Código_Persona" class="form-control @error('Código_Persona') is-invalid @enderror" value="{{ old('Código_Persona') }}" placeholder="Ingresa el código nacional de 7 u 8 dígitos">
+                                @error('Código_Persona')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                            <div class="col-md-4">
+                            <div class="form-group mb-2">
+                                <label for="c_temporal">Código Temporal</label>
+                                <input id="c_temporal" type="text" name="c_temporal" class="form-control @error('c_temporal') is-invalid @enderror" value="{{ old('c_temporal') }}" placeholder="Ej. A1B2C3D4E5F67890" maxlength="16" pattern="[0-9A-Fa-f]{16}" autocomplete="off" autocapitalize="characters">
+                                <small class="form-text text-muted">Ingrese este código solo si no tiene Código Único. Debe tener exactamente 16 caracteres hexadecimales (0-9 y A-F).</small>
+                                @error('c_temporal')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-2">
+                                <label for="Nombre">Nombres</label>
+                                <input id="Nombre" type="text" name="Nombre" class="form-control @error('Nombre') is-invalid @enderror" required value="{{ old('Nombre') }}" placeholder="Nombres del estudiante">
+                                @error('Nombre')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
 
-                  <div class="col-md-4">
-                <div class="form-group mb-2">
-                    <label for="Nombre">Nombres</label>
-                    <input type="text" name="Nombre" class="form-control @error('Nombre') is-invalid @enderror" required value="{{ old('Nombre') }}">
-                    @error('Nombre')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                </div>
 
-
-                 <div class="col-md-4">
-                <div class="form-group mb-2">
-                       <label for="Apellido">Apellidos</label>
-                    <input type="text" name="Apellido" class="form-control @error('Apellido') is-invalid @enderror" required value="{{ old('Apellido') }}">
-                    @error('Apellido')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                 </div>
-
-                 </div>
+                    </div>
 
 
 
 
                   <div class="row">
+                     <div class="col-md-4">
+                            <div class="form-group mb-2">
+                                <label for="Apellido">Apellidos</label>
+                                <input id="Apellido" type="text" name="Apellido" class="form-control @error('Apellido') is-invalid @enderror" required value="{{ old('Apellido') }}" placeholder="Apellidos del estudiante">
+                                @error('Apellido')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
                 <div class="col-md-4">
                <div class="form-group mb-2"> 
                     <label for="Sexo">Sexo</label>
@@ -85,62 +93,65 @@ button:hover{
                   <div class="col-md-4">
                 <div class="form-group mb-2">
                     <label for="Fecha_N">Fecha de Nacimiento</label>
-                    <input type="date" name="Fecha_N" class="form-control @error('Fecha_N') is-invalid @enderror" required value="{{ old('Fecha_N') }}">
+                    <input id="Fecha_N" type="date" name="Fecha_N" class="form-control @error('Fecha_N') is-invalid @enderror" required value="{{ old('Fecha_N') }}">
                     @error('Fecha_N')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                     </div>
-               
-                <div class="col-md-4">
+
+
+                </div>
+
+                <div class="row">
+
+                  <div class="col-md-4">
                 <div class="form-group mb-2">
                       <label for="Celular">Celular</label>
-                    <input type="number" name="Celular" class="form-control @error('Celular') is-invalid @enderror" required value="{{ old('Celular') }}">
+                    <input id="Celular" type="text" name="Celular" class="form-control @error('Celular') is-invalid @enderror" required value="{{ old('Celular') }}" placeholder="+50512345678" pattern="\+505[0-9]{8}" maxlength="12">
                     @error('Celular')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 </div>
-                </div>
-
-                <div class="row">
                     <div class="col-md-4">
-                    <div class="form-group mb-2">
-                        <label for="id_padre">Padre o Tutor Seleccionado</label>
-                        <div class="input-group @error('id_padre') is-invalid @enderror">
-                            <input type="hidden" name="id_padre" id="id_padre" required value="{{ old('id_padre') }}">
-                             <input type="text" id="nombre_padre_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required value="{{ old('nombre_padre_display') }}">
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalBuscarPadre">
-                                    <i class="fas fa-search"></i> Buscar
-                                </button>
+                        <div class="form-group mb-2">
+                            <label for="id_padre">Padre o Tutor Seleccionado</label>
+                            <div class="input-group @error('id_padre') is-invalid @enderror">
+                                <input type="hidden" name="id_padre" id="id_padre" required value="{{ old('id_padre') }}">
+                                <input type="text" id="nombre_padre_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required value="{{ old('nombre_padre_display') }}">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalBuscarPadre">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                </div>
                             </div>
-                          </div>
-                          @error('id_padre')
-                              <div class="invalid-feedback d-block">{{ $message }}</div>
-                          @enderror
-                    </div>
-                    </div>
-
-                    <div class="col-md-4">
-                    <div class="form-group mb-2">
-                        <label for="id_comarca">Comarcas</label>
-                        <div class="input-group @error('id_comarca') is-invalid @enderror">
-                            <input type="hidden" name="id_comarca" id="id_comarca" required value="{{ old('id_comarca') }}">
-                             <input type="text" id="nombre_com_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required value="{{ old('nombre_com_display') }}">
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalBuscarcomarca">
-                                    <i class="fas fa-search"></i> Buscar
-                                </button>
-                            </div>
-                          
+                            @error('id_padre')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
-                        @error('id_comarca')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @enderror
                     </div>
-                 </div>
-            </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="id_comarca">Comarcas</label>
+                            <div class="input-group @error('id_comarca') is-invalid @enderror">
+                                <input type="hidden" name="id_comarca" id="id_comarca" required value="{{ old('id_comarca') }}">
+                                <input type="text" id="nombre_com_display" class="form-control form-control-sm" placeholder="Haga clic en la lupa para buscar..." readonly required value="{{ old('nombre_com_display') }}">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalBuscarcomarca">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                </div>
+                            </div>
+                            @error('id_comarca')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+
+                </div>
                <hr>
                    <button type="submit" class="btn btn-primary">   <i class="fas fa-save"></i> Guardar</button>
                  <a href="{{ route('estudiantes.index') }}" class="btn btn-secondary">Cancelar</a>
@@ -162,30 +173,58 @@ button:hover{
         @section('js')
 <script>
 $(document).ready(function() {
-    // Inicializar DataTable para el modal de padres
-    $('#tabla_padres_modal').DataTable({
-        "paging": true,
-        "searching": true,
-        "ordering": true,
-        "info": false,
-        "lengthChange": false,
-        "pageLength": 5,
-        "language": {
-            "search": "Buscar:",
-            "zeroRecords": "No se encontraron padres",
-            "infoEmpty": "No hay padres disponibles"
-        }
+    inicializarTablaModal('#tabla_padres_modal', 'No se encontraron padres');
+    inicializarTablaModal('#tabla_com_modal', 'No se encontraron comarcas');
+
+    $('#modalBuscarPadre, #modalBuscarcomarca').on('shown.bs.modal', function () {
+        $.fn.DataTable.tables({ visible: true, api: true }).columns.adjust();
+        $(this).find('input[type="search"]:visible').first().trigger('focus');
     });
 
     // Delegación de eventos para seleccionar padre (compatible con DataTable)
     $(document).on('click', '.btn-seleccionar-padre', function() {
-        console.log('Botón seleccionar padre clickeado');
         const id = $(this).data('id');
         const nombre = $(this).data('nombre');
-        console.log('ID:', id, 'Nombre:', nombre);
         seleccionarPadre(id, nombre);
     });
 });
+
+function inicializarTablaModal(selector, mensajeVacio) {
+    if (!$.fn.DataTable || !$(selector).length) {
+        return null;
+    }
+
+    if ($.fn.DataTable.isDataTable(selector)) {
+        return $(selector).DataTable();
+    }
+
+    return $(selector).DataTable({
+        dom:
+            "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        paging: true,
+        pagingType: "simple_numbers",
+        searching: true,
+        ordering: true,
+        info: true,
+        lengthChange: true,
+        pageLength: 5,
+        lengthMenu: [[5, 10, 25], [5, 10, 25]],
+        language: {
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_",
+            info: "Mostrando _START_ a _END_ de _TOTAL_",
+            infoEmpty: "Sin registros",
+            zeroRecords: mensajeVacio,
+            emptyTable: mensajeVacio,
+            paginate: {
+                previous: "Anterior",
+                next: "Siguiente"
+            }
+        }
+    });
+}
 
 function seleccionarPadre(id, nombre) {
     // Llena los campos del formulario principal
@@ -200,6 +239,8 @@ function seleccionarPadre(id, nombre) {
 }
 
 function agregarPadreNuevo() {
+    normalizarCamposPadreRapido();
+
     fetch('/padres/store-rapido', {
         method: 'POST',
         headers: {
@@ -215,7 +256,7 @@ function agregarPadreNuevo() {
             table.row.add([
                 `<strong>${data.nombre}</strong>`,
                 `<span class="badge badge-info">Tutor</span>`,
-                `<button class="btn btn-sm btn-success btn-seleccionar-padre" data-id="${data.id}" data-nombre="${data.nombre}"><i class="fas fa-check"></i> Seleccionar</button>`
+                `<button type="button" class="btn btn-sm btn-success btn-seleccionar-padre" data-id="${data.id}" data-nombre="${data.nombre}"><i class="fas fa-check"></i> Seleccionar</button>`
             ]).draw();
 
             // Selecciona automáticamente
@@ -227,6 +268,20 @@ function agregarPadreNuevo() {
             alert('Padre creado y agregado a la lista');
         }
     });
+}
+
+function normalizarCamposPadreRapido() {
+    const cedula = document.querySelector('#formPadreRapido [name="Cedula"]');
+    const telefono = document.querySelector('#formPadreRapido [name="Telefono"]');
+
+    if (cedula) {
+        cedula.value = cedula.value.toUpperCase().replace(/[^0-9A-Z]/g, '').slice(0, 14);
+    }
+
+    if (telefono && telefono.value.trim() !== '' && !telefono.value.startsWith('+505')) {
+        telefono.value = '+505' + telefono.value.replace(/\D/g, '').replace(/^505?/, '');
+        telefono.value = telefono.value.slice(0, 12);
+    }
 }
 
 // COMARCAS
@@ -247,16 +302,22 @@ function agregarComarcaNueva() {
     .then(r => r.json())
     .then(data => {
         if (data.id) {
-            $('#tabla_com_modal tbody').prepend(`
-                <tr>
-                    <td><strong>${data.nombre}</strong></td>
-                    <td>
-                        <button class="btn btn-sm btn-success" onclick="seleccionarcom(${data.id}, '${data.nombre}')">
-                            <i class="fas fa-check"></i> Seleccionar
-                        </button>
-                    </td>
-                </tr>
-            `);
+            const row = [
+                `<strong>${data.nombre}</strong>`,
+                `<button type="button" class="btn btn-sm btn-success" onclick="seleccionarcom(${data.id}, '${data.nombre}')"><i class="fas fa-check"></i> Seleccionar</button>`
+            ];
+
+            if ($.fn.DataTable && $.fn.DataTable.isDataTable('#tabla_com_modal')) {
+                $('#tabla_com_modal').DataTable().row.add(row).draw();
+            } else {
+                $('#tabla_com_modal tbody').prepend(`
+                    <tr>
+                        <td>${row[0]}</td>
+                        <td>${row[1]}</td>
+                    </tr>
+                `);
+            }
+
             seleccionarcom(data.id, data.nombre);
             document.getElementById('formComarcaRapido').reset();
             alert('Comarca creada y agregada a la lista');
@@ -275,29 +336,49 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         const padreSeleccionado = document.querySelector('input[name="id_padre"]').value;
         const comarcaSeleccionada = document.querySelector('input[name="id_comarca"]').value;
+        const celular = document.getElementById('Celular').value.trim();
+        const codigoPersona = document.getElementById('codigo_persona').value.trim();
+        const codigoTemporalInput = document.getElementById('c_temporal');
+        const codigoTemporal = codigoTemporalInput.value.trim().toUpperCase();
+        const regexCelular = /^\+505[0-9]{8}$/;
+        const regexCodigoPersona = /^[0-9]{7,8}$/;
+        const regexCodigoTemporal = /^[0-9A-F]{16}$/;
+
+        codigoTemporalInput.value = codigoTemporal;
+
         if (!padreSeleccionado || !comarcaSeleccionada) {
             alert('⚠️ Completa Padre y Comarca primero');
+            return;
+        }
+
+        if (codigoPersona && !regexCodigoPersona.test(codigoPersona)) {
+            alert('⚠️ El Código Único debe tener 7 u 8 dígitos numéricos');
+            document.getElementById('codigo_persona').focus();
+            return;
+        }
+
+        if (codigoTemporal && !regexCodigoTemporal.test(codigoTemporal)) {
+            alert('⚠️ El Código Temporal debe tener exactamente 16 caracteres hexadecimales (0-9 y A-F)');
+            codigoTemporalInput.focus();
+            return;
+        }
+
+        if (!regexCelular.test(celular)) {
+            alert('⚠️ El teléfono debe tener el formato +50512345678 (8 dígitos después de +505)');
+            document.getElementById('Celular').focus();
             return;
         }
 
         if (fromParam === 'matriculas') {
             const respuesta = confirm(
                 '✅ Estudiante listo para guardar.\n\n' +
-                '¿Quieres ir luego a Matrículas?\n' +
-                '• ACEPTAR → Abrir Matriculas\n' +
-                '• CANCELAR → Ir al índice de Estudiantes'
+                '¿Deseas volver a la creación de matrícula después de guardar este estudiante?\n' +
+                '• ACEPTAR → Volver a Crear Matrícula\n' +
+                '• CANCELAR → Ir al Listado de Estudiantes'
             );
 
-            let targetTab = null;
-            if (respuesta) {
-                targetTab = window.open('', '_blank');
-            }
-
+            document.getElementById('redirect_choice').value = respuesta ? 'matriculas' : 'estudiantes';
             form.submit();
-
-            if (respuesta && targetTab) {
-                targetTab.location.href = '{{ route("matriculas.create") }}';
-            }
         } else {
             form.submit();
         }
@@ -324,6 +405,19 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.removeItem(storagePrefix + "_" + input.name);
         });
     });
+
+    function capitalizeWords(value) {
+        return value.trim().toLowerCase().replace(/\b\w/g, function(letter) {
+            return letter.toUpperCase();
+        });
+    }
+
+    const temporalInput = document.getElementById('c_temporal');
+    if (temporalInput) {
+        temporalInput.addEventListener('input', function() {
+            this.value = this.value.toUpperCase().replace(/[^0-9A-F]/g, '').slice(0, 16);
+        });
+    }
 });
 </script>
 @stop

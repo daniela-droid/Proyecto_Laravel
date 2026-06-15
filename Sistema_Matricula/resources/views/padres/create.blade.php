@@ -44,14 +44,20 @@
  
                 <div class="form-group mb-2"> 
                     <label for="Cedula">Cedula</label>
-                     <input type="text" name="Cedula" class="form-control " required>
+                     <input type="text" name="Cedula" id="Cedula" class="form-control text-uppercase @error('Cedula') is-invalid @enderror" required pattern="[0-9]{13}[A-Z]" maxlength="14" placeholder="5662811021000F">
+                     @error('Cedula')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                     @enderror
               
                    </div>
                 </div>
                 <div class="col-md-4">
              <div class="form-group mb-2">
                     <label for="Telefono">Telefono</label>
-                    <input type="text" name="Telefono" class="form-control " required>
+                    <input type="text" name="Telefono" id="Telefono" class="form-control @error('Telefono') is-invalid @enderror" required pattern="\+505[0-9]{8}" maxlength="12" placeholder="+50512345678">
+                    @error('Telefono')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 </div>
@@ -89,6 +95,20 @@
     if (!form) return; // Si no hay formulario en esta página, no hace nada
 
     const inputs = form.querySelectorAll('input, select, textarea');
+    const cedulaInput = document.getElementById('Cedula');
+    const telefonoInput = document.getElementById('Telefono');
+
+    cedulaInput?.addEventListener('input', function() {
+        this.value = this.value.toUpperCase().replace(/[^0-9A-Z]/g, '').slice(0, 14);
+    });
+
+    telefonoInput?.addEventListener('input', function() {
+        let value = this.value.replace(/[^\d+]/g, '');
+        if (!value.startsWith('+505')) {
+            value = '+505' + value.replace(/^\+?505?/, '');
+        }
+        this.value = value.slice(0, 12);
+    });
 
     // 1. CARGAR: Al entrar, rellena lo que encuentre para ESTA página
     inputs.forEach(input => {

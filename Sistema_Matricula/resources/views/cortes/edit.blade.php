@@ -12,64 +12,72 @@
          <div style="background-color: #e0e5ee; color: dark; padding: 10px 20px; border-radius: 5px;">
         <div class="card-header">Editar Corte Evaluativo</div>
         <div class="card-body">
-            <form action="{{ route('cortes.update', $corte->id) }}" method="POST">
+            <form class="edit-form" action="{{ route('cortes.update', $corte->id) }}" method="POST">
                 @csrf
-                @method('PUT') {{-- Actualizacion--}}
+                @method('PUT') {{-- Actualizacion --}}
 
-               <div class="form-group mb-2">
-                        <label for="id_modalidades">Modalidades</label>
-                        <div class="input-group w-50">
-                            <input type="hidden" name="id_modalidades" id="id_modalidades"value="{{$corte->id_modalidades}}" required>
-                            
-                            <input type="text" id="nombre_m_display" class="form-control form-control-sm" value="{{$corte->modalidades->nombre}}"  readonly required>
-                            
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalm">
-                                    <i class="fas fa-search "></i> Buscar
-                                </button>
-                              <a href="{{route('modalidades.create')}}" class="btn btn-sm btn-primary ms-1 ml-2">  <i class="fas fa-plus"></i></a>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="id_modalidades">Modalidades</label>
+                            <div class="input-group">
+                                <input type="hidden" name="id_modalidades" id="id_modalidades" value="{{ $corte->id_modalidades }}" required>
+                                <input type="text" id="nombre_m_display" class="form-control form-control-sm" value="{{ $corte->modalidades->nombre }}" readonly required>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalm">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                   
+                                </div>
                             </div>
-                         
-                         </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" name="nombre" class="form-control form-control-sm" value="{{ $corte->nombre }}" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="ponderacion">Ponderación</label>
+                            <input type="text" name="ponderacion" class="form-control form-control-sm" value="{{ $corte->ponderacion }}" required>
+                        </div>
+                    </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="id_periodo_academicos">Periodos Academicos</label>
+                            <select name="id_periodo_academicos" class="form-control form-control-sm" required>
+                                @foreach($periodos as $periodo)
+                                    <option value="{{ $periodo->id }}" {{ $corte->id_periodo_academicos == $periodo->id ? 'selected' : '' }}>
+                                        {{ $periodo->id }} {{ $periodo->Nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
 
-                <div class="form-group mb-2">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" class="form-control form-control-sm w-50" value="{{$corte->nombre}}" required>
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="fecha_inicio">Fecha Inicio</label>
+                            <input type="date" name="fecha_inicio" class="form-control form-control-sm" value="{{ $corte->fecha_inicio }}" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group mb-2">
+                            <label for="fecha_fin">Fecha Fin</label>
+                            <input type="date" name="fecha_fin" class="form-control form-control-sm" value="{{ $corte->fecha_fin }}" required>
+                        </div>
+                    </div>
                 </div>
 
-
-                <div class="form-group mb-2">
-                       <label for="ponderacion">Ponderación</label>
-                    <input type="text" name="ponderacion" class="form-control form-control-sm w-50"  value="{{$corte->ponderacion}}" required>
-                </div>
-
-                
-                <div class="form-group mb-2">
-                <label for="id_periodo_academicos">Periodos Academicos</label>
-                <select name="id_periodo_academicos" class="form-control form-control-sm w-50" required>
-                 @foreach($periodos as $periodo)
-                         <option value="{{ $periodo->id }}"{{$corte->id_periodo_academicos == $periodo->id ? 'selected' : ''}}
-                         >{{ $periodo->id}} {{ $periodo->Nombre }}</option>
-                    @endforeach
-                </select>
-              
-            </div>
-
-              
-                 <div class="form-group mb-2">
-                       <label for="fecha_inicio">Fecha Inicio</label>
-                    <input type="date" name="fecha_inicio" class="form-control form-control-sm w-50"  value="{{$corte->fecha_inicio}}" required>
-                </div>
-               
-                  <div class="form-group mb-2">
-                       <label for="fecha_fin">Fecha Fin</label>
-                    <input type="date" name="fecha_fin" class="form-control form-control-sm w-50"  value="{{$corte->fecha_fin}}"  required>
-                </div>
-
-               
-              <button type="submit" class="btn btn-success">Actualizar</button>
+                <button type="submit" class="btn btn-success">Actualizar</button>
                 <a href="{{ route('cortes.index') }}" class="btn btn-secondary">Cancelar</a>
             </form>
         </div>
@@ -83,6 +91,44 @@
                         $('#id_modalidades').val(id);
                         $('#nombre_m_display').val(nombreCompleto);
                         $('#modalm').modal('hide');
+                    }
+
+                    function agregarModalidadNueva() {
+                        var formData = new FormData(document.getElementById('formModalidadRapido'));
+                        $.ajax({
+                            url: '{{ url('modalidades/store-rapido') }}',
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    // Agregar la nueva fila a la tabla
+                                    var table = $('#tabla_m_modal').DataTable();
+                                    table.row.add([
+                                        response.nombre,
+                                        '<button type="button" class="btn btn-sm btn-success" onclick="seleccionarm(\'' + response.id + '\', \'' + response.nombre + '\')"><i class="fas fa-check"></i> Seleccionar</button>'
+                                    ]).draw();
+
+                                    // Seleccionar automáticamente la nueva modalidad
+                                    seleccionarm(response.id, response.nombre);
+
+                                    // Limpiar el formulario
+                                    document.getElementById('formModalidadRapido').reset();
+
+                                    // Cambiar a la pestaña de buscar
+                                    $('#pills-buscar-modalidad-tab').tab('show');
+                                } else {
+                                    alert('Error al agregar la modalidad');
+                                }
+                            },
+                            error: function() {
+                                alert('Error al procesar la solicitud');
+                            }
+                        });
                     }
 
                     $(document).ready(function() {

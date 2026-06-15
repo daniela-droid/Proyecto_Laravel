@@ -116,7 +116,8 @@
     {{-- Tabla --}}
     <div class="row">
         <div class="col">
-            <x-adminlte-card icon="fas fa-user-graduate"  theme="lightblue" title="Listado de Administradores">
+            <hr>
+            <!-- <x-adminlte-card icon="fas fa-user-graduate"  theme="lightblue" title="Listado de Administradores"> -->
                 <x-adminlte-datatable id="table1" :heads="$heads" head-theme="light" theme="light" striped hoverable>
                     @foreach($config['data'] as $row)
                         <tr>

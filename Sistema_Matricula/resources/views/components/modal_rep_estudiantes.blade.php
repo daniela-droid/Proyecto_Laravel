@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
 
-    <div class="modal-header bg-warning text-white">
+    <div class="modal-header bg-navy text-white">
 
         <h5 class="modal-title">Seleccionar Estudiantes</h5>
 

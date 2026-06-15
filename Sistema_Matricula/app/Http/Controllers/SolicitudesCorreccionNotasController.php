@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SolicitudCorreccionNota;
+use App\Notifications\SolicitudCorreccionNotaResuelta;
 use Illuminate\Http\Request;
 
 class SolicitudesCorreccionNotasController extends Controller
@@ -42,6 +43,12 @@ class SolicitudesCorreccionNotasController extends Controller
             'aprobada_hasta' => now()->addDays(2),
         ]);
 
+        // Enviar notificación al docente
+        $usuarioDocente = $solicitud->docente->usuarios;
+        if ($usuarioDocente) {
+            $usuarioDocente->notify(new SolicitudCorreccionNotaResuelta($solicitud, 'aprobada'));
+        }
+
         return back()->with('success', 'Solicitud aprobada. El docente podrá corregir esa nota una sola vez.');
     }
 
@@ -61,6 +68,18 @@ class SolicitudesCorreccionNotasController extends Controller
             'respuesta_admin' => $request->respuesta_admin,
         ]);
 
+        // Enviar notificación al docente
+        $usuarioDocente = $solicitud->docente->usuarios;
+        if ($usuarioDocente) {
+            $usuarioDocente->notify(new SolicitudCorreccionNotaResuelta($solicitud, 'rechazada'));
+        }
+
         return back()->with('success', 'Solicitud rechazada correctamente.');
+    }
+
+    public function destroy(SolicitudCorreccionNota $solicitud)
+    {
+        $solicitud->delete();
+        return back()->with('success', 'Solicitud eliminada correctamente.');
     }
 }

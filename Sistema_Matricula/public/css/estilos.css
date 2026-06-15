@@ -48,6 +48,39 @@
     background: rgba(255,255,255,0.05);
 }
 
+/* Sidebar search compacto */
+.sidebar-search {
+    margin: 0 10px 12px;
+}
+
+.sidebar-search .form-control {
+    border-radius: 18px;
+    padding: 0.4rem 0.85rem;
+    height: 34px;
+    font-size: 0.85rem;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border-color: rgba(255,255,255,0.15);
+}
+
+.sidebar-search .form-control:focus {
+    background: rgba(255,255,255,0.15);
+    box-shadow: none;
+    border-color: rgba(255,255,255,0.3);
+}
+
+.sidebar-search .input-group-text {
+    background: transparent;
+    border: none;
+    color: #ced4da;
+}
+
+.sidebar-search .btn-sidebar {
+    border: none;
+    background: transparent;
+    color: #ced4da;
+}
+
 /* Logo mejorado */
 .brand-link {
     background: linear-gradient(135deg, #233858 0%, #34495e 100%);
@@ -107,4 +140,35 @@
  
 }
 
- 
+ /* Estilo global para formularios edit ordenados */
+.edit-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.edit-form .form-group {
+    flex: 0 0 calc(33.333% - 0.67rem);
+    box-sizing: border-box;
+    min-width: 240px;
+}
+.edit-form .form-group .form-control,
+.edit-form .form-group .input-group,
+.edit-form .form-group .input-group .form-control {
+    width: 100% !important;
+}
+.edit-form .form-group label {
+    display: block;
+    margin-bottom: 0.35rem;
+}
+.edit-form button,
+.edit-form .btn {
+    margin-top: 0.5rem;
+}
+@media (max-width: 992px) {
+    .edit-form {
+        gap: 0.75rem;
+    }
+    .edit-form .form-group {
+        flex: 0 0 100%;
+    }
+}

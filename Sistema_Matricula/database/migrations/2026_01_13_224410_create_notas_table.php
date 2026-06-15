@@ -22,6 +22,7 @@ return new class extends Migration
             $table->double('nota_normal')->default(0); // La que se saca en el corte
             $table->double('nota_especial')->nullable(); // Solo se llena si va a reparación
             $table->string('observacion')->nullable();
+            $table->double('promedio')->default(0); // El promedio final del corte, considerando reparación si la hay
             $table->timestamps();
         });
         

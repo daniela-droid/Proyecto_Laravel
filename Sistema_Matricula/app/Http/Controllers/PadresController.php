@@ -29,15 +29,12 @@ class PadresController extends Controller
      */
    public function store(Request $request)
 {
-    $request->validate([
-        'Nombre_o_Tutor'=>'required|string|max:255',
-        'Apellido'=>'required|string|max:255',
-        'Email'=>'required|string|max:255|email',
-        'Cedula'=>'required|string|max:255',
-        'Telefono'=>'required|string|max:25'
-    ]);
-    
-    $padre = Padres::create($request->all());
+    $validated = $request->validate($this->rulesPadre(), $this->messagesPadre());
+
+    $validated['Cedula'] = strtoupper(trim($validated['Cedula']));
+    $validated['Telefono'] = trim($validated['Telefono']);
+
+    $padre = Padres::create($validated);
     
     return redirect()->route('padres.index')->with('success','Padre creado');
 
@@ -46,15 +43,12 @@ class PadresController extends Controller
 
 public function storeRapido(Request $request)
 {
-    $request->validate([
-        'Nombre_o_Tutor' => 'required|string|max:255',
-        'Apellido' => 'required|string|max:255',
-        'Email' => 'nullable|email|max:255',        // ← Opcional
-        'Cedula' => 'nullable|string|max:255',     // ← Opcional
-        'Telefono' => 'nullable|string|max:25'     // ← Opcional
-    ]);
+    $validated = $request->validate($this->rulesPadreRapido(), $this->messagesPadre());
 
-    $padre = Padres::create($request->all());
+    $validated['Cedula'] = isset($validated['Cedula']) ? strtoupper(trim($validated['Cedula'])) : null;
+    $validated['Telefono'] = isset($validated['Telefono']) ? trim($validated['Telefono']) : null;
+
+    $padre = Padres::create($validated);
 
     return response()->json([
         'success' => true,
@@ -82,16 +76,42 @@ public function storeRapido(Request $request)
      */
     public function update(Request $request, padres $padre)
     {
-         $request->validate([
+         $validated = $request->validate($this->rulesPadre(), $this->messagesPadre());
+         $validated['Cedula'] = strtoupper(trim($validated['Cedula']));
+         $validated['Telefono'] = trim($validated['Telefono']);
+
+         $padre->update($validated);
+          return redirect()->route('padres.index')->with('success','Padre actualizado');
+    }
+
+    private function rulesPadre(): array
+    {
+        return [
             'Nombre_o_Tutor'=>'required|string|max:255',
             'Apellido'=>'required|string|max:255',
-            'Email'=>'required|string|max:255',
-            'Cedula'=>'required|string|max:255',
-            'Telefono'=>'required|string|max:25'
+            'Email'=>'required|string|max:255|email',
+            'Cedula'=>['required', 'string', 'regex:/^[0-9]{13}[A-Z]$/'],
+            'Telefono'=>['required', 'string', 'regex:/^\+505[0-9]{8}$/'],
+        ];
+    }
 
-        ]);
-         $padre->update($request->all());
-          return redirect()->route('padres.index')->with('success','Padre actualizado');
+    private function rulesPadreRapido(): array
+    {
+        return [
+            'Nombre_o_Tutor' => 'required|string|max:255',
+            'Apellido' => 'required|string|max:255',
+            'Email' => 'nullable|email|max:255',
+            'Cedula' => ['nullable', 'string', 'regex:/^[0-9]{13}[A-Z]$/'],
+            'Telefono' => ['nullable', 'string', 'regex:/^\+505[0-9]{8}$/'],
+        ];
+    }
+
+    private function messagesPadre(): array
+    {
+        return [
+            'Cedula.regex' => 'La cédula debe tener 13 dígitos y una letra final en mayúscula. Ejemplo: 5662811021000F.',
+            'Telefono.regex' => 'El teléfono debe tener el formato +50512345678.',
+        ];
     }
 
     /**

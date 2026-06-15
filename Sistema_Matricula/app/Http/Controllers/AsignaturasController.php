@@ -42,6 +42,23 @@ class AsignaturasController extends Controller
         return redirect()->route('asignaturas.index')->with('success','Asignatura creada correctamente');
     }
 
+    public function storeRapido(Request $request)
+    {
+        $request->validate([
+           'Nombre'=>'required|string|max:255',
+            'Descripcion'=>'required|string|max:255',
+            'Código'=>'required|string|max:255'
+        ]);
+
+        $asignatura = Asignatura::create($request->all());
+
+        return response()->json([
+            'success' => true,
+            'id' => $asignatura->id,
+            'nombre' => $asignatura->Nombre
+        ]);
+    }
+
     /**
      * Display the specified resource.
      */
