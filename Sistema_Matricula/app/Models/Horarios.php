@@ -58,6 +58,21 @@ public function setHoraInicioAttribute($value)
         return $this->hasMany(Notas::class, 'id_horario');
     }
 
+    // Borra las notas asociadas cuando se elimina un horario (evita notas huérfanas)
+    protected static function booted()
+    {
+        static::deleting(function ($horario) {
+            try {
+                $horario->notas()->each(function ($nota) {
+                    $nota->delete();
+                });
+            } catch (\Exception $e) {
+                // Registrar si es necesario; no bloquear la eliminación
+                \Log::error('Error borrando notas asociadas al horario ' . ($horario->id ?? '?:id') . ': ' . $e->getMessage());
+            }
+        });
+    }
+
 
 
 }

@@ -39,15 +39,12 @@
                         <option value="">-- Seleccione Asignaturas--</option>
                         <option value="Lengua y Literatura"> Lengua y Literatura</option>
                         <option value="Matemática"> Matemática</option>
-                        
-                        <option value="Ciencias Naturales"> Ciencias Naturales</option>
+                         <option value="Ciencias Naturales"> Ciencias Naturales</option>
                         <option value="Estudios Sociales">Estudios Sociales</option>
                         <option value="Educación Física"> Educación Física</option>
                         <option value="Taller de Arte y Cultura"> Taller de Arte y Cultura</option>
-                       
                         <option value="Inglés"> Inglés</option>
                         <option value="Educación para Aprender, Emprender, Prosperar">A.E.P</option>
-                         <option value="Educación Física"> Educación Artistica</option>
                         <option value="Formación Personal y Ciudadana">Danza</option>
                         <option value="Computación"> Derecho de la mujer</option>
                         <option value="Creciendo en Valores">Creciendo en Valores</option>
@@ -68,9 +65,25 @@
                  <div class="form-group">
                     <label for="Código">Código</label>
                     <input type="text" name="Código" class="form-control "  id="codigoAsignatura" readonly required>
+                    </div>
+                
+                     </div>
+
+                
+                      <div class="col-md-6">
+                 <div class="form-group">
+                    <label for="tipo">Tipo</label>
+                    <select name="tipo" class="form-control" id="tipo" required>
+                        <option value="">-- Seleccione Tipo --</option>
+                        <option value="cuantitativa">Cuantitativa</option>
+                        <option value="cualitativa">Cualitativa</option>
+                    </select>
                 </div>
                 </div>
+
                 </div>
+
+
                 <button type="submit" class="btn btn-primary">   <i class="fas fa-save"></i> Guardar</button>
                 {{-- Aquí estaba mal, debe ser route() con comillas --}}
                 <a href="{{ route('asignaturas.index') }}" class="btn btn-secondary">Cancelar</a>

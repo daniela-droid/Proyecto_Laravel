@@ -6,7 +6,7 @@
 
 @section('content_header')
     <div class="d-flex justify-content-between align-items-center">
-        <h4 class="font-weight-bold text-navy">Historial Académico</h4>
+        <h4 class="font-weight-bold text-navy">Historial de Notas</h4>
         
         <a href="{{ route('notas.create') }}" class="btn btn-primary shadow-sm">
             <i class="fas fa-plus-circle mr-1"></i> Agregar Notas
@@ -18,12 +18,22 @@
 @section('content')
 <hr>
    
-        <div class="input-group input-group-sl" style="width: 620px;">
-             <input type="text" id="buscadorInput" class="form-control buscador-simple" placeholder="Buscar por Nombre o Apellido...">
+        <div class="d-flex flex-wrap align-items-center" style="max-width: 860px; gap: .75rem;">
+            <div class="input-group input-group-sl" style="width: 420px;">
+                <input type="text" id="buscadorInput" class="form-control buscador-simple" placeholder="Buscar por Nombre o Apellido...">
                 <button class="btn btn-secondary limpiar-simple" id="btnLimpiar">
                     <i class="fas fa-times"></i>
                 </button>
-         </div>
+            </div>
+            <div class="form-group mb-0" style="min-width: 220px;">
+                <select id="selectFiltroReporteCorte" class="form-control form-control-sm">
+                    <option value="">Todos los cortes</option>
+                    @foreach($cortes as $corte)
+                        <option value="{{ $corte->nombre }}">{{ $corte->nombre }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
     <div class="row">
         
         {{-- COLUMNA IZQUIERDA: LISTA DE ESTUDIANTES --}}
@@ -44,7 +54,7 @@
                                 @php
                                     $collapseId = 'collapse-' . str_replace(' ', '-', $grado) . '-' . $loop->index;
                                     $estudiantesValidos = $matriculasGrado->filter(function($datosAlumno) {
-                                        return $datosAlumno['matricula']->estudiantes;
+                                        return ($datosAlumno['matricula'] ?? null)?->estudiantes;
                                     })->count();
                                 @endphp
                                 @if($estudiantesValidos > 0)
@@ -75,11 +85,11 @@
                                                         <tbody>
                                                             @foreach($matriculasGrado as $id_matricula => $datosAlumno)
                                                                 @php
-                                                                    $matricula = $datosAlumno['matricula'];
-                                                                    $notasAlumno = $datosAlumno['notas'];
+                                                                    $matricula = $datosAlumno['matricula'] ?? null;
+                                                                    $notasAlumno = $datosAlumno['notas'] ?? collect();
                                                                     $ultimaNota = $notasAlumno->first();
-                                                                    $est = $matricula->estudiantes;
-                                                                    $grupo = $matricula->grupos;
+                                                                    $est = $matricula?->estudiantes ?? null;
+                                                                    $grupo = $matricula?->grupos ?? null;
                                                                 @endphp
                                                                 @if($est)
                                                                     <tr class="data-row">
@@ -162,6 +172,7 @@
     window.NotasIndex = {
         reportesPorGrado: @json($reportesPorGrado),
         nombreCentro: @json($nombreCentro ?: 'Centro educativo no especificado'),
+        cortes: @json($cortes),
         csrfToken: @json(csrf_token()),
         notasCreateUrl: @json(route('notas.create')),
         sloganUrl: @json(asset('img/reportes/Slogan 2026.png'))

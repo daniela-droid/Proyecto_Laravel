@@ -3,7 +3,7 @@
 @section('title', 'Políticas de Privacidad')
 
 @section('content_header')
-    <div class="alert alert shadow-sm" style="background-color: rgb(226, 136, 100); border: none; color: white;">
+    <div class="alert alert shadow-sm" style="background-color: rgb(148, 73, 44); border: none; color: white;">
         <h1 class="m-0"><i class="fas fa-user-shield mr-2"></i> Políticas y Términos de Uso</h1>
     </div>
 @stop
@@ -11,17 +11,17 @@
 @section('content')
 <div class="row">
     <div class="col-md-12">
-        <div class="card card-outline card-primary shadow">
+        <div class="card card-outline card-navy shadow">
             <div class="card-header">
                 <h3 class="card-title font-weight-bold">Marco Legal y Privacidad del Sistema</h3>
             </div>
             
             <div class="card-body">
                 <div id="accordion">
-                    <div class="card card-light shadow-none border">
+                    <div class="card card-navy shadow-none border">
                         <div class="card-header">
                             <h4 class="card-title w-100">
-                                <a class="d-block w-100 text-dark font-weight-bold" data-toggle="collapse" href="#collapseOne">
+                                <a class="d-block w-100 text-white font-weight-bold" data-toggle="collapse" href="#collapseOne">
                                     1. Tratamiento de Datos Personales
                                 </a>
                             </h4>
@@ -33,10 +33,10 @@
                         </div>
                     </div>
 
-                    <div class="card card-light shadow-none border">
+                    <div class="card card-navy  shadow-none border">
                         <div class="card-header">
                             <h4 class="card-title w-100">
-                                <a class="d-block w-100 text-dark font-weight-bold" data-toggle="collapse" href="#collapseTwo">
+                                <a class="d-block w-100 text-white font-weight-bold" data-toggle="collapse" href="#collapseTwo">
                                     2. Confidencialidad de la Información
                                 </a>
                             </h4>
@@ -48,10 +48,10 @@
                         </div>
                     </div>
 
-                    <div class="card card-light shadow-none border">
+                    <div class="card card-navy shadow-none border">
                         <div class="card-header">
                             <h4 class="card-title w-100">
-                                <a class="d-block w-100 text-dark font-weight-bold" data-toggle="collapse" href="#collapseThree">
+                                <a class="d-block w-100 text-white font-weight-bold" data-toggle="collapse" href="#collapseThree">
                                     3. Responsabilidad del Usuario
                                 </a>
                             </h4>

@@ -72,7 +72,8 @@
             $heads = [
                'Nombre',
                 'Descripción',
-                'Código' ,              
+                'Código' ,
+                'Tipo',              
                 ['label' => 'Acciones', 'no-export' => true, 'width' => 5],
             ];
         }else{
@@ -96,7 +97,8 @@
                          
                     $asignatura->Nombre,
                     $asignatura->Descripcion,
-                    $asignatura->Código ,                     
+                    $asignatura->Código ,  
+                    $asignatura->tipo,
                     '<nobr>'.$btnEdit.$btnDetails.$btnDelete.'</nobr>'                    
                 ];
             }

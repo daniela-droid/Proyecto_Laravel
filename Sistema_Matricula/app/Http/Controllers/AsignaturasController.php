@@ -34,7 +34,8 @@ class AsignaturasController extends Controller
         $request->validate([
             'Nombre'=>'required|string|max:255',
             'Descripcion'=>'required|string|max:255',
-            'Código'=>'required|string|max:255'
+            'Código'=>'required|string|max:255',
+            'tipo'=>'required|in:cuatitativa,cualitativa'
           
         ]);
         
@@ -47,7 +48,8 @@ class AsignaturasController extends Controller
         $request->validate([
            'Nombre'=>'required|string|max:255',
             'Descripcion'=>'required|string|max:255',
-            'Código'=>'required|string|max:255'
+            'Código'=>'required|string|max:255',
+            'tipo'=>'required|in:cuatitativa,cualitativa'
         ]);
 
         $asignatura = Asignatura::create($request->all());
@@ -83,7 +85,8 @@ class AsignaturasController extends Controller
         $request->validate([
             'Nombre'=>'required|string|max:255',
             'Descripcion'=>'required|string|max:255',
-            'Código'=>'required|string|max:255'
+            'Código'=>'required|string|max:255',
+            'tipo'=>'required|in:cuatitativa,cualitativa'
 
         ]);
         $asignatura->update($request->all());

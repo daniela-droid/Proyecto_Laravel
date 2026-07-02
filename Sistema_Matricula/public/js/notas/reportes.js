@@ -13,16 +13,8 @@ window.NotasReportes = (function() {
         return `${escapeHtml(principal)}${especial}`;
     }
 
-    function esAsignaturaMatematica(nombreAsignatura) {
-        return String(nombreAsignatura || '')
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase()
-            .includes('matematica');
-    }
-
     function notasCualitativas(notasMateria) {
-        const { escapeHtml, calificacionCualitativa, valorNota } = window.NotasCalificaciones;
+        const { escapeHtml, notaConCualitativo, valorNota } = window.NotasCalificaciones;
 
         if (!notasMateria.length) {
             return '<span class="text-muted">-</span>';
@@ -30,36 +22,74 @@ window.NotasReportes = (function() {
 
         const nota = notasMateria[notasMateria.length - 1];
         const principal = valorNota(nota) ?? '';
-        const cualitativa = calificacionCualitativa(principal);
 
-        return cualitativa ? escapeHtml(cualitativa) : '<span class="text-muted">-</span>';
+        // Mostrar el valor numérico y la calificación cualitativa (ej. "85" y "AS").
+        if (notaConCualitativo && typeof notaConCualitativo === 'function') {
+            return notaConCualitativo(principal);
+        }
+
+        return principal !== '' ? escapeHtml(principal) : '<span class="text-muted">-</span>';
     }
 
     function notaReporteAsignatura(asignatura, notasMateria) {
-        if (esAsignaturaMatematica(asignatura.nombre)) {
-            return notasCuantitativas(notasMateria);
+        const { escapeHtml, calificacionCualitativa, valorNota } = window.NotasCalificaciones;
+
+        if (!notasMateria || !notasMateria.length) {
+            return '<span class="text-muted">-</span>';
         }
 
-        return notasCualitativas(notasMateria);
+        const nota = notasMateria[notasMateria.length - 1];
+        const valor = valorNota(nota);
+
+        if (valor === null || valor === undefined || valor === '') {
+            return '<span class="text-muted">-</span>';
+        }
+
+        if (window.NotasCalificaciones.esAsignaturaCuantitativa(asignatura)) {
+            return escapeHtml(valor);
+        }
+
+        const cualitativa = calificacionCualitativa(valor);
+        return escapeHtml(cualitativa || valor);
     }
 
     function promedioAsignaturaReporte(notasMateria) {
-        const { valorNota } = window.NotasCalificaciones;
-        const calificaciones = notasMateria
-            .map((nota) => Number(valorNota(nota)))
-            .filter((valor) => !Number.isNaN(valor));
-
-        if (!calificaciones.length) {
+        if (!notasMateria || !notasMateria.length) {
             return null;
         }
 
-        return calificaciones.reduce((total, nota) => total + nota, 0) / calificaciones.length;
+        const notaConPromedio = notasMateria.find((nota) => nota.promedio !== null && nota.promedio !== undefined && nota.promedio !== '');
+        if (notaConPromedio) {
+            return Number(notaConPromedio.promedio);
+        }
+
+        const valores = notasMateria
+            .map((nota) => {
+                if (!window.NotasCalificaciones.isNotaCuantitativa(nota)) {
+                    return null;
+                }
+                const valor = Number(window.NotasCalificaciones.valorNota(nota));
+                return Number.isNaN(valor) ? null : valor;
+            })
+            .filter((valor) => valor !== null);
+
+        if (!valores.length) {
+            return null;
+        }
+
+        return valores.reduce((total, value) => total + value, 0) / valores.length;
     }
 
-    function promedioGeneralReporte(fila, asignaturas) {
+    function promedioGeneralReporte(fila, asignaturas, corteSeleccionado = '') {
         const { escapeHtml } = window.NotasCalificaciones;
         const promedios = asignaturas
-            .map((asignatura) => promedioAsignaturaReporte(fila.asignaturas[asignatura.key] || []))
+            .filter((asignatura) => window.NotasCalificaciones.esAsignaturaCuantitativa(asignatura))
+            .map((asignatura) => {
+                const notasMateria = (fila.asignaturas[asignatura.key] || []).filter((n) => {
+                    return !corteSeleccionado || String(n.cortes?.nombre || '').trim() === String(corteSeleccionado).trim();
+                });
+                return promedioAsignaturaReporte(notasMateria);
+            })
             .filter((promedio) => promedio !== null);
 
         if (!promedios.length) {
@@ -88,33 +118,38 @@ window.NotasReportes = (function() {
                 <title>${escapeHtml(titulo)}</title>
                 <style>
                     @page { size: landscape; margin: 10mm; }
-                    body { font-family: Arial, sans-serif; color: #222; margin: 24px; }
-                    h1 { font-size: 20px; margin: 0 0 4px; text-transform: uppercase; }
-                    h2 { font-size: 16px; margin: 22px 0 8px; color: #001f3f; }
-                    .report-header { position: relative; border-bottom: 2px solid #001f3f; padding: 8px 230px 10px 0; margin-bottom: 14px; min-height: 92px; }
+                    body { font-family: Arial, sans-serif; color: #222; margin: 18px; }
+                    h1 { font-size: 22px; margin: 0 0 4px; text-transform: uppercase; }
+                    h2 { font-size: 16px; margin: 16px 0 8px; color: #001f3f; }
+                    .report-header { position: relative; border-bottom: 2px solid #001f3f; padding: 12px 230px 14px 0; margin-bottom: 18px; min-height: 100px; }
                     .report-logos { position: absolute; top: 0; right: 0; display: flex; align-items: flex-start; justify-content: flex-end; }
-                    .report-logo { width: 210px; height: 82px; object-fit: contain; }
-                    .report-title { text-align: center; line-height: 1.3; }
+                    .report-logo { width: 220px; height: 90px; object-fit: contain; }
+                    .report-title { text-align: center; line-height: 1.3; max-width: 100%; margin: 0 auto; }
                     .report-title .country { font-size: 13px; font-weight: bold; text-transform: uppercase; }
-                    .report-title .ministry { font-size: 12px; text-transform: uppercase; }
-                    .report-title .document { font-size: 18px; font-weight: bold; margin-top: 6px; text-transform: uppercase; }
-                    .report-title .school { font-size: 14px; font-weight: bold; margin-top: 4px; }
-                    .report-subtitle { font-size: 11px; color: #444; margin-top: 5px; text-align: center; }
-                    .meta { color: #555; font-size: 12px; margin-bottom: 14px; }
-                    .badge { display: inline-block; border: 1px solid #001f3f; color: #001f3f; padding: 3px 8px; border-radius: 10px; font-size: 11px; margin-right: 4px; }
+                    .report-title .ministry { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+                    .report-title .school { font-size: 14px; font-weight: bold; margin-top: 8px; }
+                    .report-title .document { font-size: 22px; font-weight: bold; margin-top: 10px; text-transform: uppercase; }
+                    .report-subtitle { font-size: 11px; color: #444; margin-top: 6px; text-align: center; }
+                    .meta { color: #333; font-size: 12px; margin-bottom: 16px; }
+                    .meta strong { color: #111; }
+                    .badge { display: inline-block; border: 1px solid #001f3f; color: #001f3f; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-right: 6px; margin-bottom: 4px; }
                     table { border-collapse: collapse; width: 100%; margin-bottom: 18px; font-size: 12px; }
-                    th, td { border: 1px solid #aaa; padding: 6px; vertical-align: top; }
-                    th { background: #e9eef5; text-align: left; }
-                    thead .subject-head { text-align: center; background: #dbe6f4; }
-                    thead .sub-head { text-align: center; font-size: 11px; background: #f2f5f9; }
+                    th, td { border: 1px solid #999; padding: 7px 8px; vertical-align: middle; }
+                    th { background: #e7eef7; text-align: center; font-weight: 600; }
+                    td { text-align: center; }
+                    td.left { text-align: left; }
                     .text-center { text-align: center; }
+                    .text-left { text-align: left; }
                     .text-muted { color: #666; font-size: 11px; }
                     .nota { font-weight: bold; font-size: 13px; }
                     .qualitative { font-weight: bold; color: #333; }
+                    .signature-block { margin-top: 28px; display: flex; justify-content: space-between; }
+                    .signature-line { border-top: 1px solid #444; width: 260px; padding-top: 8px; text-align: center; font-size: 12px; color: #333; }
                     .page-break { page-break-before: always; }
                     @media print {
                         body { margin: 12mm; }
                         button { display: none; }
+                        .report-logos { position: absolute; top: 0; right: 0; }
                     }
                 </style>
             </head>
@@ -122,7 +157,29 @@ window.NotasReportes = (function() {
                 ${contenido}
                 <script>
                     window.onload = function() {
-                        window.print();
+                        const images = document.images;
+                        let remaining = images.length;
+
+                        if (remaining === 0) {
+                            window.print();
+                            return;
+                        }
+
+                        function checkPrint() {
+                            remaining -= 1;
+                            if (remaining <= 0) {
+                                window.print();
+                            }
+                        }
+
+                        for (const img of images) {
+                            if (img.complete) {
+                                checkPrint();
+                            } else {
+                                img.addEventListener('load', checkPrint);
+                                img.addEventListener('error', checkPrint);
+                            }
+                        }
                     };
                 <\/script>
             </body>
@@ -131,24 +188,37 @@ window.NotasReportes = (function() {
         ventana.document.close();
     }
 
-    function encabezadoReporte(nombreCentro, documento, extra = '') {
+    function encabezadoReporte(nombreCentro, documento, extra = '', docente = '') {
         const { escapeHtml } = window.NotasCalificaciones;
         const config = window.NotasIndex || {};
+        const logoUrl = config.sloganUrl || `${window.location.origin}/img/reportes/Slogan 2026.png`;
 
         return `
             <header class="report-header">
-                <div class="report-title">
-                    <div class="country">República de Nicaragua</div>
-                    <div class="ministry">Ministerio de Educación</div>
-                    <div class="school">${escapeHtml(nombreCentro || 'Centro educativo no especificado')}</div>
-                    ${extra ? `<div class="report-subtitle">${extra}</div>` : ''}
-                    <div class="document">${escapeHtml(documento)}</div>
-                </div>
                 <div class="report-logos">
-                    <img class="report-logo" src="${config.sloganUrl}" alt="Slogan 2026" onerror="this.style.visibility='hidden'">
+                    <img class="report-logo" src="${encodeURI(logoUrl)}" alt="Logo" onerror="this.onerror=null;this.src='${encodeURI(window.location.origin + '/img/reportes/logo1.png')}';">
+                </div>
+                <div class="report-title">
+                    <div class="document">${escapeHtml(documento)}</div>
+                    <div class="school">${escapeHtml(nombreCentro || 'Centro educativo no especificado')}</div>
+                    ${docente ? `<div class="report-subtitle"><strong>Docente:</strong> ${escapeHtml(docente)}</div>` : ''}
+                    ${extra ? `<div class="report-subtitle">${escapeHtml(extra)}</div>` : ''}
                 </div>
             </header>
         `;
+    }
+
+    function obtenerDocentesDetalle(detalleActual) {
+        const docentes = new Set();
+
+        detalleActual.notas.forEach(function(n) {
+            const nombreDocente = n.horarios?.docente?.Nombre;
+            if (nombreDocente) {
+                docentes.add(nombreDocente);
+            }
+        });
+
+        return Array.from(docentes).join(', ') || 'Sin docente asignado';
     }
 
     function imprimirDetalleEstudiante(detalleActual) {
@@ -180,33 +250,42 @@ window.NotasReportes = (function() {
                 });
 
             const celdasCortes = cortesOrdenados.map(function(n) {
-                const nota = n.nota_especial || n.nota_normal || '';
-                return `<td class="text-center">${escapeHtml(nota)}</td>`;
+                const valor = window.NotasCalificaciones.valorNota(n) ?? '';
+
+                // Mostrar numérico si la asignatura es cuantitativa,
+                // o el valor cualitativo si es cualitativa.
+                if (window.NotasCalificaciones.esAsignaturaCuantitativa(materia.nombre)) {
+                    return `<td class="text-center">${escapeHtml(valor)}</td>`;
+                }
+
+                const cual = window.NotasCalificaciones.calificacionCualitativa(valor);
+                return `<td class="text-center">${escapeHtml(cual || valor)}</td>`;
             }).join('');
 
-            const promedio = calcularPromedioMateria(cortesOrdenados);
+            const promedio = calcularPromedioMateria(cortesOrdenados, materia.nombre);
             const notasFaltantes = 4 - cortesOrdenados.length;
             const espaciosVacios = notasFaltantes > 0 ? '<td class="text-center text-muted">-</td>'.repeat(notasFaltantes) : '';
 
             return `
                 <tr>
-                    <td>${escapeHtml(materia.nombre)}</td>
-                    <td>${escapeHtml(materia.docente)}</td>
+                    <td class="text-left">${escapeHtml(materia.nombre)}</td>
+                    <td class="text-left">${escapeHtml(materia.docente)}</td>
                     ${celdasCortes}${espaciosVacios}
                     <td class="text-center font-weight-bold">${escapeHtml(promedio)}</td>
                 </tr>
             `;
         }).join('');
 
+        const docentes = obtenerDocentesDetalle(detalleActual);
+
         imprimirDocumento(`Expediente de ${detalleActual.estudiante.codigo || detalleActual.nombre}`, `
-            ${encabezadoReporte(detalleActual.centro, 'Expediente de calificaciones')}
+            ${encabezadoReporte(detalleActual.centro, `Expediente de calificaciones de ${escapeHtml(detalleActual.estudiante.nombre)}`, '', `Docente(s): ${escapeHtml(docentes)}`)}
             <div class="meta">
                 Estudiante: <strong>${escapeHtml(detalleActual.estudiante.nombre)}</strong> |
                 Código: <strong>${escapeHtml(detalleActual.estudiante.codigo)}</strong> |
                 Grado: <strong>${escapeHtml(detalleActual.estudiante.grado)}</strong> |
                 Grupo: <strong>${escapeHtml(detalleActual.estudiante.grupo)}</strong> |
-                Total de calificaciones: ${escapeHtml(detalleActual.count)} |
-                Fecha: ${new Date().toLocaleDateString('es-NI')}
+                Fecha: <strong>${new Date().toLocaleDateString('es-NI')}</strong>
             </div>
             <div class="table-responsive">
                 <table>
@@ -224,10 +303,14 @@ window.NotasReportes = (function() {
                     <tbody>${filas}</tbody>
                 </table>
             </div>
+            <div class="signature-block">
+                <div class="signature-line">Firma del docente</div>
+                <div class="signature-line">Firma del directivo</div>
+            </div>
         `);
     }
 
-    function imprimirReporteGrado(grado) {
+    function imprimirReporteGrado(grado, corteSeleccionado = '') {
         const { escapeHtml } = window.NotasCalificaciones;
         const config = window.NotasIndex || {};
         const reporte = config.reportesPorGrado[grado];
@@ -240,13 +323,16 @@ window.NotasReportes = (function() {
         const encabezadosAsignaturas = reporte.asignaturas.map((asignatura) => `
             <th class="subject-head">${escapeHtml(asignatura.nombre)}</th>
         `).join('');
+
         const filas = reporte.filas.map((fila) => {
             const celdasAsignaturas = reporte.asignaturas.map((asignatura) => {
-                const notasMateria = fila.asignaturas[asignatura.key] || [];
+                const notasMateria = (fila.asignaturas[asignatura.key] || []).filter((n) => {
+                    return !corteSeleccionado || String(n.cortes?.nombre || '').trim() === String(corteSeleccionado).trim();
+                });
 
                 return `<td class="text-center">${notaReporteAsignatura(asignatura, notasMateria)}</td>`;
             }).join('');
-            const promedioGeneral = promedioGeneralReporte(fila, reporte.asignaturas);
+            const promedioGeneral = promedioGeneralReporte(fila, reporte.asignaturas, corteSeleccionado);
 
             return `
                 <tr>
@@ -258,16 +344,20 @@ window.NotasReportes = (function() {
             `;
         }).join('');
 
-        imprimirDocumento(`Reporte de notas por grado ${grado}`, `
+        const tituloCorte = corteSeleccionado ? `${corteSeleccionado}` : 'Todos los cortes';
+        const etiquetaPromedio = corteSeleccionado ? `Promedio ${corteSeleccionado}` : 'Promedio General';
+
+        imprimirDocumento(`Reporte de calificaciones - Grado ${grado} - ${tituloCorte}`, `
             ${encabezadoReporte(
                 reporte.centro,
-                'Reporte de notas por grado',
-                `Turno: ${escapeHtml(reporte.turno)} | Modalidad: ${escapeHtml(reporte.modalidad)} | Docente: ${escapeHtml(reporte.docentes)}`
+                'Reporte de calificaciones',
+                `Grado: ${escapeHtml(reporte.grado)} | Corte: ${escapeHtml(tituloCorte)}`,
+                reporte.docentes
             )}
             <div class="meta">
-                Grado: <strong>${escapeHtml(reporte.grado)}</strong> |
-                Corte evaluativo: <strong>${escapeHtml(reporte.corte || 'Sin corte')}</strong> |
-                Fecha: ${new Date().toLocaleDateString('es-NI')}
+                Turno: <strong>${escapeHtml(reporte.turno)}</strong> |
+                Modalidad: <strong>${escapeHtml(reporte.modalidades)}</strong> |
+                Fecha: <strong>${new Date().toLocaleDateString('es-NI')}</strong>
             </div>
             <table>
                 <thead>
@@ -275,11 +365,15 @@ window.NotasReportes = (function() {
                         <th style="width: 90px;">Código</th>
                         <th>Nombre</th>
                         ${encabezadosAsignaturas}
-                        <th class="text-center">Promedio general</th>
+                        <th class="text-center">${escapeHtml(etiquetaPromedio)}</th>
                     </tr>
                 </thead>
                 <tbody>${filas}</tbody>
             </table>
+            <div class="signature-block">
+                <div class="signature-line">Docente responsable</div>
+                <div class="signature-line">Firma de dirección</div>
+            </div>
         `);
     }
 

@@ -17,7 +17,8 @@ use \App\Traits\HashRouteKey;
      
             'Nombre',
             'Descripcion',
-            'Código'
+            'Código',
+            'tipo'
 
 
     ];
@@ -35,6 +36,19 @@ public function matriculas()
 public function horarios()
     {
         return $this->hasMany(Horarios::class, 'id_asignatura');
+    }
+
+    protected static function booted()
+    {
+        static::deleting(function ($asignatura) {
+            try {
+                $asignatura->horarios->each(function ($horario) {
+                    $horario->delete();
+                });
+            } catch (\Exception $e) {
+                \Log::error('Error borrando horarios asociados a la asignatura ' . ($asignatura->id ?? '?:id') . ': ' . $e->getMessage());
+            }
+        });
     }
 
 }

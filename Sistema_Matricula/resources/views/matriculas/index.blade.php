@@ -54,6 +54,7 @@
                 <i class="fas fa-plus"></i> Agregar
             </a>
 
+
         </div>
     <div class="container">
     @php  
@@ -79,8 +80,17 @@
             if(count($matriculas)>0){
                 $data=[];
                 foreach($matriculas as $matricula){
-                $estadosDisponibles = ['Activo', 'Retirado', 'Suspendido', 'Expulsado'];
-            $selectEstado = '<select class="form-control form-control-sm select-toggle-estado shadow-sm" data-id="' . $matricula->id . '">';
+                $estadosDisponibles = ['Activo', 'Retirado', 'Suspendido', 'Traslado'];
+
+            $descripcionesEstado = [
+                'Activo' => 'Estudiante está estudiando actualmente.',
+                'Traslado' => 'Este estado se usa para un estudiante que fue trasladado.',
+                'Retirado' => 'Estudiante dejó de estudiar en el centro.',
+                'Suspendido' => 'Estudiante temporalmente no está activo.',
+            ];
+
+            $descripcionSeleccionada = $descripcionesEstado[$matricula->estado] ?? '';
+            $selectEstado = '<select class="form-control form-control-sm select-toggle-estado shadow-sm" data-id="' . $matricula->id . '" title="' . e($descripcionSeleccionada) . '">';
 
             foreach ($estadosDisponibles as $est) {
                 $selected = ($matricula->estado == $est) ? 'selected' : '';
@@ -90,9 +100,10 @@
                 if ($est == 'Activo') $style = 'style="color: green; font-weight: bold;"';
                 if ($est == 'Retirado') $style = 'style="color: gray;"';
                 if ($est == 'Suspendido') $style = 'style="color: orange;"';
-                if ($est == 'Expulsado') $style = 'style="color: red;"';
+                if ($est == 'Traslado') $style = 'style="color: navy;"';
 
-                $selectEstado .= '<option value="' . $est . '" ' . $selected . ' ' . $style . '>' . $est . '</option>';
+                $titulo = $descripcionesEstado[$est] ?? '';
+                $selectEstado .= '<option value="' . $est . '" ' . $selected . ' ' . $style . ' title="' . e($titulo) . '">' . $est . '</option>';
             }
             $selectEstado .= '</select>';
 

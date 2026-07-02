@@ -35,7 +35,7 @@
 @stop
 
 @section('content_header')
-<div style="background-color: rgb(117, 196, 218); color: dark; padding: 15px 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+<div style="background-color: rgb(7, 50, 90); color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
     <h1 style="margin: 0; font-size: 1.8rem;"><i class="fas fa-info-circle mr-2"></i> Guía Informativa del Sistema</h1>
     <p class="mb-0 opacity-75">Conoce las funciones y el propósito de tu plataforma administrativa.</p>
 </div>
@@ -46,7 +46,7 @@
     
     <div class="row mt-4">
         <div class="col-md-8">
-            <div class="card card-outline card-primary shadow-sm">
+            <div class="card card-outline card-info shadow-sm">
                 <div class="card-body">
                     <h3>¿Qué hace este sistema?</h3>
                     <p class="text-muted" style="font-size: 1.1rem;">
@@ -60,7 +60,7 @@
        
     </div>
 
-    <h4 class="mt-4 mb-3 text-secondary">Módulos del Sistema</h4>
+    <h4 class="mt-4 mb-3 text-dark">Módulos del Sistema</h4>
     <div class="row">
         <div class="col-md-4">
             <div class="card info-box-custom h-100">

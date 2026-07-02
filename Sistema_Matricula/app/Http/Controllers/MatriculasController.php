@@ -60,7 +60,7 @@ class MatriculasController extends Controller
                 'id_grupo' => 'required|exists:grupos,id',
                 'id_periodo_academicos' => 'required|exists:periodo_academicos,id',
                 'fecha_matricula' => 'required|date',
-                'estado' => 'required|in:Activo,Retirado,Suspendido,Expulsado',
+                'estado' => 'required|in:Activo,Retirado,Suspendido,Traslado',
                 'observaciones' => 'required|string|max:255'
             ], [
                 // Mensaje personalizado para que el usuario entienda qué pasó
@@ -108,7 +108,7 @@ class MatriculasController extends Controller
                 'id_periodo_academicos'=>'required|exists:periodo_academicos,id',
               //  'id_usuario'=>'required|exists:usuarios,id',
                 'fecha_matricula'=>'required|date',//date
-                'estado'=>'required|in:Activo,Retirado,Suspendido,Expulsado',  //enum
+                'estado'=>'required|in:Activo,Retirado,Suspendido,Traslado',  //enum
                 'observaciones'=>'required|string|max:255'//string
             
         
@@ -121,7 +121,7 @@ class MatriculasController extends Controller
         public function updateStatusOnly(Request $request, $id)
         {
             $request->validate([
-                'estado' => ['required', \Illuminate\Validation\Rule::in(['Activo', 'Retirado', 'Suspendido', 'Expulsado'])], 
+                'estado' => ['required', \Illuminate\Validation\Rule::in(['Activo', 'Retirado', 'Suspendido', 'Traslado'])], 
             ]);
 
             try {

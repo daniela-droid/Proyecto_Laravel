@@ -54,5 +54,17 @@ class Notas extends Model
         return $this->hasMany(SolicitudCorreccionNota::class, 'id_nota');
     }
 
+    // Al borrar una nota, eliminar sus solicitudes de corrección relacionadas
+    protected static function booted()
+    {
+        static::deleting(function ($nota) {
+            try {
+                $nota->solicitudesCorreccion()->delete();
+            } catch (\Exception $e) {
+                \Log::error('Error borrando solicitudes de corrección para nota ' . ($nota->id ?? '?:id') . ': ' . $e->getMessage());
+            }
+        });
+    }
+
 
 }

@@ -37,7 +37,7 @@
                             <label for="id_grupo">Secciones</label>
                             <div class="input-group">
                                 <input type="hidden" name="id_grupo" id="id_grupo" value="{{ $matricula->id_grupo }}" required>
-                                <input type="text" id="nombre_sec_display" class="form-control form-control-sm" value="{{ $matricula->grupos->Descripcion }}" readonly required>
+                                <input type="text" id="nombre_sec_display" class="form-control form-control" value="{{ $matricula->grupos->Descripcion }}" readonly required>
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalsec">
                                         <i class="fas fa-search"></i> Cambiar
@@ -50,7 +50,7 @@
                     <div class="col-md-4">
                         <div class="form-group mb-2">
                             <label for="id_periodo_academicos">Periodos Academicos</label>
-                            <select name="id_periodo_academicos" class="form-control form-control-sm" required>
+                            <select name="id_periodo_academicos" class="form-control form-control" required>
                                 @foreach($periodos as $periodo)
                                     <option value="{{ $periodo->id }}" {{ $matricula->id_periodo_academicos == $periodo->id ? 'selected' : '' }}>{{ $periodo->Nombre }}</option>
                                 @endforeach
@@ -63,14 +63,14 @@
                     <div class="col-md-4">
                         <div class="form-group mb-2">
                             <label for="fecha_matricula">Fecha</label>
-                            <input type="date" name="fecha_matricula" class="form-control form-control-sm" value="{{ $matricula->fecha_matricula }}" required>
+                            <input type="date" name="fecha_matricula" class="form-control form-control" value="{{ $matricula->fecha_matricula }}" required>
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div class="form-group mb-2">
                             <label for="estado">Estado</label>
-                            <select name="estado" class="form-control form-control-sm" required>
+                            <select name="estado" class="form-control form-control" required>
                                 <option value="Activo" {{ $matricula->estado == 'Activo' ? 'selected' : '' }}>Activo</option>
                                 <option value="Retirado" {{ $matricula->estado == 'Retirado' ? 'selected' : '' }}>Retirado</option>
                                 <option value="Suspendido" {{ $matricula->estado == 'Suspendido' ? 'selected' : '' }}>Suspendido</option>
@@ -82,7 +82,7 @@
                     <div class="col-md-4">
                         <div class="form-group mb-2">
                             <label for="observaciones">Observaciones</label>
-                            <input type="text" name="observaciones" class="form-control form-control-sm" value="{{ $matricula->observaciones }}" required>
+                            <input type="text" name="observaciones" class="form-control form-control" value="{{ $matricula->observaciones }}" required>
                         </div>
                     </div>
                 </div>

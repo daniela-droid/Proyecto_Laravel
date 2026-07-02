@@ -21,6 +21,7 @@
             <p><strong>Nombre:</strong> {{ $asignatura->Nombre }}</p>
              <p><strong>Descripcion:</strong> {{ $asignatura->Descripcion }}</p>
               <p><strong>Código:</strong> {{ $asignatura->Código }}</p>
+                <p><strong>Tipo:</strong> {{ $asignatura->tipo }}</p>
         </div>
         <div class="card-footer">
             <a href="{{ route('asignaturas.index') }}" class="btn btn-secondary">

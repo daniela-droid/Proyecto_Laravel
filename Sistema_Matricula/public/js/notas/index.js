@@ -3,6 +3,7 @@ $(document).ready(function() {
     window.NotasHistorial.init();
 
     $(document).on('click', '.btn-reporte-grado', function() {
-        window.NotasReportes.imprimirReporteGrado($(this).data('grado'));
+        const corteSeleccionado = $('#selectFiltroReporteCorte').val() || '';
+        window.NotasReportes.imprimirReporteGrado($(this).data('grado'), corteSeleccionado);
     });
 });

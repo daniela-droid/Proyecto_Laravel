@@ -89,7 +89,72 @@ Route::get('/acceso-denegado', function() {
         Route::post('modalidades/store-rapido', [ModalidadesController::class, 'storeRapido']);
         Route::resource('cortes', CortesEvaluativosController::class);
         Route::get('/notas/matricula/{idMatricula}/historial', [NotasController::class, 'historialMatricula'])->name('notas.historial');
+        // Fallback API route (temporal) que devuelve historial seguro si el controlador principal falla
+        Route::get('/notas/matricula/{idMatricula}/historial2', function($idMatricula) {
+            try {
+                $notas = \App\Models\Notas::with(['horarios.asignatura', 'horarios.docente', 'cortes'])
+                    ->where('id_matricula', $idMatricula)
+                    ->get()
+                    ->filter(function ($nota) {
+                        return $nota->horarios
+                            && $nota->horarios->asignatura
+                            && trim((string) ($nota->horarios->asignatura->Nombre ?? '')) !== '';
+                    })
+                    ->sortBy(function ($nota) {
+                        $asig = $nota->horarios?->asignatura?->Nombre ?? '';
+                        $corte = $nota->cortes?->nombre ?? '';
+                        return trim($asig . '|' . $corte);
+                    })
+                    ->values();
+
+                $transform = $notas->map(function ($nota) {
+                    return [
+                        'id' => $nota->id,
+                        'id_horario' => $nota->id_horario,
+                        'nota_normal' => $nota->nota_normal,
+                        'nota_especial' => $nota->nota_especial ?? null,
+                        'promedio' => $nota->promedio ?? null,
+                        'observacion' => $nota->observacion ?? null,
+                        'created_at' => $nota->created_at?->format('d/m/Y H:i') ?? null,
+                        'horarios' => [
+                            'asignatura' => [
+                                'Nombre' => $nota->horarios->asignatura->Nombre,
+                                'tipo' => $nota->horarios->asignatura->tipo ?? null,
+                            ],
+                            'docente' => [
+                                'Nombre' => trim((string) (($nota->horarios?->docente?->Nombre ?? '') . ' ' . ($nota->horarios?->docente?->Apellido ?? ''))),
+                            ],
+                        ],
+                        'cortes' => [ 'nombre' => $nota->cortes?->nombre ?? '' ],
+                    ];
+                });
+
+                $matricula = \App\Models\Matriculas::with(['estudiantes', 'grupos.grados'])->find($idMatricula);
+                $estudianteInfo = [];
+
+                if ($matricula && $matricula->estudiantes) {
+                    $estudianteInfo = [
+                        'nombre' => trim((string) (($matricula->estudiantes->Nombre ?? '') . ' ' . ($matricula->estudiantes->Apellido ?? ''))),
+                        'codigo' => $matricula->estudiantes->Código_Persona ?? '',
+                        'grado' => $matricula->grupos?->grados?->Nombre ?? '',
+                        'grupo' => $matricula->grupos?->Nombre ?? '',
+                    ];
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'notas' => $transform,
+                    'count' => $transform->count(),
+                    'estudiante' => $estudianteInfo,
+                ]);
+
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('historial2 error: ' . $e->getMessage());
+                return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+            }
+        });
         Route::post('/notas/matricula/{idMatricula}/promedio', [NotasController::class, 'calcularPromedioMatricula'])->name('notas.promedio');
+        Route::get('/notas/reporte-cuadro-corte', [NotasController::class, 'reporteCuadroCorte'])->name('notas.reporte-cuadro-corte');
         Route::resource('notas', NotasController::class);
         Route::get('/admin/solicitudes-notas', [SolicitudesCorreccionNotasController::class, 'index'])->name('admin.solicitudes-notas.index');
         Route::post('/admin/solicitudes-notas/{solicitud}/aprobar', [SolicitudesCorreccionNotasController::class, 'aprobar'])->name('admin.solicitudes-notas.aprobar');

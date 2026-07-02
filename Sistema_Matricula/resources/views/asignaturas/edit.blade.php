@@ -56,6 +56,16 @@
                 </div>
                 </div>
 
+                 <div class="col-md-4">
+                      <div class="form-group">
+                    <label for="tipo">Tipo</label>
+                    <select name="tipo" class="form-control" id="tipo" required>
+                        <option value="">-- Seleccione Tipo --</option>
+                        <option value="cuantitativa" {{ $asignatura->tipo == 'cuantitativa' ? 'selected' : '' }}>Cuantitativa</option>
+                        <option value="cualitativa" {{ $asignatura->tipo == 'cualitativa' ? 'selected' : '' }}>Cualitativa</option>
+                    </select>
+                </div>
+                </div>
                  
                
             </div>

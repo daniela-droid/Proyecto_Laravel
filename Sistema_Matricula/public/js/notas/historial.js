@@ -1,21 +1,85 @@
 window.NotasHistorial = (function() {
     let detalleActual = null;
 
+    const escapeHtml = (window.NotasCalificaciones && typeof window.NotasCalificaciones.escapeHtml === 'function')
+        ? window.NotasCalificaciones.escapeHtml
+        : function(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
+
     function getDetalleActual() {
         return detalleActual;
+    }
+
+    function filtrarNotasPorCorte(notas, corteSeleccionado) {
+        if (!corteSeleccionado) {
+            return notas;
+        }
+
+        return notas.filter(function(n) {
+            return String(n.cortes?.nombre ?? '').trim() === String(corteSeleccionado).trim();
+        });
+    }
+
+    function construirFiltroCorteHtml(cortes, corteSeleccionado) {
+        const opciones = [{ id: '', nombre: 'Todos los cortes' }].concat(cortes || []);
+
+        return `
+            <div class="form-inline mb-3">
+                <label for="selectFiltroCorte" class="mr-2 small text-muted">Filtrar por corte:</label>
+                <select id="selectFiltroCorte" class="form-control form-control-sm">
+                    ${opciones.map(function(corte) {
+                        const seleccionado = corte.nombre === corteSeleccionado ? 'selected' : '';
+                        return `<option value="${corte.nombre}" ${seleccionado}>${corte.nombre}</option>`;
+                    }).join('')}
+                </select>
+            </div>
+        `;
+    }
+
+    function renderPromediosCortes(promediosCorte) {
+        const { escapeHtml } = window.NotasCalificaciones;
+
+        if (!promediosCorte || !promediosCorte.length) {
+            return `
+                <div class="promedios-cortes small text-muted mt-2">
+                    Calcule primero los promedios por corte para las asignaturas cuantitativas.
+                </div>
+            `;
+        }
+
+        return `
+            <div class="promedios-cortes d-flex flex-wrap mt-2">
+                ${promediosCorte.map((item) => `
+                    <span class="badge badge-light border mr-1 mb-1">
+                        ${escapeHtml(item.corte)}: <strong>${escapeHtml(Number(item.promedio).toFixed(2))}</strong>
+                    </span>
+                `).join('')}
+            </div>
+        `;
     }
 
     function agruparNotasPorMateria(notas) {
         const notasPorMateria = {};
 
         notas.forEach(function(n) {
+            // Validar que la nota tenga datos válidos
+            if (!n || !n.horarios || !n.horarios.asignatura || !n.horarios.asignatura.Nombre) {
+                return;
+            }
+
             const key = n.id_horario || n.horarios.asignatura.Nombre;
 
             if (!notasPorMateria[key]) {
                 notasPorMateria[key] = {
                     idHorario: n.id_horario,
                     nombre: n.horarios.asignatura.Nombre,
-                    docente: n.horarios.docente.Nombre,
+                    docente: n.horarios.docente ? n.horarios.docente.Nombre : 'Sin docente',
                     notas: []
                 };
             }
@@ -39,6 +103,28 @@ window.NotasHistorial = (function() {
             const colorPrincipal = n.nota_especial ?
                 (n.nota_especial < 60 ? 'text-danger' : 'text-success') :
                 colorNormal;
+            let esCuantitativa = false;
+            if (n.horarios?.asignatura?.tipo) {
+                esCuantitativa = String(n.horarios.asignatura.tipo).toLowerCase() === 'cuantitativa';
+            } else if (window.NotasCalificaciones && typeof window.NotasCalificaciones.esAsignaturaCuantitativa === 'function') {
+                esCuantitativa = window.NotasCalificaciones.esAsignaturaCuantitativa(n.horarios?.asignatura?.Nombre || '');
+            }
+
+            let valorMostrar = '<span class="text-muted">-</span>';
+            if (notaPrincipal !== null && notaPrincipal !== undefined && notaPrincipal !== '') {
+                if (esCuantitativa) {
+                    // Para asignaturas cuantitativas mostrar sólo el valor numérico
+                    valorMostrar = escapeHtml(notaPrincipal);
+                } else {
+                    // Para asignaturas cualitativas mostrar solo la escala cualitativa
+                    if (window.NotasCalificaciones && typeof window.NotasCalificaciones.calificacionCualitativa === 'function') {
+                        const cual = window.NotasCalificaciones.calificacionCualitativa(notaPrincipal);
+                        valorMostrar = cual ? `<div class="qualitative">${escapeHtml(cual)}</div>` : '<span class="text-muted">-</span>';
+                    } else {
+                        valorMostrar = escapeHtml(notaPrincipal);
+                    }
+                }
+            }
 
             return `
                 <tr>
@@ -48,21 +134,28 @@ window.NotasHistorial = (function() {
                         ${n.observacion ? `<br><small class="text-info"><i class="fas fa-comment-dots mr-1"></i>${n.observacion}</small>` : ''}
                     </td>
                     <td class="text-center">
-                        <div class="h5 mb-1 ${colorPrincipal} font-weight-bold">${notaPrincipal}</div>
-                        ${n.nota_especial ? `<small class="text-muted">Especial</small>` : ''}
-                        ${n.nota_normal !== n.nota_especial && n.nota_normal ? `<div class="small ${colorNormal}">Normal: ${n.nota_normal}</div>` : ''}
+                        <div class="h5 mb-1 ${colorPrincipal} font-weight-bold d-inline-block">${valorMostrar}</div>
+                        ${n.nota_especial ? `<small class="text-muted d-block">Especial</small>` : ''}
                     </td>
                     <td class="text-right align-middle">
-                        <div class="btn-group btn-group-sm">
-                            <a href="/notas/${n.id}/edit" class="btn btn-outline-primary" title="Editar">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <button class="btn btn-outline-danger btn-delete-ajax"
-                                    data-id="${n.id}" data-materia="${materia.nombre}"
-                                    title="Eliminar">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
+                        ${(() => {
+                            // Por defecto mostrar el botón de eliminar para las notas mostradas,
+                            // salvo que la página establezca `window.NotasIndex.allowDelete === false`.
+                            const allowDelete = !(window.NotasIndex && window.NotasIndex.allowDelete === false);
+                            if (allowDelete) {
+                                return `
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-danger btn-delete-ajax"
+                                                data-id="${n.id}" data-materia="${materia.nombre}"
+                                                title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                `;
+                            }
+
+                            return '';
+                        })()}
                     </td>
                 </tr>
             `;
@@ -104,35 +197,48 @@ window.NotasHistorial = (function() {
         `;
     }
 
-    function renderHistorial(data, idMatricula) {
-        const { escapeHtml, valorNota } = window.NotasCalificaciones;
+    function renderHistorial(data, idMatricula, corteSeleccionado) {
+        const { escapeHtml, valorNota, esAsignaturaCuantitativa } = window.NotasCalificaciones;
         const config = window.NotasIndex || {};
-        const notasPorMateria = agruparNotasPorMateria(data.notas);
+        const notasValidas = data.notas.filter(function(n) {
+            if (!n || typeof n !== 'object') return false;
+            if (!n.horarios || typeof n.horarios !== 'object') return false;
+            if (!n.horarios.asignatura || typeof n.horarios.asignatura !== 'object') return false;
+            if (!n.horarios.asignatura.Nombre || String(n.horarios.asignatura.Nombre).trim() === '') return false;
+            return true;
+        });
+        const notasFiltradas = filtrarNotasPorCorte(notasValidas, corteSeleccionado);
+        const notasPorMateria = agruparNotasPorMateria(notasFiltradas);
 
         let bloquesMaterias = Object.values(notasPorMateria)
+            .sort((a, b) => String(a.nombre || '').localeCompare(String(b.nombre || ''), 'es', { numeric: true }))
             .map((materia) => renderBloqueMateria(materia, idMatricula))
             .join('');
 
-        const promedioGuardado = data.notas.find(function(n) {
-            return Number(n.promedio) > 0;
+        const promedioGuardado = notasValidas.find(function(n) {
+            return esAsignaturaCuantitativa(n) && Number(n.promedio) > 0;
         })?.promedio;
-        const asignaturasConNotas = new Set();
+        const asignaturasCuantitativasConNotas = new Set();
 
-        data.notas.forEach(function(n) {
+        notasValidas.forEach(function(n) {
             const nota = valorNota(n);
+            const nombreAsignatura = n.horarios.asignatura.Nombre;
 
-            if (nota !== null && nota !== undefined && nota !== '' && !Number.isNaN(Number(nota))) {
-                asignaturasConNotas.add(n.id_horario || n.horarios.asignatura.Nombre);
+            if (esAsignaturaCuantitativa(nombreAsignatura) && nota !== null && nota !== undefined && nota !== '' && !Number.isNaN(Number(nota))) {
+                asignaturasCuantitativasConNotas.add(n.id_horario || nombreAsignatura);
             }
         });
 
-        const puedePromediar = asignaturasConNotas.size > 0;
+        const promediosCorte = detalleActual.promediosCorte || [];
+        const puedePromediarCortes = asignaturasCuantitativasConNotas.size > 0;
+        const puedePromediarGeneral = promediosCorte.length > 0;
+        const filtroCorteHtml = construirFiltroCorteHtml(config.cortes || [], corteSeleccionado);
 
         if (!bloquesMaterias) {
             bloquesMaterias = `
                 <div class="text-center text-muted py-4">
                     <i class="fas fa-clipboard-list fa-2x mb-2 d-block"></i>
-                    Este estudiante esta matriculado, pero aun no tiene notas registradas.
+                    Este estudiante esta matriculado, pero aun no tiene notas registradas para el filtro seleccionado.
                 </div>
             `;
         }
@@ -144,18 +250,23 @@ window.NotasHistorial = (function() {
                     Código: ${escapeHtml(detalleActual.estudiante.codigo)}<br>
                     Grado: ${escapeHtml(detalleActual.estudiante.grado)} | Grupo: ${escapeHtml(detalleActual.estudiante.grupo)}
                 </div>
-                <span class="badge ${data.count > 0 ? 'badge-success' : 'badge-warning'}">${data.count} calificaciones registradas</span>
+                <span class="badge ${notasFiltradas.length > 0 ? 'badge-success' : 'badge-warning'}">${notasFiltradas.length} calificaciones mostradas</span>
             </div>
             <div class="border rounded p-2 mb-3 bg-light">
+                ${filtroCorteHtml}
                 <div class="d-flex align-items-center flex-wrap">
-                    <button type="button" class="btn btn-primary btn-sm mr-2 mb-1 btn-sacar-promedio-general" ${puedePromediar ? '' : 'disabled'}>
-                        <i class="fas fa-calculator mr-1"></i>Sacar promedio general
+                    <button type="button" class="btn btn-outline-primary btn-sm mr-2 mb-1 btn-sacar-promedios-corte" ${puedePromediarCortes ? '' : 'disabled'}>
+                        <i class="fas fa-layer-group mr-1"></i>Promedios por corte
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm mr-2 mb-1 btn-sacar-promedio-general" ${puedePromediarGeneral ? '' : 'disabled'}>
+                        <i class="fas fa-calculator mr-1"></i>Promedio general
                     </button>
                     <input type="text" class="form-control form-control-sm text-center font-weight-bold promedio-general mr-2 mb-1" style="max-width: 110px;" readonly value="${promedioGuardado !== null && promedioGuardado !== undefined ? promedioGuardado : ''}" placeholder="0.00">
                     <span class="badge estado-promedio-general ${Number(promedioGuardado) > 85 ? 'badge-success' : 'badge-secondary'}">
-                        ${Number(promedioGuardado) > 85 ? 'Excelencia' : (puedePromediar ? 'Listo para calcular' : 'Faltan notas')}
+                        ${Number(promedioGuardado) > 85 ? 'Excelencia' : (puedePromediarGeneral ? 'Listo para promedio general' : 'Primero promedios por corte')}
                     </span>
                 </div>
+                ${renderPromediosCortes(promediosCorte)}
             </div>
             ${bloquesMaterias}
             <div class="mt-3 text-right">
@@ -181,15 +292,19 @@ window.NotasHistorial = (function() {
         `);
 
         $.ajax({
-            url: `/notas/matricula/${idMatricula}/historial`,
+            url: `/notas/matricula/${idMatricula}/historial2`,
             method: 'GET',
             success: function(data) {
+                const estudianteData = (data.estudiante && !Array.isArray(data.estudiante)) ? data.estudiante : null;
                 detalleActual = {
-                    nombre: data.estudiante?.nombre || nombre,
+                    idMatricula: idMatricula,
+                    nombre: estudianteData?.nombre || nombre,
                     notas: data.notas,
                     count: data.count,
                     centro: config.nombreCentro,
-                    estudiante: data.estudiante || {
+                    selectedCorte: '',
+                    promediosCorte: [],
+                    estudiante: estudianteData || {
                         nombre: nombre,
                         codigo: '',
                         grado: '',
@@ -197,7 +312,7 @@ window.NotasHistorial = (function() {
                     }
                 };
 
-                $('#contenidoDetalle').html(renderHistorial(data, idMatricula));
+                $('#contenidoDetalle').html(renderHistorial(detalleActual, idMatricula, ''));
             },
             error: function(xhr) {
                 $('#contenidoDetalle').html(`
@@ -210,6 +325,24 @@ window.NotasHistorial = (function() {
         });
     }
 
+    function calcularPromediosCorte() {
+        if (!detalleActual) {
+            alert('Seleccione un estudiante antes de calcular los promedios por corte.');
+            return;
+        }
+
+        const { calcularPromediosPorCorte } = window.NotasCalificaciones;
+        const promediosCorte = calcularPromediosPorCorte(detalleActual.notas);
+
+        if (!promediosCorte.length) {
+            alert('Este estudiante no tiene notas cuantitativas para promediar por corte.');
+            return;
+        }
+
+        detalleActual.promediosCorte = promediosCorte;
+        $('#contenidoDetalle').html(renderHistorial(detalleActual, detalleActual.idMatricula, detalleActual.selectedCorte || ''));
+    }
+
     function calcularPromedioGeneral() {
         const config = window.NotasIndex || {};
         const idMatricula = $('#panelDetalle').attr('data-matricula');
@@ -217,6 +350,11 @@ window.NotasHistorial = (function() {
 
         if (!idMatricula) {
             alert('Seleccione un estudiante antes de calcular el promedio.');
+            return;
+        }
+
+        if (!detalleActual?.promediosCorte?.length) {
+            alert('Primero calcule los promedios por corte.');
             return;
         }
 
@@ -230,6 +368,8 @@ window.NotasHistorial = (function() {
             },
             success: function(data) {
                 $('.promedio-general').val(data.promedio);
+                detalleActual.promedioGeneral = data.promedio;
+                detalleActual.promediosCorte = data.promedios_cortes || detalleActual.promediosCorte || [];
                 $('.estado-promedio-general')
                     .removeClass('badge-secondary badge-success')
                     .addClass(data.excelencia ? 'badge-success' : 'badge-secondary')
@@ -239,7 +379,7 @@ window.NotasHistorial = (function() {
                 alert(xhr.responseJSON?.message || 'No se pudo calcular el promedio.');
             },
             complete: function() {
-                boton.prop('disabled', false).html('<i class="fas fa-calculator mr-1"></i>Sacar promedio general');
+                boton.prop('disabled', false).html('<i class="fas fa-calculator mr-1"></i>Promedio general');
             }
         });
     }
@@ -261,6 +401,16 @@ window.NotasHistorial = (function() {
             $('#modalDelete-' + notaId).modal('show');
         });
 
+        $(document).on('change', '#selectFiltroCorte', function() {
+            if (!detalleActual) {
+                return;
+            }
+
+            detalleActual.selectedCorte = $(this).val() || '';
+            $('#contenidoDetalle').html(renderHistorial(detalleActual, detalleActual.idMatricula, detalleActual.selectedCorte));
+        });
+
+        $(document).on('click', '.btn-sacar-promedios-corte', calcularPromediosCorte);
         $(document).on('click', '.btn-sacar-promedio-general', calcularPromedioGeneral);
     }
 

@@ -15,16 +15,16 @@ window.NotasCalificaciones = (function() {
             return '';
         }
 
-        if (valor >= 80) {
+        if (valor >= 90) {
             return 'AA';
         }
 
-        if (valor >= 70) {
-            return 'AE';
+        if (valor >= 76) {
+            return 'AS';
         }
 
         if (valor >= 60) {
-            return 'AS';
+            return 'AF';
         }
 
         return 'AI';
@@ -49,20 +49,107 @@ window.NotasCalificaciones = (function() {
             : nota.nota_normal;
     }
 
-    function calcularPromedioMateria(notasMateria) {
+    function normalizarTexto(value) {
+        return String(value || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase();
+    }
+
+    function esAsignaturaCuantitativa(asignaturaOrNombre) {
+        if (asignaturaOrNombre && typeof asignaturaOrNombre === 'object') {
+            const tipo = asignaturaOrNombre?.tipo
+                ?? asignaturaOrNombre?.horarios?.asignatura?.tipo
+                ?? asignaturaOrNombre?.horarios?.tipo;
+
+            if (tipo !== null && tipo !== undefined && String(tipo).trim() !== '') {
+                return String(tipo).trim().toLowerCase() === 'cuantitativa';
+            }
+
+            const nombre = asignaturaOrNombre?.Nombre || asignaturaOrNombre?.nombre || '';
+            return esAsignaturaCuantitativa(nombre);
+        }
+
+        const nombre = normalizarTexto(asignaturaOrNombre);
+        const cuantitativas = [
+            'lengua',
+            'literatura',
+            'matematica',
+            'estudios sociales',
+            'ciencias naturales',
+            'ingles'
+        ];
+
+        return cuantitativas.some((termino) => nombre.includes(normalizarTexto(termino)));
+    }
+
+    function isNotaCuantitativa(nota) {
+        const valor = valorNota(nota);
+        return valor !== null && valor !== undefined && valor !== '' && !Number.isNaN(Number(valor));
+    }
+//esta funcion permite sacar el promedio por corte 
+    function calcularPromediosPorCorte(notas) {
+        const cortes = {};
+
+        (notas || []).forEach((nota) => {
+            const nombreAsignatura = nota.horarios?.asignatura?.Nombre;
+
+            if (!esAsignaturaCuantitativa(nombreAsignatura) || !isNotaCuantitativa(nota)) {
+                return;
+            }
+
+            const corte = nota.cortes?.nombre || 'Sin corte';
+
+            if (!cortes[corte]) {
+                cortes[corte] = [];
+            }
+
+            cortes[corte].push(Number(valorNota(nota)));
+        });
+
+        return Object.entries(cortes)
+            .map(([corte, valores]) => ({
+                corte,
+                promedio: valores.reduce((sum, value) => sum + value, 0) / valores.length,
+                cantidad: valores.length
+            }))
+            .sort((a, b) => String(a.corte).localeCompare(String(b.corte), 'es', { numeric: true }));
+    }
+
+    function calcularPromedioGeneralDesdeCortes(promediosCorte) {
+        const valores = (promediosCorte || [])
+            .map((item) => Number(item.promedio))
+            .filter((valor) => !Number.isNaN(valor));
+
+        if (!valores.length) {
+            return null;
+        }
+
+        return valores.reduce((sum, value) => sum + value, 0) / valores.length;
+    }
+
+    function calcularPromedioMateria(notasMateria, nombreAsignatura = '') {
         if (!notasMateria.length) {
             return '';
         }
 
         const promedioGuardado = notasMateria.find((n) => n.promedio !== null && n.promedio !== undefined && n.promedio !== '');
         if (promedioGuardado) {
-            return Number(promedioGuardado.promedio).toFixed(2);
+            const val = Number(promedioGuardado.promedio);
+            if (!isNaN(val)) {
+                // Si la asignatura es cuantitativa, devolver numérico con 2 decimales
+                if (esAsignaturaCuantitativa(nombreAsignatura)) {
+                    return val.toFixed(2);
+                }
+
+                // Para cualitativas, devolver la etiqueta cualitativa correspondiente
+                return calificacionCualitativa(val);
+            }
         }
 
         const valores = notasMateria
             .map((n) => {
-                const valor = Number(valorNota(n));
-                return Number.isFinite(valor) ? valor : null;
+                return isNotaCuantitativa(n) ? Number(valorNota(n)) : null;
             })
             .filter((v) => v !== null);
 
@@ -70,7 +157,13 @@ window.NotasCalificaciones = (function() {
             return '';
         }
 
-        return (valores.reduce((sum, value) => sum + value, 0) / valores.length).toFixed(2);
+        const promedio = valores.reduce((sum, value) => sum + value, 0) / valores.length;
+
+        if (esAsignaturaCuantitativa(nombreAsignatura)) {
+            return promedio.toFixed(2);
+        }
+
+        return calificacionCualitativa(promedio);
     }
 
     function construirTablaDetalleEstudiante(notasPorMateria) {
@@ -80,11 +173,11 @@ window.NotasCalificaciones = (function() {
                 .sort((a, b) => String(a.cortes.nombre || '').localeCompare(String(b.cortes.nombre || ''), 'es', { numeric: true }));
 
             const celdasCortes = cortesOrdenados.map((n) => {
-                const nota = n.nota_especial || n.nota_normal || '';
+                const nota = valorNota(n) || '';
                 return `<td class="text-center">${escapeHtml(nota)}</td>`;
             }).join('');
 
-            const promedio = calcularPromedioMateria(cortesOrdenados);
+            const promedio = calcularPromedioMateria(cortesOrdenados, materia.nombre);
             const notasFaltantes = 4 - cortesOrdenados.length;
             const espaciosVacios = notasFaltantes > 0 ? '<td class="text-center text-muted">-</td>'.repeat(notasFaltantes) : '';
 
@@ -132,6 +225,10 @@ window.NotasCalificaciones = (function() {
         calificacionCualitativa,
         notaConCualitativo,
         valorNota,
+        esAsignaturaCuantitativa,
+        isNotaCuantitativa,
+        calcularPromediosPorCorte,
+        calcularPromedioGeneralDesdeCortes,
         calcularPromedioMateria,
         construirTablaDetalleEstudiante
     };
