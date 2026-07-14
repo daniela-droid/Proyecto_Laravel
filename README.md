@@ -12,7 +12,7 @@
 
 #Frontend: Blade, Bootstrap, DataTables, FontAwesome
 
-#Base de Datos: MySQL / MariaDB (20 tablas normalizadas)
+#Base de Datos: MySQL / MariaDB (31 tablas normalizadas)
 
 #Entorno de Desarrollo: Debian 13 (Trixie)
 
